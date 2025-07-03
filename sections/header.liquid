@@ -1,0 +1,447 @@
+{% assign main_menu_linklist = linklists[section.settings.menu] %}
+{% assign search_menu_linklist = linklists[section.settings.menu] %}
+{{ shop.customer_accounts_enabled }}
+
+
+<!-- START OF ANNOUNCEMENT BAR -->
+<div class="announcement__banner bg-[#d6d2c4] border-b border-[rgba(33,35,34,0.2)] text-center flex items-center">
+  <p class="mx-auto px-6 py-3 text-[11px] md:text-sm">
+    FREE SHIPPING ON ORDERS $40+
+    <span class="ml-0.5"
+      ><a
+        class="underline text-[#212322] opacity-70 hover:opacity-100 transition-opacity duration-200"
+        href="#"
+      >
+        SHOP NOW
+      </a></span
+    >
+  </p>
+  <div class="close-announcement-banner px-2 py-3 cursor-pointer">
+    <!-- X ICON -->
+    {% render 'icon-close' %}
+  </div>
+</div>
+<!-- END OF ANNOUNCEMENT BAR -->
+
+<!-- START OF HEADER -->
+<div class="bg-[#d6d2c4] relative">
+  <div class="relative h-14 md:h-auto md:pt-4 xl:pt-0 xl:h-[88px] ">
+    <!-- START OF LOGO -->
+    <div class="flex items-center justify-center z-[3] h-full">
+      
+        {% comment %} <a href="#">
+            <h1 class="mx-auto text-center text-2xl md:text-3xl font-bold uppercase"> {{ section.settings.header_brand_name }}</h1>
+        </a> {% endcomment %}
+      
+
+       <a class="block" href="{{ shop.url }}">
+        <img
+          class="mx-auto h-9 w-[150px] object-contain md:h-13 md:w-full"
+          src="./assets/Papatui_Header_Logo.png"
+          alt=""
+          srcset=""
+        >
+      </a>
+    </div>
+    <!-- END OF LOGO -->
+
+    <div
+      id="mobile-nav-button_open"
+      class="absolute top-0 left-[18px] h-full flex items-center cursor-pointer z-[4] md:hidden"
+    >
+      <!-- BARS ICON -->
+      {% render 'icon-bars' %}
+    </div>
+
+    <div class="absolute top-0 right-[18px] h-full flex items-center gap-3  z-[4] xl:right-[30px] md:gap-8">
+      <a href="{{ routes.account_login_url }}" class="hidden items-center relative cursor-pointer md:flex">
+        <!-- USER ICON -->
+        {% render 'icon-account-user' %}
+      </a>
+      <a href="{{ routes.cart_url }}" class=" flex items-center relative cursor-pointer">
+        <!-- CART ICON -->
+        {% render 'icon-shopping-cart' %}
+      </a>
+      <div class="nav-search-button  flex items-center cursor-pointer">
+        <!-- SEARCH ICON -->
+        {% render 'icon-search' %}
+      </div>
+    </div>
+  </div>
+
+  <!-- START OF MD:NAV -->
+  <nav>
+    <ul
+      class="hidden md:flex items-center justify-center px-[18px] pb-4 sm:mt-4 xl:px-[30px] xl:mt-0 min-[1440px]:justify-start min-[1440px]:absolute min-[1440px]:px-0 min-[1440px]:pb-0 min-[1440px]:top-1/2 min-[1440px]:left-0 min-[1440px]:-translate-y-1/2"
+    >
+      {% for link in main_menu_linklist.links %}
+        {% if link.links != blank %}
+          <li id="medium-nav-list-item" class="first:pl-0  medium-nav-list-item px-[18px]  tracking-[1px] text-sm">
+            <a
+              class="uppercase h-8 flex items-center justify-center hover:text-[rgba(33,35,34,0.7)] relative after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:w-0 after:h-[2px] after:bg-[rgba(33,35,34,0.7)] after:transition-all after:duration-300 after:ease-in-out after:-translate-x-1/2 hover:after:w-full"
+              href="{{ link.url }}"
+            >
+              {{ link.title }}
+              <!-- DOWN ARROW ICON -->
+              <span class="block pl-1.5">
+                {% render 'icon-down-arrow' %}
+              </span>
+            </a>
+            <ul
+              id="medium-subnav-container"
+              class="medium-subnav-container hidden opacity-0 transition-opacity duration-100 ease-in-out absolute bg-[#d6d2c4] px-[18px] py-[12px] min-w-[160px] max-w-[270px] w-max shadow-[0_8px_24px_rgba(33,35,34,0.08)]"
+            >
+              {% for childlink in link.links %}
+                <li class="text-[rgba(33,35,34,0.7)] leading-[1.5] w-full  text-xs ">
+                  <a class="block w-full px-[0.4em] py-[0.5em] rounded hover:bg-[rgba(33,35,34,0.1)]" href="{{ childlink.url }}"
+                    >{{  childlink.title }}</a
+                  >
+                </li>
+              {% endfor %}
+              
+            </ul>
+          </li>
+        {% else %}
+          <li id="medium-nav-list-item" class="first:pl-0 medium-nav-list-item px-[18px]  tracking-[1px] text-sm">
+            <a
+              class="uppercase h-8 flex items-center justify-center hover:text-[rgba(33,35,34,0.7)] relative after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:w-0 after:h-[2px] after:bg-[rgba(33,35,34,0.7)] after:transition-all after:duration-300 after:ease-in-out after:-translate-x-1/2 hover:after:w-full"
+              href="{{ link.url }}"
+            >
+              {{ link.title }}
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </nav>
+  <!-- END OF MD:NAV -->
+</div>
+<!-- END OF HEADER -->
+
+<!-- START OF MOBILE NAV -->
+<div
+  class="mobile__nav__drawer__bg fixed top-0 left-0 w-full h-full z-[1042] bg-[#0b0b0b66] opacity-0 invisible transition-opacity duration-500 ease-in-out"
+>
+  <div
+    class="mobile__nav__drawer__open fixed top-0 left-[-100%] z-[1043] h-full w-[480px] max-w-[calc(100vw-24px)] overflow-hidden overflow-y-auto bg-white pb-[120px] transition-[left] duration-500 ease-in-out outline-none"
+  >
+    <!-- START OF MOBILE HEADER -->
+    <div class="h-[72px] flex justify-between items-center">
+      <div id="mobile-nav-button-close" class="ml-3 w-fit">
+        <!-- X ICON -->
+        {% render 'icon-close', class: 'size-8' %}
+      </div>
+
+      <div class="mr-3">
+        <a href="{{ routes.account_login_url }}" class="flex items-center pt-[18px] pb-[18px] pl-[18px]">
+          <!-- USER ICON -->
+          {% render 'icon-account-user' %}
+
+          <span class="pl-1.5 text-xs font-secondary">Log in</span>
+        </a>
+      </div>
+    </div>
+    <!-- END OF MOBILE HEADER -->
+    <!-- START OF MOBILE MENU -->
+    <ul class="ml-4.5 mr-3 divide-y divide-[rgba(33,35,34,0.2)]">
+      {% for link in main_menu_linklist.links %}
+        {% if link.links != blank %}
+          <li class="mobile-menu-list-item">
+            <a href="{{ link.url }}"
+              class="mobile-menu-list-item__link text-xl py-7 tracking-[1px] flex items-center justify-between font-secondary"
+            >
+              <span class="block">{{ link.title }}</span>
+              <!-- RIGHT ARROW ICON -->
+              <span class="block">
+                {% render 'icon-right-arrow' %}
+              </span>
+            </a>
+            <div
+              class="mobile-nav__subcontainer absolute top-0 bottom-0 right-[-100%] w-full h-full bg-white z-[1044] overflow-y-scroll pb-[25px] transition-[right] duration-500 ease-in-out"
+            >
+              <div class="relative">
+                <div class="relative">
+                  <img
+                    class="h-60 w-full object-cover"
+                    src="./assets/mobile-secondary-subnav-banner_completefacecare_scent_uncented__01.png"
+                    alt=""
+                  >
+                  <div
+                    class="mobile-subnav__close-btn absolute top-[24px] left-[8px] cursor-pointer z-[1046]"
+                  >
+                    <!-- X ICON -->
+                    {% render 'icon-close', class: 'size-8', stroke: '#ffffff' %}
+                  </div>
+                </div>
+    
+                <div class="bg-white">
+                  <div
+                    class="mobile-subnav__back-btn text-xl py-7 tracking-[1px] flex items-center justify-center relative ml-2 mr-4.5"
+                  >
+                    <!-- LEFT ARROW ICON -->
+                    <span class="block absolute left-1">
+                      {% render 'icon-left-arrow' %}
+                    </span>
+                    <span class="block text-base font-secondary">{{ link.title }}</span>
+                  </div>
+                  <ul
+                    class="mx-4.5 divide-y divide-[rgba(33,35,34,0.2)] border-t border-[rgba(33,35,34,0.2)]"
+                  >
+                    {% for childlink in link.links %}
+                      <li>
+                        <a href="{{ childlink.url }}" class="text-xl py-7 block tracking-[1px] font-secondary">{{ childlink.title }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+          {% else %}
+            <li class="mobile-menu-list-item">
+              <a href="{{ link.url }}" class="text-xl py-7 block tracking-[1px] font-secondary">{{ link.title }}</a>
+            </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <!-- END OF MOBILE MENU -->
+    <!-- START OF MOBILE SOCIALS -->
+    <div class="ml-4.5 mr-3 flex items-center gap-2">
+      <a class="w-7 h-7 flex items-center justify-center">
+        <img class="w-5 h-5" src="./assets/papatui_instagram.png" alt="">
+      </a>
+      <a class="w-7 h-7 flex items-center justify-center">
+        <img class="w-5 h-5" src="./assets/papatui-tiktok.png" alt="">
+      </a>
+    </div>
+    <!-- END OF MOBILE SOCIALS -->
+  </div>
+</div>
+<!-- END OF MOBILE NAV -->
+
+<!-- START OF SEARCH SECTION -->
+<div
+  class="search-overlay absolute top-0 left-0 w-full h-full z-[1042] bg-[#0b0b0b66] opacity-0 invisible transition-opacity duration-500 ease-in-out"
+>
+  <div
+    class="search-panel absolute top-0 left-0 w-full h-full z-[1045] overflow-hidden overflow-y-auto bg-white transition-[top] duration-500 ease-in-out  sm:max-h-[600px]"
+  >
+    <div class="border-b border-b-[rgba(33,33,33,0.2)] px-[18px] ">
+      <form class="flex justify-between items-center gap-5 h-[72px] max-w-screen-2xl mx-auto">
+        <button>
+          <!-- SEARCH ICON -->
+          {% render 'icon-search' %}
+        </button>
+        <input
+          class="text-base tracking-[1px] block w-full outline-0 placeholder:text-[rgba(33,33,33,0.5)] font-secondary placeholder:tracking-[1px]"
+          type="text"
+          placeholder="Search our store..."
+        >
+        <div class="search-close-button cursor-pointer">
+          <!-- X ICON -->
+          {% render 'icon-close', class: 'size-8' %}
+        </div>
+      </form>
+    </div>
+
+    <div
+      class="py-[30px] px-[18px] max-w-screen-2xl mx-auto grid grid-cols-1 gap-[30px] sm:grid-cols-[1fr_1fr_2fr]"
+    >
+      <div class="">
+        <h4 class="text-sm uppercase mb-1.5 ml-1.5 tracking-[1px] leading-loose font-secondary">Recent searches</h4>
+        <ul>
+          <li class="text-sm tracking-[1px]">
+            <a
+              class="py-[3px] px-1.5 block w-full rounded hover:bg-[rgba(33,35,34,0.1)] leading-normal font-secondary"
+              href="#"
+              >Shop All</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="">
+        <h4 class="text-sm uppercase mb-1.5 ml-1.5 tracking-[1px] leading-loose font-secondary">{{ search_menu_linklist.title }}</h4>
+        <ul>
+
+            {% for link in search_menu_linklist.links %}
+              <li class="text-sm tracking-[1px]">
+                <a
+                  class="py-[3px] px-1.5 block w-full rounded hover:bg-[rgba(33,35,34,0.1)] leading-normal font-secondary"
+                  href="{{ link.url }}"
+                  >{{ link.title }}</a
+                >
+              </li>
+            {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END OF SEARCH SECTION -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // === Utility Functions ===
+    const addClasses = (el, classes) => el?.classList.add(...classes.split(' '));
+    const removeClasses = (el, classes) => el?.classList.remove(...classes.split(' '));
+
+    const body = document.body;
+    const drawerBg = document.querySelector('.mobile__nav__drawer__bg');
+    const drawerPanel = document.querySelector('.mobile__nav__drawer__open');
+
+    // === MOBILE NAV: Open ===
+    document.getElementById('mobile-nav-button_open')?.addEventListener('click', function () {
+      removeClasses(drawerBg, 'opacity-0 invisible');
+      addClasses(drawerBg, 'opacity-100 visible');
+
+      removeClasses(drawerPanel, 'left-[-100%]');
+      addClasses(drawerPanel, 'left-0');
+
+      addClasses(body, 'overflow-hidden');
+    });
+
+    // === MOBILE NAV: Close ===
+    document.getElementById('mobile-nav-button-close')?.addEventListener('click', function () {
+      removeClasses(drawerPanel, 'left-0');
+      addClasses(drawerPanel, 'left-[-100%]');
+
+      removeClasses(drawerBg, 'opacity-100 visible');
+      addClasses(drawerBg, 'opacity-0');
+
+      setTimeout(() => {
+        addClasses(drawerBg, 'invisible');
+        removeClasses(body, 'overflow-hidden');
+      }, 500);
+    });
+
+    // === MOBILE SUBNAV: Open ===
+    document.querySelectorAll('.mobile-menu-list-item__link').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const listItem = this.closest('.mobile-menu-list-item');
+        const subContainer = listItem?.querySelector('.mobile-nav__subcontainer');
+        if (subContainer) {
+          removeClasses(subContainer, 'right-[-100%]');
+          addClasses(subContainer, 'right-0');
+        }
+
+        const backBtnWrap = this.closest('.mobile-subnav__back-btn');
+        const previousSub = backBtnWrap?.querySelector('.mobile-nav__subcontainer');
+        if (previousSub) {
+          removeClasses(previousSub, 'right-0');
+          addClasses(previousSub, 'right-[-100%]');
+        }
+      });
+    });
+
+    // === MOBILE SUBNAV: Back Button ===
+    document.querySelectorAll('.mobile-subnav__back-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const subnav = this.closest('.mobile-nav__subcontainer');
+        if (subnav) {
+          removeClasses(subnav, 'right-0');
+          addClasses(subnav, 'right-[-100%]');
+        }
+      });
+    });
+
+    // === MOBILE SUBNAV: Close Button (X) ===
+    document.querySelectorAll('.mobile-subnav__close-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.mobile-nav__subcontainer').forEach(el => {
+          removeClasses(el, 'right-0');
+          addClasses(el, 'right-[-100%]');
+        });
+
+        removeClasses(drawerPanel, 'left-0');
+        addClasses(drawerPanel, 'left-[-100%]');
+
+        removeClasses(drawerBg, 'opacity-100 visible');
+        addClasses(drawerBg, 'opacity-0');
+
+        setTimeout(() => {
+          addClasses(drawerBg, 'invisible');
+          removeClasses(body, 'overflow-hidden');
+        }, 500);
+      });
+    });
+
+    // === MEDIUM NAV: Hover to Fade In/Out ===
+    document.querySelectorAll('.medium-nav-list-item').forEach(item => {
+      const submenu = item.querySelector('.medium-subnav-container');
+      if (!submenu) return;
+
+      item.addEventListener('mouseenter', () => {
+        submenu.style.display = 'block';
+        requestAnimationFrame(() => {
+          submenu.style.opacity = '1';
+        });
+      });
+
+      item.addEventListener('mouseleave', () => {
+        submenu.style.opacity = '0';
+        setTimeout(() => {
+          submenu.style.display = 'none';
+        }, 125);
+      });
+    });
+
+    // === SEARCH PANEL: Open ===
+    document.querySelectorAll('.nav-search-button').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const overlay = document.querySelector('.search-overlay');
+        const panel = document.querySelector('.search-panel');
+
+        removeClasses(overlay, 'opacity-0 invisible');
+        addClasses(overlay, 'opacity-100 visible');
+
+        removeClasses(panel, 'top-[-100%]');
+        addClasses(panel, 'top-0');
+
+        addClasses(body, 'overflow-hidden');
+      });
+    });
+
+    // === SEARCH PANEL: Close ===
+    document.querySelectorAll('.search-close-button').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const overlay = document.querySelector('.search-overlay');
+        const panel = document.querySelector('.search-panel');
+
+        removeClasses(panel, 'top-0');
+        addClasses(panel, 'top-[-100%]');
+
+        removeClasses(overlay, 'opacity-100 visible');
+        addClasses(overlay, 'opacity-0');
+
+        setTimeout(() => {
+          addClasses(overlay, 'invisible');
+          removeClasses(body, 'overflow-hidden');
+        }, 500);
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Header Menu",
+      "default": "main-menu",
+      "info": "Choose your menu",
+    },
+    {
+      "type": "link_list",
+      "id": "search-menu",
+      "label": "Search Menu",
+      "default": "main-menu",
+      "info": "Choose your menu for the search component",
+    }
+  ]
+}
+{% endschema %}
