@@ -1,0 +1,94 @@
+<!-- START OF ANNOUNCEMENT BAR -->
+{% if section.settings.enable_announcement %}
+  <div
+    class="announcement-bar border-b border-[rgba(33,35,34,0.2)] text-center flex items-center"
+    style="background-color: {{ section.settings.background_color }};"
+  >
+    <p class="mx-auto px-6 py-3 text-[11px] md:text-sm">
+      {{ section.settings.announcement_text }}
+      {% if section.settings.announcement_link != blank %}
+        <span class="ml-0.5">
+          <a
+            class="underline text-[#212322] opacity-70 hover:opacity-100 transition-opacity duration-200"
+            href="{{ section.settings.announcement_link }}"
+          >
+            {{ section.settings.link_text }}
+          </a>
+        </span>
+      {% endif %}
+    </p>
+
+    <div class="close-announcement-bar px-2 py-3 cursor-pointer">
+      {% render 'icon-close' %}
+    </div>
+  </div>
+{% endif %}
+<!-- END OF ANNOUNCEMENT BAR -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const banner = document.querySelector('.announcement-bar');
+    const closeBtn = document.querySelector('.close-announcement-bar');
+    const dismissKey = 'announcementDismissedAt';
+
+    // Check if banner was dismissed and how much time has passed
+    const dismissedAt = localStorage.getItem(dismissKey);
+    const now = Date.now(); // current timestamp in milliseconds
+
+    // If banner was dismissed and 24 hours hasn't passed → keep hidden
+    if (dismissedAt && now - parseInt(dismissedAt, 10) < 24 * 60 * 60 * 1000) {
+      banner?.classList.add('hidden');
+    }
+
+    // When user closes the banner
+    closeBtn?.addEventListener('click', function () {
+      banner?.classList.add('hidden');
+      localStorage.setItem(dismissKey, now.toString());
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_announcement",
+      "label": "Enable announcement bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement Text",
+      "default": "FREE SHIPPING ON ORDERS $40+"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "Link URL (optional)",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#d6d2c4"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
