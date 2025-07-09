@@ -1,7 +1,7 @@
 <!-- START OF ANNOUNCEMENT BAR -->
 {% if section.settings.enable_announcement %}
   <div
-    class="announcement__banner bg-[{{ section.settings.background_color }}] border-b border-[rgba(33,35,34,0.2)] text-center flex items-center py-2"
+    class="announcement__banner bg-[#d6d2c4] border-b border-[rgba(33,35,34,0.2)] text-center flex items-center py-2"
   >
     <div class="relative w-full max-w-[700px] mx-auto px-0">
       {% if section.blocks.size > 1 %}
@@ -196,12 +196,6 @@
       "id": "enable_announcement",
       "label": "Enable announcement bar",
       "default": true
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "Background Color",
-      "default": "#d6d2c4"
     }
   ],
   "max_blocks": 3,
@@ -216,6 +210,7 @@
           "label": "Banner text",
           "default": "FREE SHIPPING ON ORDERS $40+"
         },
+        
         {
           "type": "url",
           "id": "link",
