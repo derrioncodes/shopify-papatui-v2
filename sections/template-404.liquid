@@ -1,0 +1,51 @@
+<div class="404-container text-center my-[30px] max-w-2xl mx-auto flex flex-col justify-center items-center">
+  <h1 class="text-[28px] text-[#3e4827] uppercase leading-[1.8] relative pb-1 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0">
+    {{ section.settings.title }}
+  </h1>
+  <p class="mt-4 mb-6 font-secondary ">{{ section.settings.subtext }}</p>
+  {% if section.settings.button_link == blank %}
+    {% assign shop_url = shop.secure_url %}
+    {% else %}
+        {% assign shop_url = section.settings.button_link %}
+    {% endif %}
+  <a
+    class="block text-center mb-4 bg-[#d6d2c4] text-[#3e4827] uppercase text-sm py-[9px] px-[30px] leading-[30px] tracking-[1px] w-full transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] md:w-fit"
+    href="{{ shop_url }}"
+  >
+    {{ section.settings.button_text }}
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "Template 404",
+  "tag": "section",
+  "class": "mb-14",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "404 Page Not Found",
+      "label": "404 Heading Title"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "default": "The page you requested does not exist.",
+      "label": "404 Subtext"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "default": "Continue shopping",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link",
+      
+    }
+  ]
+}
+{% endschema %}
