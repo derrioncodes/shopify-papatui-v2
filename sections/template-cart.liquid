@@ -1,0 +1,204 @@
+<!-- START OF ANNOUNCEMENT BAR -->
+<div
+  class="announcement__banner bg-[#3e4827] border-b border-[rgba(33,35,34,0.2)] text-center flex items-center mb-10"
+>
+  <p class="mx-auto px-6 py-3 text-[11px] font-secondary text-white md:text-sm">
+    Receive FREE SHIPPING when you spend $40+
+  </p>
+  <div class="close-announcement-banner px-2 py-3 cursor-pointer">
+    <!-- X ICON -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="size-4"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>
+  </div>
+</div>
+<!-- END OF ANNOUNCEMENT BAR -->
+
+<div class="cart-container max-w-7xl mx-auto px-[18px] mb-10">
+  <div class="title flex items-start my-[30px] max-w-[600px] lg:max-w-full mx-auto">
+    <h1
+      class="relative text-[#3e4827] pb-4 mb-0 uppercase font-normal text-[18px] md:text-[24px] leading-[24px] after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-[36px] after:h-[3px] after:bg-[#db864e]"
+    >
+      Shopping Cart
+      {% if cart.item_count > 1 %}
+        <span class="ml-2 text-[16px] text-[#2123228C] font-secondary normal-case">
+          ({{ cart.item_count }} items)
+        </span>
+      {% elsif cart.item_count == 1 %}
+        <span class="ml-2 text-[16px] text-[#2123228C] font-secondary normal-case"> ({{ cart.item_count }} item) </span>
+      {% endif %}
+    </h1>
+  </div>
+
+  {% if cart.item_count > 0 %}
+    {% form 'cart', cart %}
+      <div class="cart max-w-[600px] mx-auto lg:max-w-full lg:flex lg:gap-12">
+        <div
+          class="cart-items-container w-full lg:w-[55%]"
+        >
+          <div class="cart-items">
+            {% for item in cart.items %}
+              <div class="cart-item flex justify-between gap-5 mb-[30px] pb-[30px] border-b border-[rgba(33,35,34,0.2)] last:border-b-0 last:mb-0">
+                <div class="flex gap-5">
+                  <div>
+                    <a href="{{ item.url }}">
+                      {% if item.image %}
+                        <img
+                          class="w-[clamp(80px,10vw,120px)] object-contain transition-opacity duration-200 hover:opacity-70"
+                          src="{{ item.image | image_url }}"
+                          alt="{{ item.title | escape }}"
+                        >
+                      {% else %}
+                        {{ 'product-1' | placeholder_svg_tag: 'w-[clamp(80px,10vw,120px)] object-contain' }}
+                      {% endif %}
+                    </a>
+                  </div>
+                  <div class="product-details">
+                    <div class="product-name  mb-3.5">
+                      <a
+                        href="{{ item.url }}"
+                        class="font-secondary text-base text-[#3e4827] hover:text-[rgba(62,72,39,0.7)] transition-colors duration-200 font-normal capitalize"
+                      >
+                        {{ item.product.title }}
+                      </a>
+                    </div>
+                    <div
+                      class="item__quantity flex flex-wrap gap-[12px] items-center justify-start w-full"
+                      style="grid-area: 2 / 2;"
+                    >
+                      <div class="item__quantity__input flex border border-[rgba(33,35,34,0.2)]">
+                        <button
+                          name="minus"
+                          type="button"
+                          class="input__minus text-[0.865rem] w-[1.9rem] h-[1.9rem] relative outline-offset-[-3px] cursor-pointer bg-transparent p-0 text-center border-0 m-0 inline-block leading-none touch-manipulation"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          value="{{ item.quantity }}"
+                          min="1"
+                          autocomplete="off"
+                          step="1"
+                          name="updates[{{ item.key }}]"
+                          class="outline-offset-[-3px] p-0 rounded-none bg-transparent cursor-text border-l border-r border-t-0 border-b-0 border-[rgba(33,35,34,0.2)] text-center m-0 relative inline-block leading-none touch-manipulation align-middle w-[2.375rem] h-[1.9rem] text-[#212121] text-[0.865rem] appearance-none"
+                          id="updates_{{ forloop.index }}"
+                        >
+                        <button
+                          class="input__plus text-[0.865rem] w-[1.9rem] h-[1.9rem] relative outline-offset-[-3px] cursor-pointer bg-transparent p-0 text-center border-0 m-0 inline-block leading-none touch-manipulation"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <a
+                        href="{{ routes.cart_change_url }}?line={{forloop.index}}&quantity=0"
+                        class="cart-item__remove block cursor-pointer"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="size-5"
+                        >
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="product-price font-secondary">{{ item.final_line_price | money }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="w-full lg:w-[45%]">
+          <div class="order-summary w-full border border-[rgba(33,35,34,0.2)] py-3 px-4.5">
+            <div class="font-secondary text-[22px] leading-[60px] border-b border-[rgba(33,35,34,0.2)]">
+              Order summary
+            </div>
+            <div class="order-details mt-3 flex justify-between mb-3">
+              <div class="font-secondary text-[18px]">Subtotal</div>
+              <div class="font-secondary text-[18px]">{{ cart.total_price | money }}</div>
+            </div>
+            <p class="font-secondary text-xs text-[#212322B3] mb-3">Taxes and shipping calculated at checkout</p>
+            <button
+              type="submit"
+              name="checkout"
+              class="py-[9px] px-[18px] mb-3 text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer"
+            >
+              Check out
+            </button>
+          </div>
+
+          <a
+            href="{{ routes.all_products_collection_url }}"
+            class="flex items-center gap-2 mt-6 w-fit hover:text-[#3e4827]"
+          >
+            <div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+              </svg>
+            </div>
+            <div class="text-xs font-secondary uppercase tracking-[1px]">Continue shopping</div>
+          </a>
+        </div>
+      </div>
+    {% endform %}
+  {% else %}
+    <!-- START OF EMPTY CART -->
+    <div class="empty-cart max-w-[600px] mx-auto flex flex-col items-center mb20">
+      <p class="mt-4 mb-6 font-secondary ">Your cart is currently empty</p>
+      <a
+        href="{{ routes.all_products_collection_url }}"
+        class="block text-center mb-4 bg-[#d6d2c4] text-[#3e4827] uppercase text-sm py-[9px] px-[30px] leading-[30px] tracking-[1px] w-full transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] md:w-[300px]"
+        >Shop Now</a
+      >
+    </div>
+
+    <!-- END OF EMPTY CART -->
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.item__quantity__input').forEach((wrapper) => {
+      const minusBtn = wrapper.querySelector('.input__minus');
+      const plusBtn = wrapper.querySelector('.input__plus');
+      const input = wrapper.querySelector('input[type="number"]');
+
+      if (!input || !plusBtn || !minusBtn) return;
+
+      minusBtn.addEventListener('click', () => {
+        let value = parseInt(input.value, 10);
+        if (value > 1) {
+          input.value = value - 1;
+          input.form.submit(); // Auto-submit form (optional)
+        }
+      });
+
+      plusBtn.addEventListener('click', () => {
+        let value = parseInt(input.value, 10);
+        input.value = value + 1;
+        input.form.submit(); // Auto-submit form (optional)
+      });
+    });
+  });
+</script>
