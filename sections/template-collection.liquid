@@ -1,0 +1,50 @@
+{% for product in collection.products %}
+  <div class="collection-container grid [justify-items:center] grid-cols-1 px-[10px] mx-auto md:grid-cols-2 lg:grid-cols-3 lg:px-[30px] xl:grid-cols-4">
+    <div class="product-card px-2 mb-[30px] md:mb-9 relative">
+      <div class="product-card__top">
+        <a class="block" href="{{ product.url }}">
+          <ul
+            class="product-card__label absolute flex flex-col z-[3] top-[15px] right-0 mb-0 text-right items-end"
+          >
+            <li class="product-card__label-li w-fit mb-1 bg-[#e5e5e5] px-[10px] py-1">
+              <p class="product-card__label-text text-black tracking-[1px] uppercase text-[10px]">Best Seller</p>
+            </li>
+          </ul>
+          {% if product.featured_image %}
+            <div class="product-card__image">
+              <img
+                class="w-full h-full object-contain"
+                src="{{ product.featured_image | image_url }}"
+                alt="{{ product.featured_image.alt }}"
+              >
+            </div>
+            {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-contain bg-gray-100' }}
+          {% endif %}
+        </a>
+        <a
+          href="#"
+          class="product-cart__button block w-full border border-[#212322] mt-3 text-center m-0 cursor-pointer tracking-[1px] uppercase leading-[30px] py-[9px] px-[30px] text-[13px] transition-all duration-200 ease-in-out hover:bg-[#212121] hover:text-white"
+        >
+          Add to cart
+        </a>
+      </div>
+
+      <div class="product-card__bottom mt-3">
+        <a class="block hover:opacity-70 transition-opacity duration-200 ease-in-out" href="{{ product.url }}">
+          <p
+            class="product__micro-copy font-secondary tracking-[1px] leading-[1.3] text-[rgba(33,35,34,0.55)] mb-[6px] text-[0.9rem]"
+          >
+            Unscented
+          </p>
+          <h3 class="product__title leading-[1.3] text-[16px] tracking-[1px] font-secondary capitalize">
+            {{ product.title }}
+          </h3>
+          <p class="product__price mt-1.5 font-bold tracking-[1px] font-secondary">{{ product.price | money }}</p>
+        </a>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <p class="mt-4 mb-6 font-secondary text-center">There are no products in this collection</p>
+{% endfor %}
