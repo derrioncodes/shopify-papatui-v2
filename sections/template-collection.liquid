@@ -3,13 +3,15 @@
     <div class="product-card px-2 mb-[30px] md:mb-9 relative">
       <div class="product-card__top">
         <a class="block" href="{{ product.url }}">
-          <ul
-            class="product-card__label absolute flex flex-col z-[3] top-[15px] right-0 mb-0 text-right items-end"
-          >
-            <li class="product-card__label-li w-fit mb-1 bg-[#e5e5e5] px-[10px] py-1">
-              <p class="product-card__label-text text-black tracking-[1px] uppercase text-[10px]">Best Seller</p>
-            </li>
-          </ul>
+          {% if product.tags contains 'best-seller' %}
+            <ul
+              class="product-card__label absolute flex flex-col z-[3] top-[15px] right-0 mb-0 text-right items-end"
+            >
+              <li class="product-card__label-li w-fit mb-1 bg-[#e5e5e5] px-[10px] py-1">
+                <p class="product-card__label-text text-black tracking-[1px] uppercase text-[10px]">Best Seller</p>
+              </li>
+            </ul>
+          {% endif %}
           {% if product.images.size > 0 %}
             <div class="product-card__image relative group w-full overflow-hidden">
               <!-- First Image -->
@@ -33,19 +35,27 @@
           {% endif %}
         </a>
         {% if product.available %}
-          <button
-            data-variant-id="{{ product.variants.first.id }}"
-            type="button"
-            class="product-cart__button block w-full border border-[#212322] mt-3 text-center m-0 cursor-pointer tracking-[1px] uppercase leading-[30px] py-[9px] px-[30px] text-[13px] transition-all duration-200 ease-in-out hover:bg-[#212121] hover:text-white"
-          >
-            Add to cart
-          </button>
+          {% if product.variants.size > 1 %}
+            <a
+              href="{{ product.url }}"
+              class="product-cart__button block w-full border border-[#212322] mt-3 text-center m-0 cursor-pointer tracking-[1px] uppercase leading-[30px] py-[9px] px-[30px] text-[13px] transition-all duration-200 ease-in-out hover:bg-[#212121] hover:text-white"
+            >
+              Quick View
+            </a>
+          {% else %}
+            <button
+              data-variant-id="{{ product.variants.first.id }}"
+              type="button"
+              class="product-cart__button block w-full border border-[#212322] mt-3 text-center m-0 cursor-pointer tracking-[1px] uppercase leading-[30px] py-[9px] px-[30px] text-[13px] transition-all duration-200 ease-in-out hover:bg-[#212121] hover:text-white"
+            >
+              Add to cart
+            </button>
+          {% endif %}
         {% else %}
           <button
-            data-variant-id="{{ product.variants.first.id }}"
             type="button"
-            aria-disabled="true"
             disabled
+            aria-disabled="true"
             class="product-cart__button block w-full border border-[#212322] cursor-not-allowed opacity-60 mt-3 text-center m-0 pointer-events-none tracking-[1px] uppercase leading-[30px] py-[9px] px-[30px] text-[13px]"
           >
             Sold out
@@ -82,6 +92,9 @@
       if (button.disabled) return;
 
       button.addEventListener('click', async () => {
+        // Only run if button text is "Add to cart"
+        if (button.textContent.trim().toLowerCase() !== 'add to cart') return;
+
         const variantId = button.getAttribute('data-variant-id');
         if (!variantId) return;
 
@@ -116,18 +129,4 @@
       });
     });
   });
-
-  function showCartToast(message = 'Added to cart') {
-    const toast = document.getElementById('cart-toast');
-    if (!toast) return;
-
-    toast.textContent = message;
-    toast.classList.remove('opacity-0', 'pointer-events-none');
-    toast.classList.add('opacity-100');
-
-    setTimeout(() => {
-      toast.classList.remove('opacity-100');
-      toast.classList.add('opacity-0', 'pointer-events-none');
-    }, 2500);
-  }
 </script>

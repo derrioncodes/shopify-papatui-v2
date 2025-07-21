@@ -1,20 +1,18 @@
 {% assign main_menu_linklist = linklists[section.settings.menu] %}
 {% assign search_menu_linklist = linklists[section.settings.menu] %}
 
-
-
 <!-- START OF HEADER -->
 <div class="bg-[#d6d2c4] relative">
   <div class="relative h-14 md:h-auto md:pt-4 xl:pt-0 xl:h-[88px] ">
     <!-- START OF LOGO -->
     <div class="flex items-center justify-center z-[3] h-full">
-      
-        {% comment %} <a href="#">
+      {% comment %}
+        <a href="#">
             <h1 class="mx-auto text-center text-2xl md:text-3xl font-bold uppercase"> {{ section.settings.header_brand_name }}</h1>
-        </a> {% endcomment %}
-      
+        </a>
+      {% endcomment %}
 
-       <a class="block" href="{{ shop.url }}">
+      <a class="block" href="{{ shop.url }}">
         <img
           class="mx-auto h-9 w-[150px] object-contain md:h-13 md:w-full"
           src="./assets/Papatui_Header_Logo.png"
@@ -40,7 +38,25 @@
       </a>
       <a href="{{ routes.cart_url }}" class=" flex items-center relative cursor-pointer">
         <!-- CART ICON -->
-        {% render 'icon-shopping-cart' %}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-5"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round"
+              d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
+        <div class="relative">
+          <span
+            id="CartCount"
+            class="absolute -top-[12px] -right-[5px] min-w-[14px] leading-[12px] text-[9px] px-[3px] py-[1px] text-center text-white tracking-[0] rounded-[15px] bg-[#212322]"
+          >
+            {{ cart.item_count }}
+          </span>
+        </div>
       </a>
       <div class="nav-search-button  flex items-center cursor-pointer">
         <!-- SEARCH ICON -->
@@ -73,12 +89,14 @@
             >
               {% for childlink in link.links %}
                 <li class="text-[rgba(33,35,34,0.7)] leading-[1.5] w-full  text-xs ">
-                  <a class="block w-full px-[0.4em] py-[0.5em] rounded hover:bg-[rgba(33,35,34,0.1)]" href="{{ childlink.url }}"
-                    >{{  childlink.title }}</a
+                  <a
+                    class="block w-full px-[0.4em] py-[0.5em] rounded hover:bg-[rgba(33,35,34,0.1)]"
+                    href="{{ childlink.url }}"
                   >
+                    {{- childlink.title -}}
+                  </a>
                 </li>
               {% endfor %}
-              
             </ul>
           </li>
         {% else %}
@@ -127,7 +145,8 @@
       {% for link in main_menu_linklist.links %}
         {% if link.links != blank %}
           <li class="mobile-menu-list-item">
-            <a href="{{ link.url }}"
+            <a
+              href="{{ link.url }}"
               class="mobile-menu-list-item__link text-xl py-7 tracking-[1px] flex items-center justify-between font-secondary"
             >
               <span class="block">{{ link.title }}</span>
@@ -153,7 +172,7 @@
                     {% render 'icon-close', class: 'size-8', stroke: '#ffffff' %}
                   </div>
                 </div>
-    
+
                 <div class="bg-white">
                   <div
                     class="mobile-subnav__back-btn text-xl py-7 tracking-[1px] flex items-center justify-center relative ml-2 mr-4.5"
@@ -169,7 +188,9 @@
                   >
                     {% for childlink in link.links %}
                       <li>
-                        <a href="{{ childlink.url }}" class="text-xl py-7 block tracking-[1px] font-secondary">{{ childlink.title }}</a>
+                        <a href="{{ childlink.url }}" class="text-xl py-7 block tracking-[1px] font-secondary">
+                          {{- childlink.title -}}
+                        </a>
                       </li>
                     {% endfor %}
                   </ul>
@@ -177,10 +198,10 @@
               </div>
             </div>
           </li>
-          {% else %}
-            <li class="mobile-menu-list-item">
-              <a href="{{ link.url }}" class="text-xl py-7 block tracking-[1px] font-secondary">{{ link.title }}</a>
-            </li>
+        {% else %}
+          <li class="mobile-menu-list-item">
+            <a href="{{ link.url }}" class="text-xl py-7 block tracking-[1px] font-secondary">{{ link.title }}</a>
+          </li>
         {% endif %}
       {% endfor %}
     </ul>
@@ -240,18 +261,20 @@
         </ul>
       </div>
       <div class="">
-        <h4 class="text-sm uppercase mb-1.5 ml-1.5 tracking-[1px] leading-loose font-secondary">{{ search_menu_linklist.title }}</h4>
+        <h4 class="text-sm uppercase mb-1.5 ml-1.5 tracking-[1px] leading-loose font-secondary">
+          {{ search_menu_linklist.title }}
+        </h4>
         <ul>
-
-            {% for link in search_menu_linklist.links %}
-              <li class="text-sm tracking-[1px]">
-                <a
-                  class="py-[3px] px-1.5 block w-full rounded hover:bg-[rgba(33,35,34,0.1)] leading-normal font-secondary"
-                  href="{{ link.url }}"
-                  >{{ link.title }}</a
-                >
-              </li>
-            {% endfor %}
+          {% for link in search_menu_linklist.links %}
+            <li class="text-sm tracking-[1px]">
+              <a
+                class="py-[3px] px-1.5 block w-full rounded hover:bg-[rgba(33,35,34,0.1)] leading-normal font-secondary"
+                href="{{ link.url }}"
+              >
+                {{- link.title -}}
+              </a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
     </div>
@@ -295,7 +318,7 @@
     });
 
     // === MOBILE SUBNAV: Open ===
-    document.querySelectorAll('.mobile-menu-list-item__link').forEach(link => {
+    document.querySelectorAll('.mobile-menu-list-item__link').forEach((link) => {
       link.addEventListener('click', function (e) {
         e.preventDefault();
 
@@ -316,7 +339,7 @@
     });
 
     // === MOBILE SUBNAV: Back Button ===
-    document.querySelectorAll('.mobile-subnav__back-btn').forEach(btn => {
+    document.querySelectorAll('.mobile-subnav__back-btn').forEach((btn) => {
       btn.addEventListener('click', function () {
         const subnav = this.closest('.mobile-nav__subcontainer');
         if (subnav) {
@@ -327,9 +350,9 @@
     });
 
     // === MOBILE SUBNAV: Close Button (X) ===
-    document.querySelectorAll('.mobile-subnav__close-btn').forEach(btn => {
+    document.querySelectorAll('.mobile-subnav__close-btn').forEach((btn) => {
       btn.addEventListener('click', function () {
-        document.querySelectorAll('.mobile-nav__subcontainer').forEach(el => {
+        document.querySelectorAll('.mobile-nav__subcontainer').forEach((el) => {
           removeClasses(el, 'right-0');
           addClasses(el, 'right-[-100%]');
         });
@@ -348,7 +371,7 @@
     });
 
     // === MEDIUM NAV: Hover to Fade In/Out ===
-    document.querySelectorAll('.medium-nav-list-item').forEach(item => {
+    document.querySelectorAll('.medium-nav-list-item').forEach((item) => {
       const submenu = item.querySelector('.medium-subnav-container');
       if (!submenu) return;
 
@@ -368,7 +391,7 @@
     });
 
     // === SEARCH PANEL: Open ===
-    document.querySelectorAll('.nav-search-button').forEach(btn => {
+    document.querySelectorAll('.nav-search-button').forEach((btn) => {
       btn.addEventListener('click', function () {
         const overlay = document.querySelector('.search-overlay');
         const panel = document.querySelector('.search-panel');
@@ -384,7 +407,7 @@
     });
 
     // === SEARCH PANEL: Close ===
-    document.querySelectorAll('.search-close-button').forEach(btn => {
+    document.querySelectorAll('.search-close-button').forEach((btn) => {
       btn.addEventListener('click', function () {
         const overlay = document.querySelector('.search-overlay');
         const panel = document.querySelector('.search-panel');
@@ -413,14 +436,14 @@
       "id": "menu",
       "label": "Header Menu",
       "default": "main-menu",
-      "info": "Choose your menu",
+      "info": "Choose your menu"
     },
     {
       "type": "link_list",
       "id": "search-menu",
       "label": "Search Menu",
       "default": "main-menu",
-      "info": "Choose your menu for the search component",
+      "info": "Choose your menu for the search component"
     }
   ]
 }
