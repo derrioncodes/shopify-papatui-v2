@@ -1,0 +1,273 @@
+<section class="hero relative">
+  <div class="hero-carousel-wrapper relative h-[500px] md:h-full md:aspect-[2/1] lg:aspect-[16/7] overflow-hidden">
+    {% for block in section.blocks %}
+      <!-- Slide 1 (active) -->
+      <div class="hero-container slide active">
+        <div class="hero-asset">
+          {% if block.settings.asset_type == 'video' %}
+            {% if block.settings.video %}
+              <div class="video">
+                {{
+                  block.settings.video
+                  | video_tag:
+                    class: 'w-full h-[500px] md:h-full object-cover block',
+                    autoplay: true,
+                    loop: true,
+                    muted: true,
+                    playsinline: true
+                }}
+              </div>
+            {% else %}
+              <!-- Fallback video file from assets -->
+              <video
+                class="w-full h-[500px] md:h-full object-cover block"
+                src="{{ 'papatui-hero-video.mp4' | asset_url }}"
+                autoplay
+                loop
+                muted
+                playsinline
+              ></video>
+            {% endif %}
+          {% else %}
+            {% if block.settings.image %}
+              <div class="image">
+                <img
+                  class="w-full h-[500px] md:h-full object-cover block"
+                  src="{{ block.settings.image | image_url }}"
+                  alt=""
+                >
+              </div>
+            {% else %}
+              <div class="image">
+                <img
+                  class="w-full h-[500px] md:h-full object-cover block"
+                  src="{{ 'papatui-hero-01.jpeg' | asset_url }}"
+                  alt="Fallback image"
+                >
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+
+        <div
+          class="
+            text-content text-left px-[40px] py-[48px] lg:px-[54px] lg:py-[60px] max-w-[750px] bg-[rgba(214,210,196)]/100 absolute top-1/2 -translate-y-1/2 z-[3]
+            {% case block.settings.text_position %}
+              {% when 'left' %} left-0 mr-7
+              {% when 'center' %} left-1/2 -translate-x-1/2 w-full md:mx-4
+              {% when 'right' %} right-0 mr-0 ml-7
+            {% endcase %}
+          "
+        >
+          <h2
+            class="relative text-[#3e4827] mb-5 pb-[12px] text-[32px] leading-[40px] font-normal uppercase after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-9 after:h-[3px] after:bg-[#db864e]"
+          >
+            {{ block.settings.heading }}
+          </h2>
+          {% if block.settings.enable_subtext %}
+            <p class="text-base text-[#3e4827] mb-5 leading-6 font-secondary">
+              {{ block.settings.subtext }}
+            </p>
+          {% endif %}
+          <a
+            href="{{ block.settings.button_link }}"
+            class="block text-center bg-[#3e4827] text-[#d6d2c4] uppercase text-sm py-[9px] px-[30px] leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#5a6939] w-fit"
+          >
+            {{ block.settings.button_text }}
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% if section.blocks.size > 1 %}
+    <div class="carousel-dots absolute bottom-[12px] left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+  {% endif %}
+</section>
+
+<style>
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    z-index: 0;
+    transition: opacity 0.5s linear;
+  }
+
+  .slide.active {
+    opacity: 1;
+    z-index: 10;
+  }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    z-index: 11;
+  }
+
+  .carousel-dots button {
+    width: 10px;
+    height: 10px;
+    border: none;
+    border-radius: 50%;
+    background-color: #ffffff;
+    cursor: pointer;
+    opacity: 0.3;
+  }
+
+  .carousel-dots button.active {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const wrapper = document.querySelector('.hero-carousel-wrapper');
+    const slides = wrapper.querySelectorAll('.slide');
+    const dotContainer = document.querySelector('.carousel-dots');
+    let currentSlide = 0;
+    let autoplayInterval;
+
+    // === Setup dots ===
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.setAttribute('aria-label', `Slide ${i + 1}`);
+      dot.addEventListener('click', () => {
+        showSlide(i);
+        restartAutoplay();
+      });
+      dotContainer.appendChild(dot);
+    });
+
+    // === Show slide function ===
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      dotContainer.querySelectorAll('button').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+      currentSlide = index;
+    }
+
+    // === Move to next slide ===
+    function nextSlide() {
+      const nextIndex = (currentSlide + 1) % slides.length;
+      showSlide(nextIndex);
+    }
+
+    // === Autoplay control ===
+    function startAutoplay() {
+      autoplayInterval = setInterval(nextSlide, 5000); // change every 5s
+    }
+
+    function stopAutoplay() {
+      clearInterval(autoplayInterval);
+    }
+
+    function restartAutoplay() {
+      stopAutoplay();
+      startAutoplay();
+    }
+
+    // === Initialize ===
+    showSlide(currentSlide);
+    startAutoplay();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Hero Slider",
+  "tag": "section",
+  "max_blocks": 5,
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "select",
+          "id": "asset_type",
+          "label": "Asset Type",
+          "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "video", "label": "Video" }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide Image"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Slide Video"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text Position",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "It's time to take better care"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_subtext",
+            "label": "Enable Subtext",
+            "default": true
+          },
+        {
+          "type": "text",
+          "id": "subtext",
+          "label": "Subtext",
+          "default": "Everything you need to stay fresh & confident"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop skincare"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link",
+          "default": "/"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Slider",
+      "category": "Custom",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "asset_type": "image",
+            "heading": "It's time to take better care",
+            "subtext": "Everything you need to stay fresh & confident",
+            "button_text": "Shop skincare",
+            "button_link": "/collections/skincare"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
