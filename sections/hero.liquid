@@ -1,4 +1,4 @@
-<section class="hero relative">
+<section class="hero relative mb-12 lg:mb-16">
   <div class="hero-carousel-wrapper relative h-[500px] md:h-full md:aspect-[2/1] lg:aspect-[16/7] overflow-hidden">
     {% for block in section.blocks %}
       <!-- Slide 1 (active) -->
@@ -34,7 +34,7 @@
                 <img
                   class="w-full h-[500px] md:h-full object-cover block"
                   src="{{ block.settings.image | image_url }}"
-                  alt=""
+                  alt="{{ block.settings.alt_text }}"
                 >
               </div>
             {% else %}
@@ -124,8 +124,15 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const wrapper = document.querySelector('.hero-carousel-wrapper');
+    if (!wrapper) return;
+
     const slides = wrapper.querySelectorAll('.slide');
     const dotContainer = document.querySelector('.carousel-dots');
+    if (!dotContainer) return;
+
+    // If only 1 slide, exit early — no dots or autoplay needed
+    if (slides.length <= 1) return;
+
     let currentSlide = 0;
     let autoplayInterval;
 
@@ -159,7 +166,7 @@
 
     // === Autoplay control ===
     function startAutoplay() {
-      autoplayInterval = setInterval(nextSlide, 5000); // change every 5s
+      autoplayInterval = setInterval(nextSlide, 5000);
     }
 
     function stopAutoplay() {
@@ -203,6 +210,12 @@
           "label": "Slide Image"
         },
         {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt Text",
+          "default": "Promotional banner"
+        },
+        {
           "type": "video",
           "id": "video",
           "label": "Slide Video"
@@ -225,11 +238,11 @@
           "default": "It's time to take better care"
         },
         {
-            "type": "checkbox",
-            "id": "enable_subtext",
-            "label": "Enable Subtext",
-            "default": true
-          },
+          "type": "checkbox",
+          "id": "enable_subtext",
+          "label": "Enable Subtext",
+          "default": true
+        },
         {
           "type": "text",
           "id": "subtext",
