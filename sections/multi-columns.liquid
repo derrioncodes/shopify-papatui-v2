@@ -1,0 +1,85 @@
+<section class="px-[18px] mb-6 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto bg-[#f3f1ec]">
+  <div class="multi-column-container w-full pt-[72px] pb-[50px] bg-[#f3f1ec] flex flex-wrap justify-center  items-center gap-x-[60px] gap-y-[30px] md:gap-y-[36px] lg:gap-y-[60px]">
+    {% for block in section.blocks %}
+      <div class="column-item max-w-[400px] mx-auto xl:mx-0 2xl:max-w-[300px]">
+        {% if block.settings.image %}
+          <div class="image mx-auto w-[clamp(60px,8vw,80px)] mb-3">
+            <img
+              class="w-full h-auto object-contain"
+              src="{{ block.settings.column_image | image_url }}"
+              alt="{{ block.settings.alt_text }}"
+            >
+          </div>
+        {% else %}
+          <div class="image mx-auto w-[clamp(60px,8vw,80px)] mb-3">
+            <img
+              class="w-full h-auto object-contain"
+              src="{{'Papatui_Sulfate_Free_Icon_Ingredient.png' | asset_url}}"
+              alt="Fallback Image"
+            >
+          </div>
+        {% endif %}
+        <div class="text-content text-center">
+          <h3 class="text-base leading-[28px] uppercase mb-1.5">{{ block.settings.heading }}</h3>
+          <p class=" text-sm font-secondary leading-[30px]">
+            {{ block.settings.subtext }}
+          </p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Multi Columns",
+  "tag": "section",
+  "max_blocks": 5,
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "column_image",
+          "label": "Column Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt Text",
+          "default": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "FORMULATED WITHOUT SULFATES"
+        },
+        {
+          "type": "text",
+          "id": "subtext",
+          "label": "Subtext",
+          "default": "Sulfates can compromise the balance of your skin. Our cleansers don't have them."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multi Columns",
+      "category": "Custom",
+      "blocks": [
+        {
+          "type": "column",
+          "settings": {
+            "heading": "FORMULATED WITHOUT SULFATES",
+            "subtext": "Sulfates can compromise the balance of your skin. Our cleansers don't have them.",
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -466,6 +466,9 @@
   .h-\[500px\] {
     height: 500px;
   }
+  .h-auto {
+    height: auto;
+  }
   .h-full {
     height: 100%;
   }
@@ -496,6 +499,9 @@
   .w-\[480px\] {
     width: 480px;
   }
+  .w-\[clamp\(60px\,8vw\,80px\)\] {
+    width: clamp(60px, 8vw, 80px);
+  }
   .w-\[clamp\(80px\,10vw\,120px\)\] {
     width: clamp(80px, 10vw, 120px);
   }
@@ -516,6 +522,9 @@
   }
   .max-w-\[270px\] {
     max-width: 270px;
+  }
+  .max-w-\[400px\] {
+    max-width: 400px;
   }
   .max-w-\[600px\] {
     max-width: 600px;
@@ -620,6 +629,12 @@
   }
   .gap-\[30px\] {
     gap: 30px;
+  }
+  .gap-x-\[60px\] {
+    column-gap: 60px;
+  }
+  .gap-y-\[30px\] {
+    row-gap: 30px;
   }
   .divide-y {
     :where(& > :not(:last-child)) {
@@ -821,6 +836,9 @@
   .pt-\[60px\] {
     padding-top: 60px;
   }
+  .pt-\[72px\] {
+    padding-top: 72px;
+  }
   .pr-2 {
     padding-right: calc(var(--spacing) * 2);
   }
@@ -844,6 +862,9 @@
   }
   .pb-\[30px\] {
     padding-bottom: 30px;
+  }
+  .pb-\[50px\] {
+    padding-bottom: 50px;
   }
   .pb-\[120px\] {
     padding-bottom: 120px;
@@ -964,6 +985,10 @@
   .leading-\[24px\] {
     --tw-leading: 24px;
     line-height: 24px;
+  }
+  .leading-\[28px\] {
+    --tw-leading: 28px;
+    line-height: 28px;
   }
   .leading-\[30px\] {
     --tw-leading: 30px;
@@ -1546,6 +1571,11 @@
       gap: calc(var(--spacing) * 8);
     }
   }
+  .md\:gap-y-\[36px\] {
+    @media (width >= 48rem) {
+      row-gap: 36px;
+    }
+  }
   .md\:p-\[48px\] {
     @media (width >= 48rem) {
       padding: 48px;
@@ -1720,6 +1750,11 @@
       gap: calc(var(--spacing) * 12);
     }
   }
+  .lg\:gap-y-\[60px\] {
+    @media (width >= 64rem) {
+      row-gap: 60px;
+    }
+  }
   .lg\:p-\[60px\] {
     @media (width >= 64rem) {
       padding: 60px;
@@ -1772,6 +1807,11 @@
       right: 30px;
     }
   }
+  .xl\:mx-0 {
+    @media (width >= 80rem) {
+      margin-inline: calc(var(--spacing) * 0);
+    }
+  }
   .xl\:mt-0 {
     @media (width >= 80rem) {
       margin-top: calc(var(--spacing) * 0);
@@ -1805,6 +1845,11 @@
   .\32 xl\:left-\[100px\] {
     @media (width >= 96rem) {
       left: 100px;
+    }
+  }
+  .\32 xl\:max-w-\[300px\] {
+    @media (width >= 96rem) {
+      max-width: 300px;
     }
   }
 }
