@@ -1,0 +1,224 @@
+{% assign selected_collection = section.settings.collection %}
+
+<section class="px-[18px] mb-6 max-w-[1400px] mx-auto lg:mb-16 lg:px-[30px]">
+  {% if selected_collection and selected_collection.products.size >= 2 %}
+    <div
+      class="collection_title ml-2 text-[20px] leading-[1.6] mb-5 uppercase w-fit border-b-[2px] border-[#db864e] font-secondary"
+    >
+      {{ selected_collection.title }}
+    </div>
+    <div class="glide relative groupXX">
+      <div class="glide__track" data-glide-el="track">
+        <ul class="glide__slides">
+          {% for product in selected_collection.products limit: settings.product_limit %}
+            <li class="glide__slide">
+              {% render 'product-card', product: product %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      
+      <div
+        class="glide__arrows hidden md:flex justify-between items-center mt-4 opacity-0 transition-opacity duration-300"
+        data-glide-el="controls"
+      >
+        <button
+          class="glide__arrow glide__arrow--left bg-white shadow-md w-[48px] h-[48px] flex items-center justify-center absolute top-33 -left-4 cursor-pointer"
+          data-glide-dir="<"
+        >
+          <span class="block">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+          </span>
+        </button>
+        <button
+          class="glide__arrow glide__arrow--right bg-white shadow-md w-[48px] h-[48px] flex items-center justify-center absolute top-33 -right-4 cursor-pointer"
+          data-glide-dir=">"
+        >
+          <!-- RIGHT ARROW ICON -->
+          <span class="block">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </span>
+        </button>
+      </div>
+      <div class="glide__bullets hidden md:flex" data-glide-el="controls[nav]">
+        <!-- Will auto-generate based on number of slides using JS -->
+      </div>
+      <div class="collection_wrapper_slide-numbers flex md:hidden justify-center gap-1 mt-4 text-center">
+        <span class="slides-number-active">01</span> / <span class="total"></span>
+      </div>
+    </div>
+  {% elsif selected_collection.products.size == 1 %}
+    <div class="collection-slider-single">
+      {% assign product = selected_collection.products.first %}
+      {% render 'product-card', product: product %}
+    </div>
+  {% else %}
+    <p class="mt-4 mb-6 font-secondary text-center">There are no products in this collection</p>
+  {% endif %}
+</section>
+
+<style>
+  .collection_wrapper_slide-numbers {
+    display: block !important;
+  }
+
+  @media (min-width: 768px) {
+    .collection_wrapper_slide-numbers {
+      display: none !important;
+    }
+  }
+
+  .glide__bullets {
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .glide__bullet {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    border: none;
+    cursor: pointer;
+  }
+
+  .glide__bullet:hover,
+  .glide__bullet.active {
+    background-color: #333;
+  }
+
+  .glide__arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  (() => {
+    document.addEventListener('DOMContentLoaded', () => {
+      const glideElement = document.querySelector('.glide');
+      if (!glideElement) return;
+
+      const slides = glideElement.querySelectorAll('.glide__slide');
+      const bulletsContainer = glideElement.querySelector('.glide__bullets');
+      const arrowsContainer = glideElement.querySelector('.glide__arrows');
+
+      const perView = 4;
+      const totalPages = Math.ceil(slides.length / perView);
+
+      // Hide bullets if only one page
+      if (totalPages <= 1 && bulletsContainer) {
+        bulletsContainer.style.display = 'none';
+      }
+
+      // Hide arrows if only one page
+      if (totalPages <= 1 && arrowsContainer) {
+        arrowsContainer.style.display = 'none';
+      }
+
+      // Arrow hover show/hide (JS-based)
+      if (glideElement && arrowsContainer) {
+        glideElement.addEventListener('mouseenter', () => {
+          arrowsContainer.classList.add('opacity-100');
+        });
+
+        glideElement.addEventListener('mouseleave', () => {
+          arrowsContainer.classList.remove('opacity-100');
+        });
+      }
+
+      for (let i = 0; i < totalPages; i++) {
+        const bullet = document.createElement('button');
+        bullet.className = 'glide__bullet';
+        bullet.setAttribute('data-glide-dir', `=${i * perView}`);
+        if (i === 0) bullet.classList.add('active');
+        bulletsContainer?.appendChild(bullet);
+      }
+
+      const glide = new Glide(glideElement, {
+        type: 'slide',
+        perView: perView,
+        gap: 4,
+        breakpoints: {
+          1024: { perView: 3 },
+          768: { perView: 1 },
+        },
+      });
+
+      const updateSlideNumbers = () => {
+        const current = document.querySelector('.slides-number-active');
+        const total = document.querySelector('.total');
+        const totalSlides = glideElement.querySelectorAll('.glide__slide:not(.glide__slide--clone)').length;
+
+        if (current && total) {
+          current.textContent = String(glide.index + 1).padStart(2, '0');
+          total.textContent = String(totalSlides).padStart(2, '0');
+        }
+      };
+
+      const updateArrowStates = () => {
+        const prevArrow = glideElement.querySelector('.glide__arrow--left');
+        const nextArrow = glideElement.querySelector('.glide__arrow--right');
+
+        if (!prevArrow || !nextArrow) return;
+
+        prevArrow.disabled = glide.index === 0;
+        nextArrow.disabled = glide.index + glide.settings.perView >= slides.length;
+      };
+
+      glide.mount();
+      updateSlideNumbers();
+      updateArrowStates();
+
+      glide.on('run', () => {
+        const bullets = document.querySelectorAll('.glide__bullet');
+        const activeBulletIndex = Math.floor(glide.index / glide.settings.perView);
+
+        bullets.forEach((bullet, i) => {
+          bullet.classList.toggle('active', i === activeBulletIndex);
+        });
+
+        updateSlideNumbers();
+        updateArrowStates();
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection Slider",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Slider"
+    }
+  ]
+}
+{% endschema %}

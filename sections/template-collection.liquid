@@ -6,7 +6,7 @@
 
 <div class="collection-container grid [justify-items:center] grid-cols-1 px-[10px] mx-auto md:grid-cols-2 lg:grid-cols-3 lg:px-[30px] xl:grid-cols-4">
   {% for product in collection.products %}
-    <div class="product-card px-2 mb-[30px] md:mb-9 relative">
+    {% comment %} <div class="product-card px-2 mb-[30px] md:mb-9 relative">
       <div class="product-card__top">
         <a class="block" href="{{ product.url }}">
           {% if product.tags contains 'best-seller' %}
@@ -82,57 +82,11 @@
           <p class="product__price mt-1.5 font-bold tracking-[1px] font-secondary">{{ product.price | money }}</p>
         </a>
       </div>
-    </div>
-
+    </div> {% endcomment %}
+    {% render 'product-card', product: product %}
   {% else %}
     <p class="mt-4 mb-6 font-secondary text-center">There are no products in this collection</p>
   {% endfor %}
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const addToCartButtons = document.querySelectorAll('.product-cart__button');
 
-    addToCartButtons.forEach((button) => {
-      // Skip disabled buttons
-      if (button.disabled) return;
-
-      button.addEventListener('click', async () => {
-        // Only run if button text is "Add to cart"
-        if (button.textContent.trim().toLowerCase() !== 'add to cart') return;
-
-        const variantId = button.getAttribute('data-variant-id');
-        if (!variantId) return;
-
-        try {
-          // Add to cart
-          await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-            },
-            body: JSON.stringify({
-              id: variantId,
-              quantity: 1,
-            }),
-          });
-
-          // Update cart count
-          const cartResponse = await fetch('/cart.js');
-          const cartData = await cartResponse.json();
-
-          const cartCountEl = document.getElementById('CartCount');
-          if (cartCountEl) {
-            cartCountEl.textContent = cartData.item_count;
-          }
-
-          // Show toast (optional)
-          showCartToast();
-        } catch (error) {
-          console.error('Error adding to cart:', error);
-        }
-      });
-    });
-  });
-</script>

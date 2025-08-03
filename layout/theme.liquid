@@ -29,6 +29,9 @@
     {{ 'application.css' | asset_url | stylesheet_tag }}
     {{ 'application.js' | asset_url | script_tag }}
 
+    <!-- GLIDE SLIDER -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.core.min.css"></link>
+
     
     
   </head>
@@ -45,5 +48,8 @@
       {{ content_for_layout }}
     </main>
     {% section 'footer' %}
+
+    <!-- Glide.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide" defer></script> 
   </body>
 </html>
