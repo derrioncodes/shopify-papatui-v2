@@ -5,7 +5,7 @@
 <div class="bg-[#d6d2c4] relative">
   <div class="relative h-14 md:h-auto md:pt-4 xl:pt-0 xl:h-[88px] ">
     <!-- START OF LOGO -->
-    <div class="flex items-center justify-center z-[3] h-full">
+    <div class="flex items-center justify-center z-[3]XX h-full">
       {% comment %}
         <a href="#">
             <h1 class="mx-auto text-center text-2xl md:text-3xl font-bold uppercase"> {{ section.settings.header_brand_name }}</h1>
@@ -15,7 +15,7 @@
       <a class="block" href="{{ shop.url }}">
         <img
           class="mx-auto h-9 w-[150px] object-contain md:h-13 md:w-full"
-          src="./assets/Papatui_Header_Logo.png"
+          src="{{ 'Papatui_Header_Logo.png' | asset_url }}" 
           alt=""
           srcset=""
         >
@@ -25,13 +25,13 @@
 
     <div
       id="mobile-nav-button_open"
-      class="absolute top-0 left-[18px] h-full flex items-center cursor-pointer z-[4] md:hidden"
+      class="absolute top-0 left-[18px] h-full flex items-center cursor-pointer z-[4]XX md:hidden"
     >
       <!-- BARS ICON -->
       {% render 'icon-bars' %}
     </div>
 
-    <div class="absolute top-0 right-[18px] h-full flex items-center gap-3  z-[4] xl:right-[30px] md:gap-8">
+    <div class="absolute top-0 right-[18px] h-full flex items-center gap-3  z-[4]XX xl:right-[30px] md:gap-8">
       <a href="{{ routes.account_url }}" class="hidden items-center relative cursor-pointer md:flex">
         <!-- USER ICON -->
         {% render 'icon-account-user' %}
@@ -68,11 +68,11 @@
   <!-- START OF MD:NAV -->
   <nav>
     <ul
-      class="hidden md:flex items-center justify-center px-[18px] pb-4 sm:mt-4 xl:px-[30px] xl:mt-0 min-[1440px]:justify-start min-[1440px]:absolute min-[1440px]:px-0 min-[1440px]:pb-0 min-[1440px]:top-1/2 min-[1440px]:left-0 min-[1440px]:-translate-y-1/2"
+      class="hidden md:flex items-center justify-center px-[18px] pb-4 sm:mt-4 xl:px-[30px] xl:mt-0 min-[1440px]:justify-start min-[1440px]:absolute min-[1440px]:px-0 min-[1440px]:pb-0 min-[1440px]:top-1/2 min-[1440px]:left-0 min-[1440px]:-translate-y-1/2 z-40"
     >
       {% for link in main_menu_linklist.links %}
         {% if link.links != blank %}
-          <li id="medium-nav-list-item" class="first:pl-0  medium-nav-list-item px-[18px]  tracking-[1px] text-sm">
+          <li id="medium-nav-list-item" class="first:pl-0  medium-nav-list-item px-[18px]  tracking-[1px] text-sm relative">
             <a
               class="uppercase h-8 flex items-center justify-center hover:text-[rgba(33,35,34,0.7)] relative after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:w-0 after:h-[2px] after:bg-[rgba(33,35,34,0.7)] after:transition-all after:duration-300 after:ease-in-out after:-translate-x-1/2 hover:after:w-full"
               href="{{ link.url }}"
@@ -85,7 +85,7 @@
             </a>
             <ul
               id="medium-subnav-container"
-              class="medium-subnav-container hidden opacity-0 transition-opacity duration-100 ease-in-out absolute bg-[#d6d2c4] px-[18px] py-[12px] min-w-[160px] max-w-[270px] w-max shadow-[0_8px_24px_rgba(33,35,34,0.08)]"
+              class="medium-subnav-container hidden opacity-0 transition-opacity duration-100 ease-in-out absolute bg-[#d6d2c4] px-[18px] py-[12px] min-w-[160px] max-w-[270px] w-max shadow-[0_8px_24px_rgba(33,35,34,0.08)] z-[40] lg:z-[40]"
             >
               {% for childlink in link.links %}
                 <li class="text-[rgba(33,35,34,0.7)] leading-[1.5] w-full  text-xs ">
@@ -118,10 +118,10 @@
 
 <!-- START OF MOBILE NAV -->
 <div
-  class="mobile__nav__drawer__bg fixed top-0 left-0 w-full h-full z-[1042] bg-[#0b0b0b66] opacity-0 invisible transition-opacity duration-500 ease-in-out"
+  class="mobile__nav__drawer__bg fixed top-0 left-0 w-full h-full z-[40] bg-[#0b0b0b66] opacity-0 invisible transition-opacity duration-500 ease-in-out"
 >
   <div
-    class="mobile__nav__drawer__open fixed top-0 left-[-100%] z-[1043] h-full w-[480px] max-w-[calc(100vw-24px)] overflow-hidden overflow-y-auto bg-white pb-[120px] transition-[left] duration-500 ease-in-out outline-none"
+    class="mobile__nav__drawer__open fixed top-0 left-[-100%] z-[50] h-full w-[480px] max-w-[calc(100vw-24px)] overflow-hidden overflow-y-auto bg-white pb-[120px] transition-[left] duration-500 ease-in-out outline-none"
   >
     <!-- START OF MOBILE HEADER -->
     <div class="h-[72px] flex justify-between items-center">
@@ -156,17 +156,17 @@
               </span>
             </a>
             <div
-              class="mobile-nav__subcontainer absolute top-0 bottom-0 right-[-100%] w-full h-full bg-white z-[1044] overflow-y-scroll pb-[25px] transition-[right] duration-500 ease-in-out"
+              class="mobile-nav__subcontainer absolute top-0 bottom-0 right-[-100%] w-full h-full bg-white z-[60] overflow-y-scroll pb-[25px] transition-[right] duration-500 ease-in-out"
             >
               <div class="relative">
                 <div class="relative">
                   <img
                     class="h-60 w-full object-cover"
-                    src="./assets/mobile-secondary-subnav-banner_completefacecare_scent_uncented__01.png"
+                    src="{{ 'mobile-secondary-subnav-banner_completefacecare_scent_uncented__01.png' | asset_url }}" 
                     alt=""
                   >
                   <div
-                    class="mobile-subnav__close-btn absolute top-[24px] left-[8px] cursor-pointer z-[1046]"
+                    class="mobile-subnav__close-btn absolute top-[24px] left-[8px] cursor-pointer z-[60]"
                   >
                     <!-- X ICON -->
                     {% render 'icon-close', class: 'size-8', stroke: '#ffffff' %}
@@ -209,10 +209,10 @@
     <!-- START OF MOBILE SOCIALS -->
     <div class="ml-4.5 mr-3 flex items-center gap-2">
       <a class="w-7 h-7 flex items-center justify-center">
-        <img class="w-5 h-5" src="./assets/papatui_instagram.png" alt="">
+        <img class="w-5 h-5" src="{{ 'papatui_instagram.png' | asset_url }}" alt=""> 
       </a>
       <a class="w-7 h-7 flex items-center justify-center">
-        <img class="w-5 h-5" src="./assets/papatui-tiktok.png" alt="">
+        <img class="w-5 h-5" src="{{ 'papatui-tiktok.png' | asset_url }}" alt="">
       </a>
     </div>
     <!-- END OF MOBILE SOCIALS -->
@@ -222,10 +222,10 @@
 
 <!-- START OF SEARCH SECTION -->
 <div
-  class="search-overlay absolute top-0 left-0 w-full h-full z-[1042] bg-[#0b0b0b66] opacity-0 invisible transition-opacity duration-500 ease-in-out"
+  class="search-overlay absolute top-0 left-0 w-full h-full z-[40] bg-[#0b0b0b66] opacity-0 invisible transition-opacity duration-500 ease-in-out"
 >
   <div
-    class="search-panel absolute top-0 left-0 w-full h-full z-[1045] overflow-hidden overflow-y-auto bg-white transition-[top] duration-500 ease-in-out  sm:max-h-[600px]"
+    class="search-panel absolute top-0 left-0 w-full h-full z-[50] overflow-hidden overflow-y-auto bg-white transition-[top] duration-500 ease-in-out  sm:max-h-[600px]"
   >
     <div class="border-b border-b-[rgba(33,33,33,0.2)] px-[18px] ">
       <form class="flex justify-between items-center gap-5 h-[72px] max-w-screen-2xl mx-auto">

@@ -1,3 +1,9 @@
+<div class="page-title text-center mt-[30px] mb-[60px] max-w-2xl mx-auto flex flex-col justify-center items-center">
+  <h1 class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0">
+    {{ collection.title }}
+  </h1>
+</div>
+
 <div class="collection-container grid [justify-items:center] grid-cols-1 px-[10px] mx-auto md:grid-cols-2 lg:grid-cols-3 lg:px-[30px] xl:grid-cols-4">
   {% for product in collection.products %}
     <div class="product-card px-2 mb-[30px] md:mb-9 relative">
@@ -5,7 +11,7 @@
         <a class="block" href="{{ product.url }}">
           {% if product.tags contains 'best-seller' %}
             <ul
-              class="product-card__label absolute flex flex-col z-[3] top-[15px] right-0 mb-0 text-right items-end"
+              class="product-card__label absolute flex flex-col z-[1] top-[15px] right-0 mb-0 text-right items-end"
             >
               <li class="product-card__label-li w-fit mb-1 bg-[#e5e5e5] px-[10px] py-1">
                 <p class="product-card__label-text text-black tracking-[1px] uppercase text-[10px]">Best Seller</p>
