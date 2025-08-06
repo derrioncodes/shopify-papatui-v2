@@ -1,4 +1,4 @@
-<section class="px-[18px] mb-6 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto bg-[#f3f1ec] pt-[60px] pb-[60px]">
+<section class="px-[18px] {% if section.settings.enable_margin_bottom %} mb-6 lg:mb-16 {% endif %} lg:px-[30px] max-w-[1900px] mx-auto bg-[#f3f1ec] pt-[60px] pb-[60px]">
   <h1 class="text-center text-[24px] text-[#3e4827] uppercase leading-[1.8] relative pb-4 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 mb-10">
     {{ section.settings.title }}
   </h1>
@@ -68,6 +68,12 @@
       "id": "title",
       "default": "What real guys are saying",
       "label": "Review Heading Title"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_margin_bottom",
+      "label": "Enable bottom margin",
+      "default": true
     }
   ],
   "max_blocks": 3,
