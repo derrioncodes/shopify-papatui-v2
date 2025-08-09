@@ -1,0 +1,47 @@
+<div class="list-collection-page px-[18px] mb-6 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto">
+  <div
+    class="page-title text-center mt-[30px] mb-[24px] max-w-2xl mx-auto flex flex-col justify-center items-center"
+  >
+    <h1
+      class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0"
+    >
+      Collections
+    </h1>
+  </div>
+
+  <div class="list-collection__container grid grid-cols-1 gap-[30px] md:grid-cols-3">
+    {% for collection in collections %}
+      {% if collection.all_products_count > 0 %}
+        <div class="list-collection__item relative w-full">
+          <div class="relative image aspect-[3/4]">
+            {% if collection.featured_image != blank %}
+              {% assign collection_image = collection.featured_image %}
+            {% else %}
+              {% assign collection_image = collection.products.first.image %}
+            {% endif %}
+            <img
+              class="w-full h-full object-cover"
+              src="{{ collection_image | image_url }}"
+              alt="{{ collection.title }}"
+            >
+            <div class="absolute inset-0 bg-black/20"></div>
+          </div>
+
+          <div class="text-content w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-[30px]">
+            <h3
+              class="text-center text-[24px] text-[#ffffff] uppercase leading-[1.8] relative pb-4 after:content-[''] after:w-9 after:h-[3px] after:bg-[#d6d2c4] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 mb-6"
+            >
+              {{ collection.title }}
+            </h3>
+            <a
+              href="{{ collection.url }}"
+              class="block w-full max-w-[180px] mx-auto text-center bg-transparent text-[#ffffff] shadow-[inset_0_0_0_1px_#ffffff] uppercase text-xs py-[12px] px-[12px] leading-[24px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#ffffff] hover:text-[#212121] "
+            >
+              View collection
+            </a>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
