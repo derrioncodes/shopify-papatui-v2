@@ -1,0 +1,48 @@
+<section class="px-[18px] mb-6 lg:mb-16 lg:px-[30px] max-w-[1200px] mx-auto">
+  <div
+    class="page-title text-center mt-[30px] mb-[60px] max-w-2xl mx-auto flex flex-col justify-center items-center"
+  >
+    <h1
+      class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0"
+    >
+      {{ page.title }}
+    </h1>
+  </div>
+  
+
+  <p class="page-dates font-secondary font-bold">
+    {% if page.updated_at == page.created_at %}
+      Created on {{ page.created_at | date: "%B %d, %Y" }}
+    {% else %}
+        Last Updated: {{ page.published_at | date: "%B %d, %Y" }}
+    {% endif %}
+  </p>
+  
+  <div class="page-content font-secondary">
+    {{ page.content }}
+  </div>
+</section>
+
+<style>
+  p {
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 30px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover {
+    font-weight: 700;
+  }
+
+  p:has(strong) {
+    font-size: 16px;
+  }
+
+  .page-dates{
+    font-size: 16px;
+    }
+</style>
