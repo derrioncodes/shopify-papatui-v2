@@ -244,12 +244,18 @@
 
 <style>
     /* ========== SINGLE PRODUCT THUMBS ========== */
+    .product-media {
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out; /* adjust duration as needed */
+    }
+    
+    .product-media.is-visible {
+      opacity: 1;
+    }
+
     .main-display {
       position: relative;
       width: 100%;
-      /* pick one approach: min-height or aspect-ratio */
-      /* min-height: 320px; */
-      {% comment %} aspect-ratio: 1 / 1; /* nice square; change if you want */ {% endcomment %}
       background: #f8f8f8; /* optional placeholder */
 
       display: block;
@@ -472,12 +478,11 @@
       const node = tpl.content.cloneNode(true);
       mainDisplay.appendChild(node);
 
-      // optional: if the media is a <video>, don’t auto-play unless you want to
       const vid = mainDisplay.querySelector('video');
       if (vid) {
         vid.pause();
         vid.currentTime = 0;
-        vid.play(); // enable if you want auto-play
+        vid.play();
       }
     }
 
@@ -494,8 +499,34 @@
       ensureVisible(li);
     }
 
-    // init
-    setActiveByIndex(0);
+    // === Fade-in logic for product-media (initial load only) ===
+    function showProductMediaOnce() {
+      const productMedia = document.querySelector('.product-media');
+      if (!productMedia) return;
+
+      const media = mainDisplay.querySelector('img, video, iframe, model-viewer');
+      const reveal = () => productMedia.classList.add('is-visible');
+
+      if (!media) return reveal();
+
+      const tag = media.tagName;
+      if (tag === 'IMG') {
+        if (media.complete && media.naturalWidth > 0) return reveal();
+        media.addEventListener('load', reveal, { once: true });
+      } else if (tag === 'VIDEO') {
+        if (media.readyState >= 1) return reveal();
+        media.addEventListener('loadeddata', reveal, { once: true });
+      } else {
+        setTimeout(reveal, 100);
+      }
+    }
+    // === end fade-in logic ===
+
+    // init first media, then fade in
+    requestAnimationFrame(() => {
+      setActiveByIndex(0);
+      showProductMediaOnce();
+    });
 
     // click a thumb
     thumbs.forEach((li, i) => li.addEventListener('click', () => setActiveByIndex(i)));
@@ -535,3 +566,4 @@
     refresh();
   });
 </script>
+
