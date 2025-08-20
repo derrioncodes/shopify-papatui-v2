@@ -3,14 +3,81 @@
     <img
       class="w-full h-auto object-contain"
       src="{{ media | image_url }}"
-      alt="{{ media.preview_image.alt }}"
+      alt="{{ media.alt | escape }}"
     >
+    <template class="full-media">
+      <img
+        class="object-contain w-full h-auto"
+        src="{{ media | image_url }}"
+        alt="{{ media.alt | escape }}"
+      >
+    </template>
+
   {% when 'external_video' %}
-    {{ media | external_video_tag: class: 'w-full h-auto object-contain' }}
+    <div class="relative">
+      <img
+        class="w-full h-auto object-contain"
+        src="{{ media.preview_image | image_url }}"
+        alt="{{ media.preview_image.alt | escape }}"
+      >
+      <!-- play badge -->
+      <div class="absolute top-1 right-1 bg-white rounded p-0.5">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          class="size-4 text-gray-500"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+        </svg>
+      </div>
+    </div>
+    <template class="full-media">
+      {{ media | external_video_tag: class: 'object-contain w-full h-auto' }}
+    </template>
+
   {% when 'video' %}
-    {{ media | video_tag: controls: true, class: 'w-full h-auto object-contain' }}
+    <div class="relative">
+      <img
+        class="w-full h-auto object-contain"
+        src="{{ media.preview_image | image_url }}"
+        alt="{{ media.preview_image.alt | escape }}"
+      >
+      <!-- play badge -->
+      <div class="absolute top-1 right-1 bg-white rounded p-0.5">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          class="size-4 text-gray-500"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+        </svg>
+      </div>
+    </div>
+    <template class="full-media">
+      {{ media | video_tag: controls: true, playsinline: true, class: 'object-contain w-full h-auto' }}
+    </template>
+
   {% when 'model' %}
-    {{ media | model_viewer_tag }}
+    <img
+      class="w-full h-auto object-contain"
+      src="{{ media.preview_image | image_url }}"
+      alt="{{ media.preview_image.alt | escape }}"
+    >
+    <template class="full-media">
+      {{ media | model_viewer_tag }}
+    </template>
+
   {% else %}
-    {{ media | media_tag }}
+    <img
+      class="w-full h-auto object-contain"
+      src="{{ media.preview_image | image_url }}"
+      alt="{{ media.preview_image.alt | escape }}"
+    >
+    <template class="full-media">
+      {{ media | media_tag }}
+    </template>
 {% endcase %}

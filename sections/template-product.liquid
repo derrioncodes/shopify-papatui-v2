@@ -1,5 +1,3 @@
-{% assign first_media = product.media | first %}
-
 <!-- START OF SINGLE PRODUCT -->
 <section class="px-[18px] mb-6 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto">
   <div class="single-product__container mt-8 lg:flex">
@@ -25,20 +23,7 @@
           </svg>
         </button>
 
-        {% if first_media %}
-          {% case first_media.media_type %}
-            {% when 'image' %}
-              <img class="object-contain" src="{{ first_media | image_url }}" alt="{{ first_media.alt | escape }}">
-            {% when 'video' %}
-              {{ first_media | video_tag: controls: true, class: 'object-contain' }}
-            {% when 'external_video' %}
-              {{ first_media | external_video_tag: class: 'object-contain' }}
-            {% when 'model' %}
-              {{ first_media | model_viewer_tag  }}
-          {% endcase %}
-        {% else %}
-          {{ 'image' | placeholder_svg_tag: 'object-contain' }}
-        {% endif %}
+        <div class="main-display"></div>
         <!-- Next arrow -->
         <button
           type="button"
@@ -102,6 +87,8 @@
             {% for media in product.media %}
               <li class="thumbnail md:flex-none md:w-[70px]">
                 {% render 'product-media', media: media %}
+
+                
               </li>
             {% endfor %}
           </ul>
@@ -256,89 +243,128 @@
 <!-- END OF SINGLE PRODUCT -->
 
 <style>
-  /* ========== SINGLE PRODUCT THUMBS ========== */
+    /* ========== SINGLE PRODUCT THUMBS ========== */
+    .main-display {
+      position: relative;
+      width: 100%;
+      /* pick one approach: min-height or aspect-ratio */
+      /* min-height: 320px; */
+      {% comment %} aspect-ratio: 1 / 1; /* nice square; change if you want */ {% endcomment %}
+      background: #f8f8f8; /* optional placeholder */
 
-  /* Horizontal strip */
-  .thumbnails__wrapper {
-    display: flex;
-    gap: 8px;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  /* Default: 3 per view (<480px) */
-  .thumbnail {
-    flex: 0 0 calc((100% - (8px * 2)) / 3);
-    border: 1px solid transparent;
-    cursor: pointer;
-  }
-
-  .thumbnail.is-active {
-    border-color: #212322;
-  }
-
-  .thumbnail img {
-    display: block;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-
-  /* Arrow look (optional) */
-
-  .thumb-arrow.is-disabled {
-    opacity: 0.35;
-    pointer-events: none;
-  }
-
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, Opera */
-  }
-
-  /* 480–640px: 4 per view */
-  @media (min-width: 480px) and (max-width: 640px) {
-    .thumbnail {
-      flex: 0 0 calc((100% - (8px * 3)) / 4);
-    }
-  }
-
-  /* 641–767px: 5 per view (still mobile for us) */
-  @media (min-width: 641px) and (max-width: 767px) {
-    .thumbnail {
-      flex: 0 0 calc((100% - (8px * 4)) / 5);
-    }
-  }
-
-  @media (min-width: 768px) {
-    .thumbnail {
-      flex: 0 0 auto;
+      display: block;
     }
 
-    /* column items keep natural height */
-    /* Optional: dim disabled arrows */
+    .main-display > img,
+    .main-display > video,
+    .main-display > iframe,
+    .main-display > model-viewer {
+      inset: 0;
+      width: 100%;
+      {% comment %} height: 100%; {% endcomment %}
+       height: auto;
+      object-fit: contain; /* matches your “object-contain” intent */
+    }
+
+
+    /* Horizontal strip */
+    .thumbnails__wrapper {
+      display: flex;
+      gap: 8px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Default: 3 per view (<480px) */
+    .thumbnail {
+      flex: 0 0 calc((100% - (8px * 2)) / 3);
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: #f8f8f8; /* optional placeholder */
+
+      aspect-ratio: 1 / 1;    /* make each thumb square (or pick another ratio) */
+      overflow: hidden;
+      display: block;
+    }
+
+    .thumbnail img,
+    .thumbnail video,
+    .thumbnail iframe,
+    .thumbnail model-viewer,
+    .thumbnail picture,
+    .thumbnail .thumb-media,      /* if you wrap the media */
+    .thumbnail > * {
+      
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;          /* fills the square; crops edges */
+      display: block;
+    }
+
+    .thumbnail.is-active {
+      border-color: #212322;
+    }
+
+
+    /* Arrow look (optional) */
+    .thumb-arrow {
+      cursor: pointer; /* all arrows clickable by default */
+    }
+
     .thumb-arrow.is-disabled {
       opacity: 0.35;
       pointer-events: none;
     }
-  }
+
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari, Opera */
+    }
+
+    /* 480–640px: 4 per view */
+    @media (min-width: 480px) and (max-width: 640px) {
+      .thumbnail {
+        flex: 0 0 calc((100% - (8px * 3)) / 4);
+      }
+    }
+
+    /* 641–767px: 5 per view (still mobile for us) */
+    @media (min-width: 641px) and (max-width: 767px) {
+      .thumbnail {
+        flex: 0 0 calc((100% - (8px * 4)) / 5);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .thumbnail {
+        flex: 0 0 auto;
+      }
+
+      /* column items keep natural height */
+      /* Optional: dim disabled arrows */
+      .thumb-arrow.is-disabled {
+        opacity: 0.35;
+        pointer-events: none;
+      }
+    }
 </style>
 
+
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // --- elements ---
-    const mainImg = document.querySelector('.main-image__wrapper img');
-    const viewport = document.querySelector('.thumbs-viewport') || document.querySelector('.thumbnails__wrapper'); // scroller fallback
+  window.addEventListener('load', () => {
+    const mainDisplay = document.querySelector('.main-display');
+    const viewport = document.querySelector('.thumbs-viewport') || document.querySelector('.thumbnails__wrapper');
     const track = document.querySelector('.thumbnails__wrapper');
     const thumbs = Array.from(document.querySelectorAll('.thumbnail'));
 
@@ -347,48 +373,27 @@
     const mainPrev = document.querySelector('.main-arrow.prev');
     const mainNext = document.querySelector('.main-arrow.next');
 
-    if (!mainImg || !viewport || !track || thumbs.length === 0) return;
+    if (!mainDisplay || !viewport || !track || thumbs.length === 0) return;
 
-    // --- config ---
-    const GAP = 8; // match your CSS gap
-    const ROWS_DESKTOP = 6; // visible rows at ≥768px (optional height lock)
+    const GAP = 8;
+    const ROWS_DESKTOP = 6;
 
-    // --- helpers ---
-    function isVertical() {
-      return window.innerWidth >= 768;
-    }
+    const isVertical = () => window.innerWidth >= 768;
+    const visibleRows = () => Math.max(0, Math.min(ROWS_DESKTOP, thumbs.length));
+    const perViewMobile = () => (window.innerWidth >= 641 ? 5 : window.innerWidth >= 480 ? 4 : 3);
+    const perViewCurrent = () => (isVertical() ? ROWS_DESKTOP : perViewMobile());
 
-    function visibleRows() {
-      // How many rows should we show at desktop right now?
-      // If you set ROWS_DESKTOP = 6, this clamps to [0..min(6, thumbs.length)]
-      return Math.max(0, Math.min(ROWS_DESKTOP, thumbs.length));
-    }
-
-    function perViewMobile() {
-      const w = window.innerWidth;
-      if (w >= 641) return 5; // 641–767
-      if (w >= 480) return 4; // 480–640
-      return 3; // <480
-    }
-    function perViewCurrent() {
-      return isVertical() ? ROWS_DESKTOP : perViewMobile();
-    }
-
-    // size of one thumb + gap along current axis
     function unitSize() {
       const a = thumbs[0].getBoundingClientRect();
       let gap = GAP;
       if (thumbs[1]) {
         const b = thumbs[1].getBoundingClientRect();
-        gap = isVertical()
-          ? Math.max(0, b.top - a.bottom) // vertical gap
-          : Math.max(0, b.left - a.right); // horizontal gap
+        gap = isVertical() ? Math.max(0, b.top - a.bottom) : Math.max(0, b.left - a.right);
       }
       const size = isVertical() ? a.height : a.width;
       return { size, gap };
     }
 
-    // keep the active thumb fully in view
     function ensureVisible(li) {
       const vr = viewport.getBoundingClientRect();
       const lr = li.getBoundingClientRect();
@@ -401,7 +406,6 @@
       }
     }
 
-    // page the thumbs viewport by a full "view"
     function pageThumbs(dir) {
       const { size, gap } = unitSize();
       const step = perViewCurrent() * (size + gap);
@@ -416,66 +420,68 @@
 
       if (isVertical()) {
         const noOverflow = viewport.scrollHeight <= viewport.clientHeight + eps;
-        if (noOverflow) {
-          thumbPrev.classList.add('is-disabled');
-          thumbNext.classList.add('is-disabled');
-          return;
-        }
+        if (noOverflow) return thumbPrev.classList.add('is-disabled'), thumbNext.classList.add('is-disabled');
+
         const max = Math.max(0, viewport.scrollHeight - viewport.clientHeight - eps);
         thumbPrev.classList.toggle('is-disabled', viewport.scrollTop <= eps);
         thumbNext.classList.toggle('is-disabled', viewport.scrollTop >= max);
       } else {
         const noOverflow = viewport.scrollWidth <= viewport.clientWidth + eps;
-        if (noOverflow) {
-          thumbPrev.classList.add('is-disabled');
-          thumbNext.classList.add('is-disabled');
-          return;
-        }
+        if (noOverflow) return thumbPrev.classList.add('is-disabled'), thumbNext.classList.add('is-disabled');
+
         const max = Math.max(0, viewport.scrollWidth - viewport.clientWidth - eps);
         thumbPrev.classList.toggle('is-disabled', viewport.scrollLeft <= eps);
         thumbNext.classList.toggle('is-disabled', viewport.scrollLeft >= max);
       }
     }
 
-    // (optional) fix viewport height to exactly N rows on desktop
-
     function setViewportHeight() {
-      // Only constrain height in vertical (desktop) mode
       if (!isVertical()) {
         viewport.style.height = '';
-        viewport.style.overflowY = ''; // let your CSS control on mobile
+        viewport.style.overflowY = '';
         return;
       }
-
-      const rows = visibleRows(); // e.g., min(6, thumbs.length)
+      const rows = visibleRows();
       if (rows <= 0) {
         viewport.style.height = '0px';
         viewport.style.overflowY = 'hidden';
         return;
       }
 
-      const { size, gap } = unitSize(); // measured from DOM
-      // If there’s only 1 thumb, there are 0 gaps; otherwise (rows - 1) gaps
+      const { size, gap } = unitSize();
       const gapsCount = Math.max(0, rows - 1);
       const h = rows * size + gapsCount * gap;
 
       viewport.style.height = `${Math.max(0, h)}px`;
 
-      // Only show a vertical scrollbar if there are MORE thumbs than rows
       if (thumbs.length > rows) {
         viewport.style.overflowY = 'auto';
       } else {
         viewport.style.overflowY = 'hidden';
-        // also reset scrollTop so the top arrow won’t falsely disable/enable
         viewport.scrollTop = 0;
       }
     }
 
-    // --- selection state shared by everything ---
     let currentIndex = 0;
 
+    function renderMainFromThumb(li) {
+      const tpl = li.querySelector('template.full-media');
+      if (!tpl) return;
+
+      mainDisplay.innerHTML = '';
+      const node = tpl.content.cloneNode(true);
+      mainDisplay.appendChild(node);
+
+      // optional: if the media is a <video>, don’t auto-play unless you want to
+      const vid = mainDisplay.querySelector('video');
+      if (vid) {
+        vid.pause();
+        vid.currentTime = 0;
+        vid.play(); // enable if you want auto-play
+      }
+    }
+
     function setActiveByIndex(index) {
-      // wrap around
       if (index < 0) index = thumbs.length - 1;
       if (index >= thumbs.length) index = 0;
       currentIndex = index;
@@ -484,22 +490,17 @@
       const li = thumbs[index];
       li.classList.add('is-active');
 
-      const img = li.querySelector('img');
-      if (img) {
-        mainImg.src = img.src;
-        mainImg.alt = img.alt || 'Product image';
-      }
-
+      renderMainFromThumb(li);
       ensureVisible(li);
     }
 
-    // --- wire up ---
+    // init
     setActiveByIndex(0);
 
-    // click a thumbnail
+    // click a thumb
     thumbs.forEach((li, i) => li.addEventListener('click', () => setActiveByIndex(i)));
 
-    // main image arrows (prev/next image)
+    // main-prev/next
     mainPrev?.addEventListener('click', (e) => {
       e.preventDefault();
       setActiveByIndex(currentIndex - 1);
@@ -509,7 +510,7 @@
       setActiveByIndex(currentIndex + 1);
     });
 
-    // thumbnail arrows (page the strip; do not change selection)
+    // thumbs paging
     thumbPrev?.addEventListener('click', (e) => {
       e.preventDefault();
       if (!thumbPrev.classList.contains('is-disabled')) pageThumbs(-1);
@@ -519,8 +520,8 @@
       if (!thumbNext.classList.contains('is-disabled')) pageThumbs(1);
     });
 
-    // keep arrows & height in sync
     viewport.addEventListener('scroll', updateThumbArrows);
+
     let raf;
     function refresh() {
       cancelAnimationFrame(raf);
@@ -531,7 +532,6 @@
     }
     window.addEventListener('resize', refresh);
     window.addEventListener('load', () => setTimeout(refresh, 0));
-
-    refresh(); // first pass
+    refresh();
   });
 </script>
