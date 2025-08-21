@@ -196,6 +196,17 @@
   .visible {
     visibility: visible;
   }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
   .absolute {
     position: absolute;
   }
@@ -525,14 +536,8 @@
   .h-\[50px\] {
     height: 50px;
   }
-  .h-\[60vh\] {
-    height: 60vh;
-  }
   .h-\[72px\] {
     height: 72px;
-  }
-  .h-\[200px\] {
-    height: 200px;
   }
   .h-\[500px\] {
     height: 500px;
