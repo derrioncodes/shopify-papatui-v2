@@ -339,6 +339,9 @@
   .my-\[30px\] {
     margin-block: 30px;
   }
+  .mt-0\.5 {
+    margin-top: calc(var(--spacing) * 0.5);
+  }
   .mt-1\.5 {
     margin-top: calc(var(--spacing) * 1.5);
   }
@@ -1268,6 +1271,9 @@
   .text-\[\#212322\] {
     color: #212322;
   }
+  .text-\[\#535353\] {
+    color: #535353;
+  }
   .text-\[\#2123228C\] {
     color: #2123228C;
   }
@@ -1676,6 +1682,16 @@
           width: 100%;
         }
       }
+    }
+  }
+  .disabled\:cursor-not-allowed {
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+  .disabled\:opacity-60 {
+    &:disabled {
+      opacity: 60%;
     }
   }
   .min-\[1440px\]\:absolute {

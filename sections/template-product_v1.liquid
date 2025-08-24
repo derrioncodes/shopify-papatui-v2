@@ -117,15 +117,11 @@
 
     <div class="details w-full max-w-[640px] mx-auto lg:w-[40%]">
       {% form 'product', product %}
-        {% assign v = product.selected_or_first_available_variant %}
-
+        {% assign product_price = product.selected_or_first_available_variant %}
         <h1 class="mb-4 text-2xl uppercase">{{ product.title }}</h1>
-
-        <!-- PRICE (JS will update when variant changes) -->
-        <p class="product-price mt-[12px] mb-[12px] text-xl leading-[1.4] font-secondary" data-price-target>
-          {{ v.price | money }}
+        <p class="product-price mt-[12px] mb-[12px] text-xl leading-[1.4] font-secondary">
+          {{ product_price.price | money }}
         </p>
-
         <div class="spacer border-b border-[rgba(33,35,34,0.2)] pt-[6px] mb-[24px]"></div>
 
         {% unless product.has_only_default_variant %}
@@ -133,7 +129,6 @@
             {% for option in product.options_with_values %}
               <div class="product-options flex mb-[24px]">
                 <div class="uppercase text-xs mr-3 mt-2.5 font-secondary tracking-[1px]">{{ option.name }}:</div>
-
                 <div data-option-index="{{ forloop.index0 }}" class="variants flex flex-wrap gap-1.5">
                   {% for value in option.values %}
                     {% assign input_id = 'Option-'
@@ -144,7 +139,6 @@
                       | append: value
                       | handleize
                     %}
-
                     <input
                       id="{{ input_id }}"
                       class="sr-only variant-input"
@@ -155,7 +149,6 @@
                         checked
                       {% endif %}
                     >
-
                     <label
                       for="{{ input_id }}"
                       class="
@@ -173,13 +166,11 @@
                 </div>
               </div>
             {% endfor %}
+            <!-- Must hold the active variant id -->
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
           </div>
         {% endunless %}
 
-        <!-- Must hold the active variant id -->
-        <input type="hidden" name="id" value="{{ v.id }}">
-
-        <!-- QUANTITY -->
         <label
           for="Quantity-{{ section.id }}"
           class="block mb-[0.75em] text-[12px] uppercase tracking-[1px] font-secondary"
@@ -191,9 +182,7 @@
         >
           <div class="item__quantity__input flex border border-[rgba(33,35,34,0.2)]">
             <button
-              type="button"
               class="input__minus text-[0.865rem] w-[1.9rem] h-[1.9rem] relative outline-offset-[-3px] cursor-pointer bg-transparent p-0 text-center border-0 m-0 inline-block leading-none touch-manipulation"
-              aria-label="Decrease quantity"
             >
               -
             </button>
@@ -208,57 +197,33 @@
               class="outline-offset-[-3px] p-0 rounded-none bg-transparent cursor-text border-l border-r border-t-0 border-b-0 border-[rgba(33,35,34,0.2)] text-center m-0 relative inline-block leading-none touch-manipulation align-middle w-[2.375rem] h-[1.9rem] text-[#212121] text-[0.865rem] appearance-none"
             >
             <button
-              type="button"
               class="input__plus text-[0.865rem] w-[1.9rem] h-[1.9rem] relative outline-offset-[-3px] cursor-pointer bg-transparent p-0 text-center border-0 m-0 inline-block leading-none touch-manipulation"
-              aria-label="Increase quantity"
             >
               +
             </button>
           </div>
         </div>
-
-        <!-- SINGLE ADD-TO-CART BUTTON (JS toggles state/text) -->
-        {% comment %}
+        {% if product.selected_or_first_available_variant.available == false %}
+          <button
+            type="button"
+            disabled
+            aria-disabled="true"
+            class="py-[9px] px-[18px] mb-6 text-center w-full border border-[#212322] cursor-not-allowed opacity-60 text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px]"
+          >
+            Sold Out
+          </button>
+        {% else %}
           <button
             type="submit"
             name="add"
-            data-add-to-cart
-            class="
-              py-[9px] px-[18px] mb-6 text-center w-full uppercase text-xs leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out
-              bg-[#d6d2c4] text-[#3e4827] hover:bg-[#ccc7b5] cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed border border-[#212322]
-            "
-            {% if v.available == false %}
-              disabled
-            {% endif %}
+            class="py-[9px] px-[18px] mb-6 text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer"
           >
-            {% if v.available %}Add to cart{% else %}Sold out{% endif %}
+            Add to cart
           </button>
-        {% endcomment %}
-
-        <button
-          data-add-to-cart
-          type="{% if v.available %}submit{% else %}button{% endif %}"
-          {% if v.available %}
-            name="add"
-          {% endif %}
-          {% unless v.available %}
-            disabled aria-disabled="true"
-          {% endunless %}
-          class="
-            {% if v.available %}
-              py-[9px] px-[18px] mb-6 text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer
-            {% else %}
-              py-[9px] px-[18px] mb-6 text-center w-full border border-[#212322] cursor-not-allowed opacity-60 text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px]
-            {% endif %}
-          "
-        >
-          {% if v.available %}Add to cart{% else %}Sold Out{% endif %}
-        </button>
+        {% endif %}
 
         <div class="spacer border-b border-[rgba(33,35,34,0.2)] pt-[6px] mb-[24px]"></div>
       {% endform %}
-
-      <!-- DESCRIPTION (wrapper styles apply to children) -->
       <div class="product-description">
         <h3 class="mb-[3px] font-medium uppercase text-[18px] leading-[1.7]">Product Description</h3>
         <div class="mb-4 leading-[2] font-normal text-sm tracking-[0px] font-secondary">
@@ -266,6 +231,61 @@
         </div>
         <p class="mb-4 leading-[2] font-normal text-base">TAKE BETTER CARE<sup>&trade;</sup></p>
       </div>
+      {% comment %}
+        <div class="accordion">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <h3 class="font-secondary">Key Ingredients</h3>
+              <div class="x-icon"></div>
+            </div>
+            <div class="accordion-content">
+              <ul>
+                <li class="font-secondary">AHAs</li>
+                <li class="font-secondary">Witch Hazel</li>
+                <li class="font-secondary">Glycolic Acid</li>
+              </ul>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <h3 class="font-secondary">Benefits</h3>
+              <div class="x-icon"></div>
+            </div>
+            <div class="accordion-content">
+              <ul>
+                <li class="font-secondary">Tightens pore</li>
+                <li class="font-secondary">Exfoliates, hydrates & brightens skin</li>
+                <li class="font-secondary">
+                  Free from parabens and phthalates, cruelty free, formulated without sulfates and vegan
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <h3 class="font-secondary">Scent Notes</h3>
+              <div class="x-icon"></div>
+            </div>
+            <div class="accordion-content">
+              <p class="font-secondary">Unscented</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <h3 class="font-secondary">Full Ingredient List</h3>
+              <div class="x-icon"></div>
+            </div>
+            <div class="accordion-content">
+              <p class="font-secondary">
+                Ingredients: Water, Hamamelis Virginiana (Witch Hazel) Water, Propanediol, Glycolic Acid, Lactic Acid,
+                Ethoxydiglycol, Glycerin, Sodium Hydroxide, Sodium Hyaluronate, Tartaric Acid, Phytic Acid, Hibiscus
+                Sabdariffa (Red Sorrel) Flower Extract, Gluconolactone, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid,
+                Tocopherol.
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endcomment %}
     </div>
   </div>
 </section>
@@ -596,286 +616,6 @@
   });
 </script>
 
-{% comment %}
-  <script>
-      (function () {
-        // Shopify exposes full variant objects; we’ll use them to map selections → variant
-        const variants = {{ product.variants | json }};
 
-        // Form + hooks
-        const form = document.querySelector('form[action="/cart/add"], form.product-form') || document.querySelector('form');
-        if (!form) return;
 
-        const groups = Array.from(document.querySelectorAll('[data-option-index]'));
-        const idInput = form.querySelector('input[name="id"]');
-        const priceEl = form.querySelector('[data-price-target]');
-        const addBtn = form.querySelector('[data-add-to-cart]');
-        const qtyInput = form.querySelector('input[name="quantity"]');
-        const minusBtn = form.querySelector('.input__minus');
-        const plusBtn  = form.querySelector('.input__plus');
 
-        // Money formatter: prefer Shopify.formatMoney if present
-        function formatMoney(cents) {
-          try {
-            if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
-              // Theme may define cart/price format string in settings; fallback to {{amount}}
-              return Shopify.formatMoney(cents, window.theme && theme.moneyFormat || '${{amount}}');
-            }
-          } catch (e) {}
-          // very simple fallback
-          return (cents / 100).toLocaleString(undefined, { style: 'currency', currency: '{{ shop.currency }}' });
-        }
-
-        function currentSelection() {
-          return groups.map(g => {
-            const c = g.querySelector('input[type="radio"]:checked');
-            return c ? c.value : '';
-          });
-        }
-
-        function findVariant(selected) {
-          return variants.find(v => v.options.every((opt, i) => opt === selected[i]));
-        }
-
-        function updateSelectedStyles() {
-          groups.forEach(g => {
-            g.querySelectorAll('input[type="radio"]').forEach(input => {
-              const label = g.querySelector(`label[for="${input.id}"]`);
-              const checked = input.checked;
-              // selected look
-              label?.classList.toggle('border-[#212322]', checked);
-              label?.classList.toggle('shadow-[0_0_3px_1px_rgba(33,35,34,0.2)]', checked);
-              // default look
-              label?.classList.toggle('border-[rgba(33,35,34,0.2)]', !checked);
-            });
-          });
-        }
-
-        function applyVariant(variant) {
-          if (!variant) return;
-          // update hidden id
-          {% comment %} idInput.value = variant.id; {% endcomment %}
-
-          if (idInput) idInput.value = variant.id;
-
-          // price
-          if (priceEl) priceEl.textContent = formatMoney(variant.price);
-
-          // add-to-cart button (keep same element; just toggle)
-          if (addBtn) {
-            addBtn.disabled = !variant.available;
-            addBtn.textContent = variant.available ? 'Add to cart' : 'Sold out';
-          }
-
-          // update URL ?variant=
-          const url = new URL(window.location.href);
-          url.searchParams.set('variant', variant.id);
-          window.history.replaceState({}, '', url);
-
-          // Emit an event if other components (gallery, SKU, etc.) want to react
-          document.dispatchEvent(new CustomEvent('variant:change', { detail: { variant } }));
-        }
-
-        function onVariantChange() {
-          const sel = currentSelection();
-          const match = findVariant(sel);
-          if (match) applyVariant(match);
-          updateSelectedStyles();
-        }
-
-        // Bind changes on radios
-        form.addEventListener('change', (e) => {
-          if (e.target.classList.contains('variant-input')) onVariantChange();
-        });
-
-        // Quantity +/- (clamp to min=1)
-        function clampQty(n) {
-          const min = parseInt(qtyInput.min || '1', 10);
-          const step = parseInt(qtyInput.step || '1', 10);
-          n = Math.max(min, Math.round(n / step) * step);
-          return n;
-        }
-        minusBtn?.addEventListener('click', (e) => {
-          e.preventDefault();
-          const curr = parseInt(qtyInput.value || '1', 10);
-          qtyInput.value = clampQty(curr - 1);
-        });
-        plusBtn?.addEventListener('click', (e) => {
-          e.preventDefault();
-          const curr = parseInt(qtyInput.value || '1', 10);
-          qtyInput.value = clampQty(curr + 1);
-        });
-
-        // Init on load (respect deep links ?variant=ID)
-        (function init() {
-          const url = new URL(window.location.href);
-          const idFromURL = url.searchParams.get('variant');
-          let start = idFromURL ? variants.find(v => String(v.id) === String(idFromURL)) : null;
-          if (!start) start = variants.find(v => v.available) || variants[0];
-          if (!start) return;
-
-          // check radios for the starting variant
-          groups.forEach((g, i) => {
-            const val = start.options[i];
-            const input = g.querySelector(`input[value="${CSS.escape(val)}"]`);
-            if (input) input.checked = true;
-          });
-
-          applyVariant(start);
-          updateSelectedStyles();
-        })();
-      })();
-  </script>
-{% endcomment %}
-
-<script>
-    (function () {
-      // Shopify exposes full variant objects; we’ll use them to map selections → variant
-      const variants = {{ product.variants | json }};
-  
-      // Form + hooks
-      const form = document.querySelector('form[action="/cart/add"], form.product-form') || document.querySelector('form');
-      if (!form) return;
-  
-      const groups   = Array.from(document.querySelectorAll('[data-option-index]'));
-      const idInput  = form.querySelector('input[name="id"]');
-      const priceEl  = form.querySelector('[data-price-target]');
-      const addBtn   = form.querySelector('[data-add-to-cart]');
-      const qtyInput = form.querySelector('input[name="quantity"]');
-      const minusBtn = form.querySelector('.input__minus');
-      const plusBtn  = form.querySelector('.input__plus');
-  
-      /* =========================
-         ADD: exact classes + toggle helper
-         ========================= */
-      const ADD_CLASSES  = 'py-[9px] px-[18px] mb-6 text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer';
-      const SOLD_CLASSES = 'py-[9px] px-[18px] mb-6 text-center w-full border border-[#212322] cursor-not-allowed opacity-60 text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px]';
-  
-      function setAddButtonState(isAvailable){
-        if (!addBtn) return;
-        if (isAvailable) {
-          addBtn.disabled = false;
-          addBtn.removeAttribute('aria-disabled');
-          addBtn.setAttribute('type', 'submit');
-          addBtn.setAttribute('name', 'add');
-          addBtn.textContent = 'Add to cart';
-          addBtn.className = ADD_CLASSES;
-        } else {
-          addBtn.disabled = true;
-          addBtn.setAttribute('aria-disabled', 'true');
-          addBtn.setAttribute('type', 'button');
-          addBtn.removeAttribute('name');
-          addBtn.textContent = 'Sold Out';
-          addBtn.className = SOLD_CLASSES;
-        }
-      }
-      /* ========================= */
-  
-      // Money formatter: prefer Shopify.formatMoney if present
-      function formatMoney(cents) {
-        try {
-          if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
-            // Theme may define cart/price format string in settings; fallback to {{amount}}
-            return Shopify.formatMoney(cents, window.theme && theme.moneyFormat || '${{amount}}');
-          }
-        } catch (e) {}
-        // very simple fallback
-        return (cents / 100).toLocaleString(undefined, { style: 'currency', currency: '{{ shop.currency }}' });
-      }
-  
-      function currentSelection() {
-        return groups.map(g => {
-          const c = g.querySelector('input[type="radio"]:checked');
-          return c ? c.value : '';
-        });
-      }
-  
-      function findVariant(selected) {
-        return variants.find(v => v.options.every((opt, i) => opt === selected[i]));
-      }
-  
-      function updateSelectedStyles() {
-        groups.forEach(g => {
-          g.querySelectorAll('input[type="radio"]').forEach(input => {
-            const label = g.querySelector(`label[for="${input.id}"]`);
-            const checked = input.checked;
-            // selected look
-            label?.classList.toggle('border-[#212322]', checked);
-            label?.classList.toggle('shadow-[0_0_3px_1px_rgba(33,35,34,0.2)]', checked);
-            // default look
-            label?.classList.toggle('border-[rgba(33,35,34,0.2)]', !checked);
-          });
-        });
-      }
-  
-      function applyVariant(variant) {
-        if (!variant) return;
-  
-        // update hidden id
-        if (idInput) idInput.value = variant.id;
-  
-        // price
-        if (priceEl) priceEl.textContent = formatMoney(variant.price);
-  
-        // REPLACED: toggle button using your exact styles
-        setAddButtonState(variant.available);
-  
-        // update URL ?variant=
-        const url = new URL(window.location.href);
-        url.searchParams.set('variant', variant.id);
-        window.history.replaceState({}, '', url);
-  
-        // Emit an event if other components (gallery, SKU, etc.) want to react
-        document.dispatchEvent(new CustomEvent('variant:change', { detail: { variant } }));
-      }
-  
-      function onVariantChange() {
-        const sel = currentSelection();
-        const match = findVariant(sel);
-        if (match) applyVariant(match);
-        updateSelectedStyles();
-      }
-  
-      // Bind changes on radios
-      form.addEventListener('change', (e) => {
-        if (e.target.classList.contains('variant-input')) onVariantChange();
-      });
-  
-      // Quantity +/- (clamp to min=1)
-      function clampQty(n) {
-        const min = parseInt(qtyInput.min || '1', 10);
-        const step = parseInt(qtyInput.step || '1', 10);
-        n = Math.max(min, Math.round(n / step) * step);
-        return n;
-      }
-      minusBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const curr = parseInt(qtyInput.value || '1', 10);
-        qtyInput.value = clampQty(curr - 1);
-      });
-      plusBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const curr = parseInt(qtyInput.value || '1', 10);
-        qtyInput.value = clampQty(curr + 1);
-      });
-  
-      // Init on load (respect deep links ?variant=ID)
-      (function init() {
-        const url = new URL(window.location.href);
-        const idFromURL = url.searchParams.get('variant');
-        let start = idFromURL ? variants.find(v => String(v.id) === String(idFromURL)) : null;
-        if (!start) start = variants.find(v => v.available) || variants[0];
-        if (!start) return;
-  
-        // check radios for the starting variant
-        groups.forEach((g, i) => {
-          const val = start.options[i];
-          const input = g.querySelector(`input[value="${CSS.escape(val)}"]`);
-          if (input) input.checked = true;
-        });
-  
-        applyVariant(start);
-        updateSelectedStyles();
-      })();
-    })();
-</script>

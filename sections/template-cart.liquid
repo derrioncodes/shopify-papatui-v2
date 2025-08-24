@@ -68,6 +68,11 @@
                       >
                         {{ item.product.title }}
                       </a>
+                      {% unless item.product.has_only_default_variant %}
+                        <div class="font-secondary text-[#535353] text-xs mt-0.5">
+                          {{ item.variant.options | join: ' / ' }}
+                        </div>
+                      {% endunless %}
                     </div>
                     <div
                       class="item__quantity flex flex-wrap gap-[12px] items-center justify-start w-full"
