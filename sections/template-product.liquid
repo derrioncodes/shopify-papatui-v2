@@ -728,6 +728,160 @@
   </script>
 {% endcomment %}
 
+{% comment %}
+  <script>
+      (function () {
+        // Shopify exposes full variant objects; we’ll use them to map selections → variant
+        const variants = {{ product.variants | json }};
+
+        // Form + hooks
+        const form = document.querySelector('form[action="/cart/add"], form.product-form') || document.querySelector('form');
+        if (!form) return;
+
+        const groups   = Array.from(document.querySelectorAll('[data-option-index]'));
+        const idInput  = form.querySelector('input[name="id"]');
+        const priceEl  = form.querySelector('[data-price-target]');
+        const addBtn   = form.querySelector('[data-add-to-cart]');
+        const qtyInput = form.querySelector('input[name="quantity"]');
+        const minusBtn = form.querySelector('.input__minus');
+        const plusBtn  = form.querySelector('.input__plus');
+
+        /* =========================
+           ADD: exact classes + toggle helper
+           ========================= */
+        const ADD_CLASSES  = 'py-[9px] px-[18px] mb-6 text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer';
+        const SOLD_CLASSES = 'py-[9px] px-[18px] mb-6 text-center w-full border border-[#212322] cursor-not-allowed opacity-60 text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px]';
+
+        function setAddButtonState(isAvailable){
+          if (!addBtn) return;
+          if (isAvailable) {
+            addBtn.disabled = false;
+            addBtn.removeAttribute('aria-disabled');
+            addBtn.setAttribute('type', 'submit');
+            addBtn.setAttribute('name', 'add');
+            addBtn.textContent = 'Add to cart';
+            addBtn.className = ADD_CLASSES;
+          } else {
+            addBtn.disabled = true;
+            addBtn.setAttribute('aria-disabled', 'true');
+            addBtn.setAttribute('type', 'button');
+            addBtn.removeAttribute('name');
+            addBtn.textContent = 'Sold Out';
+            addBtn.className = SOLD_CLASSES;
+          }
+        }
+        /* ========================= */
+
+        // Money formatter: prefer Shopify.formatMoney if present
+        function formatMoney(cents) {
+          try {
+            if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
+              // Theme may define cart/price format string in settings; fallback to {{amount}}
+              return Shopify.formatMoney(cents, window.theme && theme.moneyFormat || '${{amount}}');
+            }
+          } catch (e) {}
+          // very simple fallback
+          return (cents / 100).toLocaleString(undefined, { style: 'currency', currency: '{{ shop.currency }}' });
+        }
+
+        function currentSelection() {
+          return groups.map(g => {
+            const c = g.querySelector('input[type="radio"]:checked');
+            return c ? c.value : '';
+          });
+        }
+
+        function findVariant(selected) {
+          return variants.find(v => v.options.every((opt, i) => opt === selected[i]));
+        }
+
+        function updateSelectedStyles() {
+          groups.forEach(g => {
+            g.querySelectorAll('input[type="radio"]').forEach(input => {
+              const label = g.querySelector(`label[for="${input.id}"]`);
+              const checked = input.checked;
+              // selected look
+              label?.classList.toggle('border-[#212322]', checked);
+              label?.classList.toggle('shadow-[0_0_3px_1px_rgba(33,35,34,0.2)]', checked);
+              // default look
+              label?.classList.toggle('border-[rgba(33,35,34,0.2)]', !checked);
+            });
+          });
+        }
+
+        function applyVariant(variant) {
+          if (!variant) return;
+
+          // update hidden id
+          if (idInput) idInput.value = variant.id;
+
+          // price
+          if (priceEl) priceEl.textContent = formatMoney(variant.price);
+
+          // REPLACED: toggle button using your exact styles
+          setAddButtonState(variant.available);
+
+          // update URL ?variant=
+          const url = new URL(window.location.href);
+          url.searchParams.set('variant', variant.id);
+          window.history.replaceState({}, '', url);
+
+          // Emit an event if other components (gallery, SKU, etc.) want to react
+          document.dispatchEvent(new CustomEvent('variant:change', { detail: { variant } }));
+        }
+
+        function onVariantChange() {
+          const sel = currentSelection();
+          const match = findVariant(sel);
+          if (match) applyVariant(match);
+          updateSelectedStyles();
+        }
+
+        // Bind changes on radios
+        form.addEventListener('change', (e) => {
+          if (e.target.classList.contains('variant-input')) onVariantChange();
+        });
+
+        // Quantity +/- (clamp to min=1)
+        function clampQty(n) {
+          const min = parseInt(qtyInput.min || '1', 10);
+          const step = parseInt(qtyInput.step || '1', 10);
+          n = Math.max(min, Math.round(n / step) * step);
+          return n;
+        }
+        minusBtn?.addEventListener('click', (e) => {
+          e.preventDefault();
+          const curr = parseInt(qtyInput.value || '1', 10);
+          qtyInput.value = clampQty(curr - 1);
+        });
+        plusBtn?.addEventListener('click', (e) => {
+          e.preventDefault();
+          const curr = parseInt(qtyInput.value || '1', 10);
+          qtyInput.value = clampQty(curr + 1);
+        });
+
+        // Init on load (respect deep links ?variant=ID)
+        (function init() {
+          const url = new URL(window.location.href);
+          const idFromURL = url.searchParams.get('variant');
+          let start = idFromURL ? variants.find(v => String(v.id) === String(idFromURL)) : null;
+          if (!start) start = variants.find(v => v.available) || variants[0];
+          if (!start) return;
+
+          // check radios for the starting variant
+          groups.forEach((g, i) => {
+            const val = start.options[i];
+            const input = g.querySelector(`input[value="${CSS.escape(val)}"]`);
+            if (input) input.checked = true;
+          });
+
+          applyVariant(start);
+          updateSelectedStyles();
+        })();
+      })();
+  </script>
+{% endcomment %}
+
 <script>
     (function () {
       // Shopify exposes full variant objects; we’ll use them to map selections → variant
@@ -746,7 +900,7 @@
       const plusBtn  = form.querySelector('.input__plus');
   
       /* =========================
-         ADD: exact classes + toggle helper
+         Button styles toggle
          ========================= */
       const ADD_CLASSES  = 'py-[9px] px-[18px] mb-6 text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer';
       const SOLD_CLASSES = 'py-[9px] px-[18px] mb-6 text-center w-full border border-[#212322] cursor-not-allowed opacity-60 text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px]';
@@ -769,19 +923,27 @@
           addBtn.className = SOLD_CLASSES;
         }
       }
-      /* ========================= */
   
       // Money formatter: prefer Shopify.formatMoney if present
       function formatMoney(cents) {
         try {
           if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
-            // Theme may define cart/price format string in settings; fallback to {{amount}}
-            return Shopify.formatMoney(cents, window.theme && theme.moneyFormat || '${{amount}}');
+            return Shopify.formatMoney(cents, (window.theme && theme.moneyFormat) || '${{amount}}');
           }
         } catch (e) {}
-        // very simple fallback
         return (cents / 100).toLocaleString(undefined, { style: 'currency', currency: '{{ shop.currency }}' });
       }
+  
+      // --- NEW: track current variant + subtotal renderer ---
+      let currentVariant = null;
+  
+      function updateDisplayedPrice() {
+        if (!priceEl) return;
+        const qty = Math.max(1, parseInt(qtyInput?.value || '1', 10));
+        const cents = (currentVariant ? currentVariant.price : 0) * qty;
+        priceEl.textContent = formatMoney(cents);
+      }
+      // ------------------------------------------------------
   
       function currentSelection() {
         return groups.map(g => {
@@ -811,13 +973,12 @@
       function applyVariant(variant) {
         if (!variant) return;
   
-        // update hidden id
+        currentVariant = variant;                // <-- keep reference for subtotal
+  
         if (idInput) idInput.value = variant.id;
   
-        // price
-        if (priceEl) priceEl.textContent = formatMoney(variant.price);
+        updateDisplayedPrice();                  // <-- subtotal (price × qty)
   
-        // REPLACED: toggle button using your exact styles
         setAddButtonState(variant.available);
   
         // update URL ?variant=
@@ -843,21 +1004,30 @@
   
       // Quantity +/- (clamp to min=1)
       function clampQty(n) {
-        const min = parseInt(qtyInput.min || '1', 10);
-        const step = parseInt(qtyInput.step || '1', 10);
-        n = Math.max(min, Math.round(n / step) * step);
-        return n;
+        const min = parseInt(qtyInput?.min || '1', 10);
+        const step = parseInt(qtyInput?.step || '1', 10);
+        return Math.max(min, Math.round(n / step) * step);
       }
+  
       minusBtn?.addEventListener('click', (e) => {
         e.preventDefault();
+        if (!qtyInput) return;
         const curr = parseInt(qtyInput.value || '1', 10);
         qtyInput.value = clampQty(curr - 1);
+        updateDisplayedPrice();                  // <-- update subtotal
       });
+  
       plusBtn?.addEventListener('click', (e) => {
         e.preventDefault();
+        if (!qtyInput) return;
         const curr = parseInt(qtyInput.value || '1', 10);
         qtyInput.value = clampQty(curr + 1);
+        updateDisplayedPrice();                  // <-- update subtotal
       });
+  
+      // Update subtotal when user types a number
+      qtyInput?.addEventListener('input', updateDisplayedPrice);
+      qtyInput?.addEventListener('change', updateDisplayedPrice);
   
       // Init on load (respect deep links ?variant=ID)
       (function init() {
@@ -870,7 +1040,8 @@
         // check radios for the starting variant
         groups.forEach((g, i) => {
           const val = start.options[i];
-          const input = g.querySelector(`input[value="${CSS.escape(val)}"]`);
+          const esc = (window.CSS && CSS.escape) ? CSS.escape(val) : val.replace(/"/g, '\\"');
+          const input = g.querySelector(`input[value="${esc}"]`);
           if (input) input.checked = true;
         });
   
