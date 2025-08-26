@@ -266,11 +266,79 @@
         </div>
         <p class="mb-4 leading-[2] font-normal text-base">TAKE BETTER CARE<sup>&trade;</sup></p>
       </div>
+
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <h3 class="font-secondary">Benefits</h3>
+            <div class="x-icon"></div>
+          </div>
+          <div class="accordion-content">
+            <p class="font-secondary">
+              Daily-use formula designed to keep you feeling clean and comfortable. It removes sweat and grime without
+              stripping, and supports a healthy moisture balance—so skin and hair feel fresh, not tight or greasy.
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <h3 class="font-secondary">Who It's For</h3>
+            <div class="x-icon"></div>
+          </div>
+          <div class="accordion-content">
+            <p class="font-secondary">
+              Made for anyone who wants simple, effective care. Suitable for most skin and hair types, and easy to
+              adjust based on your needs.
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <h3 class="font-secondary">Key Ingredients</h3>
+            <div class="x-icon"></div>
+          </div>
+          <div class="accordion-content">
+            <ul>
+              <li class="font-secondary">
+                <strong>Hyaluronic Acid</strong> — draws in water for light, lasting hydration; skin feels bouncy, not
+                greasy
+              </li>
+              <li class="font-secondary">
+                <strong>Aloe</strong> — instantly calms and cools to comfort skin after sweat, sun, or shave
+              </li>
+              <li class="font-secondary">
+                <strong>Witch Hazel</strong> — helps cut shine and refine the look of pores without the sting
+              </li>
+              <li class="font-secondary">
+                <strong>Niacinamide</strong> — supports the skin barrier, balances oil, and smooths texture over time
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <h3 class="font-secondary">Good to Know</h3>
+            <div class="x-icon"></div>
+          </div>
+          <div class="accordion-content">
+            <ul>
+              <li class="font-secondary">Use <strong>PM</strong> 2-4x/week to start; increase as skin allows</li>
+              <li class="font-secondary">Always follow with <strong>SPF</strong> during the day</li>
+              <li class="font-secondary">
+                Derm-minded formula: <strong>no parabens / no phthalates / no SLS/SLES</strong>
+              </li>
+              <li class="font-secondary">Vegan & cruelty-free</li>
+            </ul>
+          </div>
+        </div>
+        
+      </div>
     </div>
   </div>
 </section>
 <!-- END OF SINGLE PRODUCT -->
 
+{% comment %} Product media and description {% endcomment %}
 <style>
   /* ========== SINGLE PRODUCT THUMBS ========== */
   .product-media {
@@ -395,7 +463,106 @@
   }
 </style>
 
-{% comment %} For Product images  {% endcomment %}
+{% comment %} Accordian {% endcomment %}
+<style>
+  /* ACCORDIAN SNIPPET */
+  .no-borders {
+    border: none !important;
+  }
+
+  .accordion-item {
+    padding: 1em 0;
+
+    border-bottom: 1px solid rgba(33, 35, 34, 0.2);
+  }
+
+  .accordion-item:first-of-type {
+    border-top: 1px solid rgba(33, 35, 34, 0.2);
+  }
+
+  .accordion-header {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 9px;
+    cursor: pointer;
+  }
+
+  .accordion-header h3 {
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .x-icon {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+  }
+
+  .x-icon::before,
+  .x-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 1px;
+    /* Thin line */
+    background-color: #000;
+    /* Adjust color as needed */
+    transform-origin: center;
+  }
+
+  .x-icon::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .x-icon::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .accordion-header .x-icon {
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+  }
+
+  .accordion-header.active .x-icon {
+    transform: rotate(90deg);
+  }
+
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    line-height: 2;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0px;
+    transition: max-height 0.3s ease;
+  }
+
+  .accordion-content ul {
+    list-style: disc;
+    margin-left: 2rem;
+    padding-top: 12px;
+  }
+
+  .accordion-content p {
+    padding-top: 12px;
+  }
+
+  .accordion-content ul li {
+    margin-bottom: 0.4rem;
+  }
+
+  .accordion-content ul li:last-child {
+    margin-bottom: 0;
+  }
+</style>
+
+{% comment %} Product images  {% endcomment %}
 <script>
   window.addEventListener('load', () => {
     const mainDisplay = document.querySelector('.main-display');
@@ -596,292 +763,7 @@
   });
 </script>
 
-{% comment %}
-  <script>
-      (function () {
-        // Shopify exposes full variant objects; we’ll use them to map selections → variant
-        const variants = {{ product.variants | json }};
-
-        // Form + hooks
-        const form = document.querySelector('form[action="/cart/add"], form.product-form') || document.querySelector('form');
-        if (!form) return;
-
-        const groups = Array.from(document.querySelectorAll('[data-option-index]'));
-        const idInput = form.querySelector('input[name="id"]');
-        const priceEl = form.querySelector('[data-price-target]');
-        const addBtn = form.querySelector('[data-add-to-cart]');
-        const qtyInput = form.querySelector('input[name="quantity"]');
-        const minusBtn = form.querySelector('.input__minus');
-        const plusBtn  = form.querySelector('.input__plus');
-
-        // Money formatter: prefer Shopify.formatMoney if present
-        function formatMoney(cents) {
-          try {
-            if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
-              // Theme may define cart/price format string in settings; fallback to {{amount}}
-              return Shopify.formatMoney(cents, window.theme && theme.moneyFormat || '${{amount}}');
-            }
-          } catch (e) {}
-          // very simple fallback
-          return (cents / 100).toLocaleString(undefined, { style: 'currency', currency: '{{ shop.currency }}' });
-        }
-
-        function currentSelection() {
-          return groups.map(g => {
-            const c = g.querySelector('input[type="radio"]:checked');
-            return c ? c.value : '';
-          });
-        }
-
-        function findVariant(selected) {
-          return variants.find(v => v.options.every((opt, i) => opt === selected[i]));
-        }
-
-        function updateSelectedStyles() {
-          groups.forEach(g => {
-            g.querySelectorAll('input[type="radio"]').forEach(input => {
-              const label = g.querySelector(`label[for="${input.id}"]`);
-              const checked = input.checked;
-              // selected look
-              label?.classList.toggle('border-[#212322]', checked);
-              label?.classList.toggle('shadow-[0_0_3px_1px_rgba(33,35,34,0.2)]', checked);
-              // default look
-              label?.classList.toggle('border-[rgba(33,35,34,0.2)]', !checked);
-            });
-          });
-        }
-
-        function applyVariant(variant) {
-          if (!variant) return;
-          // update hidden id
-          {% comment %} idInput.value = variant.id; {% endcomment %}
-
-          if (idInput) idInput.value = variant.id;
-
-          // price
-          if (priceEl) priceEl.textContent = formatMoney(variant.price);
-
-          // add-to-cart button (keep same element; just toggle)
-          if (addBtn) {
-            addBtn.disabled = !variant.available;
-            addBtn.textContent = variant.available ? 'Add to cart' : 'Sold out';
-          }
-
-          // update URL ?variant=
-          const url = new URL(window.location.href);
-          url.searchParams.set('variant', variant.id);
-          window.history.replaceState({}, '', url);
-
-          // Emit an event if other components (gallery, SKU, etc.) want to react
-          document.dispatchEvent(new CustomEvent('variant:change', { detail: { variant } }));
-        }
-
-        function onVariantChange() {
-          const sel = currentSelection();
-          const match = findVariant(sel);
-          if (match) applyVariant(match);
-          updateSelectedStyles();
-        }
-
-        // Bind changes on radios
-        form.addEventListener('change', (e) => {
-          if (e.target.classList.contains('variant-input')) onVariantChange();
-        });
-
-        // Quantity +/- (clamp to min=1)
-        function clampQty(n) {
-          const min = parseInt(qtyInput.min || '1', 10);
-          const step = parseInt(qtyInput.step || '1', 10);
-          n = Math.max(min, Math.round(n / step) * step);
-          return n;
-        }
-        minusBtn?.addEventListener('click', (e) => {
-          e.preventDefault();
-          const curr = parseInt(qtyInput.value || '1', 10);
-          qtyInput.value = clampQty(curr - 1);
-        });
-        plusBtn?.addEventListener('click', (e) => {
-          e.preventDefault();
-          const curr = parseInt(qtyInput.value || '1', 10);
-          qtyInput.value = clampQty(curr + 1);
-        });
-
-        // Init on load (respect deep links ?variant=ID)
-        (function init() {
-          const url = new URL(window.location.href);
-          const idFromURL = url.searchParams.get('variant');
-          let start = idFromURL ? variants.find(v => String(v.id) === String(idFromURL)) : null;
-          if (!start) start = variants.find(v => v.available) || variants[0];
-          if (!start) return;
-
-          // check radios for the starting variant
-          groups.forEach((g, i) => {
-            const val = start.options[i];
-            const input = g.querySelector(`input[value="${CSS.escape(val)}"]`);
-            if (input) input.checked = true;
-          });
-
-          applyVariant(start);
-          updateSelectedStyles();
-        })();
-      })();
-  </script>
-{% endcomment %}
-
-{% comment %}
-  <script>
-      (function () {
-        // Shopify exposes full variant objects; we’ll use them to map selections → variant
-        const variants = {{ product.variants | json }};
-
-        // Form + hooks
-        const form = document.querySelector('form[action="/cart/add"], form.product-form') || document.querySelector('form');
-        if (!form) return;
-
-        const groups   = Array.from(document.querySelectorAll('[data-option-index]'));
-        const idInput  = form.querySelector('input[name="id"]');
-        const priceEl  = form.querySelector('[data-price-target]');
-        const addBtn   = form.querySelector('[data-add-to-cart]');
-        const qtyInput = form.querySelector('input[name="quantity"]');
-        const minusBtn = form.querySelector('.input__minus');
-        const plusBtn  = form.querySelector('.input__plus');
-
-        /* =========================
-           ADD: exact classes + toggle helper
-           ========================= */
-        const ADD_CLASSES  = 'py-[9px] px-[18px] mb-6 text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer';
-        const SOLD_CLASSES = 'py-[9px] px-[18px] mb-6 text-center w-full border border-[#212322] cursor-not-allowed opacity-60 text-[#3e4827] uppercase text-xs leading-[30px] tracking-[1px]';
-
-        function setAddButtonState(isAvailable){
-          if (!addBtn) return;
-          if (isAvailable) {
-            addBtn.disabled = false;
-            addBtn.removeAttribute('aria-disabled');
-            addBtn.setAttribute('type', 'submit');
-            addBtn.setAttribute('name', 'add');
-            addBtn.textContent = 'Add to cart';
-            addBtn.className = ADD_CLASSES;
-          } else {
-            addBtn.disabled = true;
-            addBtn.setAttribute('aria-disabled', 'true');
-            addBtn.setAttribute('type', 'button');
-            addBtn.removeAttribute('name');
-            addBtn.textContent = 'Sold Out';
-            addBtn.className = SOLD_CLASSES;
-          }
-        }
-        /* ========================= */
-
-        // Money formatter: prefer Shopify.formatMoney if present
-        function formatMoney(cents) {
-          try {
-            if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
-              // Theme may define cart/price format string in settings; fallback to {{amount}}
-              return Shopify.formatMoney(cents, window.theme && theme.moneyFormat || '${{amount}}');
-            }
-          } catch (e) {}
-          // very simple fallback
-          return (cents / 100).toLocaleString(undefined, { style: 'currency', currency: '{{ shop.currency }}' });
-        }
-
-        function currentSelection() {
-          return groups.map(g => {
-            const c = g.querySelector('input[type="radio"]:checked');
-            return c ? c.value : '';
-          });
-        }
-
-        function findVariant(selected) {
-          return variants.find(v => v.options.every((opt, i) => opt === selected[i]));
-        }
-
-        function updateSelectedStyles() {
-          groups.forEach(g => {
-            g.querySelectorAll('input[type="radio"]').forEach(input => {
-              const label = g.querySelector(`label[for="${input.id}"]`);
-              const checked = input.checked;
-              // selected look
-              label?.classList.toggle('border-[#212322]', checked);
-              label?.classList.toggle('shadow-[0_0_3px_1px_rgba(33,35,34,0.2)]', checked);
-              // default look
-              label?.classList.toggle('border-[rgba(33,35,34,0.2)]', !checked);
-            });
-          });
-        }
-
-        function applyVariant(variant) {
-          if (!variant) return;
-
-          // update hidden id
-          if (idInput) idInput.value = variant.id;
-
-          // price
-          if (priceEl) priceEl.textContent = formatMoney(variant.price);
-
-          // REPLACED: toggle button using your exact styles
-          setAddButtonState(variant.available);
-
-          // update URL ?variant=
-          const url = new URL(window.location.href);
-          url.searchParams.set('variant', variant.id);
-          window.history.replaceState({}, '', url);
-
-          // Emit an event if other components (gallery, SKU, etc.) want to react
-          document.dispatchEvent(new CustomEvent('variant:change', { detail: { variant } }));
-        }
-
-        function onVariantChange() {
-          const sel = currentSelection();
-          const match = findVariant(sel);
-          if (match) applyVariant(match);
-          updateSelectedStyles();
-        }
-
-        // Bind changes on radios
-        form.addEventListener('change', (e) => {
-          if (e.target.classList.contains('variant-input')) onVariantChange();
-        });
-
-        // Quantity +/- (clamp to min=1)
-        function clampQty(n) {
-          const min = parseInt(qtyInput.min || '1', 10);
-          const step = parseInt(qtyInput.step || '1', 10);
-          n = Math.max(min, Math.round(n / step) * step);
-          return n;
-        }
-        minusBtn?.addEventListener('click', (e) => {
-          e.preventDefault();
-          const curr = parseInt(qtyInput.value || '1', 10);
-          qtyInput.value = clampQty(curr - 1);
-        });
-        plusBtn?.addEventListener('click', (e) => {
-          e.preventDefault();
-          const curr = parseInt(qtyInput.value || '1', 10);
-          qtyInput.value = clampQty(curr + 1);
-        });
-
-        // Init on load (respect deep links ?variant=ID)
-        (function init() {
-          const url = new URL(window.location.href);
-          const idFromURL = url.searchParams.get('variant');
-          let start = idFromURL ? variants.find(v => String(v.id) === String(idFromURL)) : null;
-          if (!start) start = variants.find(v => v.available) || variants[0];
-          if (!start) return;
-
-          // check radios for the starting variant
-          groups.forEach((g, i) => {
-            const val = start.options[i];
-            const input = g.querySelector(`input[value="${CSS.escape(val)}"]`);
-            if (input) input.checked = true;
-          });
-
-          applyVariant(start);
-          updateSelectedStyles();
-        })();
-      })();
-  </script>
-{% endcomment %}
-
+{% comment %} Product variants, quantity, and add to cart functions {% endcomment %}
 <script>
     (function () {
       // Shopify exposes full variant objects; we’ll use them to map selections → variant
@@ -1049,4 +931,27 @@
         updateSelectedStyles();
       })();
     })();
+</script>
+
+{% comment %} Accordian {% endcomment %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const headers = document.querySelectorAll('.accordion-header');
+
+    headers.forEach((header) => {
+      header.addEventListener('click', function () {
+        const content = this.nextElementSibling;
+
+        // Toggle active class
+        this.classList.toggle('active');
+
+        // Slide toggle effect
+        if (content.style.maxHeight) {
+          content.style.maxHeight = null;
+        } else {
+          content.style.maxHeight = content.scrollHeight + 'px';
+        }
+      });
+    });
+  });
 </script>
