@@ -1,0 +1,58 @@
+<div class="page-title text-center mt-[30px] mb-[24px] max-w-2xl mx-auto flex flex-col justify-center items-center">
+  <h1 class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0">
+    Search Results
+  </h1>
+</div>
+
+<form action="{{ routes.search_url }}" method="get" class="w-full max-w-[600px] mx-auto mb-[42px] px-[18px]">
+  <div class="relative w-full">
+    <input
+      type="search"
+      name="q"
+      placeholder="Search our store..."
+      class="
+        w-full h-[54px] pl-[12px] pr-[40px] py-[12px]
+        text-[1.3rem] leading-[32px] m-0 text-base tracking-[1px]
+        block outline-0 placeholder:text-[rgba(33,33,33,0.5)]
+        font-secondary placeholder:tracking-[1px]
+        border border-[rgba(33,35,34,0.2)]
+      "
+    >
+    <button
+      type="submit"
+      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black"
+    >
+      <!-- SEARCH ICON -->
+      {% render 'icon-search' %}
+    </button>
+  </div>
+</form>
+
+<div class="text-[18px] font-secondary text-center mb-[60px]">{{ search.results_count }} results</div> 
+
+
+
+<div class="collection-container grid [justify-items:center] grid-cols-1 px-[10px] mx-auto md:grid-cols-2 lg:grid-cols-3 lg:px-[30px] xl:grid-cols-4">
+  {% comment %} {% for item in search.results %}
+    {% case item.object_type %}
+      {% when 'product' %}
+        {% render 'product-card', product: item %}
+
+      {% else %}
+
+    {% endcase %}
+
+  {% else %}
+    <p class="mt-4 mb-6 font-secondary text-center">There are no products in this collection</p>
+  {% endfor %} {% endcomment %}
+
+  {% for item in search.results %}
+    
+        {% render 'product-card', product: item %}
+
+      
+
+  {% else %}
+    <p class="mt-4 mb-6 font-secondary text-center">There are no products in this collection</p>
+  {% endfor %}
+</div>
