@@ -301,6 +301,26 @@
 </div>
 <!-- END OF SEARCH SECTION -->
 
+<style>
+  /* Chrome / Safari / Edge (Chromium) */
+  input[type='search']::-webkit-search-cancel-button,
+  input[type='search']::-webkit-search-decoration,
+  input[type='search']::-webkit-search-results-button,
+  input[type='search']::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+    display: none;
+  }
+
+  /* Legacy Edge / IE */
+  input[type='search']::-ms-clear,
+  input[type='search']::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     // === Utility Functions ===

@@ -221,9 +221,6 @@
   .inset-0 {
     inset: calc(var(--spacing) * 0);
   }
-  .inset-x-0 {
-    inset-inline: calc(var(--spacing) * 0);
-  }
   .-top-\[12px\] {
     top: calc(12px * -1);
   }
@@ -885,6 +882,9 @@
   .bg-\[\#e5e5e5\] {
     background-color: #e5e5e5;
   }
+  .bg-\[\#f0f0f0\] {
+    background-color: #f0f0f0;
+  }
   .bg-\[\#f2eb78\] {
     background-color: #f2eb78;
   }
@@ -963,14 +963,8 @@
   .px-\[12px\] {
     padding-inline: 12px;
   }
-  .px-\[16px\] {
-    padding-inline: 16px;
-  }
   .px-\[18px\] {
     padding-inline: 18px;
-  }
-  .px-\[20px\] {
-    padding-inline: 20px;
   }
   .px-\[30px\] {
     padding-inline: 30px;
@@ -1008,6 +1002,9 @@
   .py-\[12px\] {
     padding-block: 12px;
   }
+  .py-\[18px\] {
+    padding-block: 18px;
+  }
   .py-\[20px\] {
     padding-block: 20px;
   }
@@ -1034,9 +1031,6 @@
   }
   .pr-2 {
     padding-right: calc(var(--spacing) * 2);
-  }
-  .pr-\[30px\] {
-    padding-right: 30px;
   }
   .pr-\[40px\] {
     padding-right: 40px;
@@ -1136,8 +1130,14 @@
   .text-\[0\.865rem\] {
     font-size: 0.865rem;
   }
+  .text-\[1\.2rem\] {
+    font-size: 1.2rem;
+  }
   .text-\[1\.3rem\] {
     font-size: 1.3rem;
+  }
+  .text-\[1rem\] {
+    font-size: 1rem;
   }
   .text-\[9px\] {
     font-size: 9px;
@@ -1263,10 +1263,6 @@
   .font-bold {
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
-  }
-  .font-extralight {
-    --tw-font-weight: var(--font-weight-extralight);
-    font-weight: var(--font-weight-extralight);
   }
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
@@ -1462,6 +1458,13 @@
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
         pointer-events: auto;
+      }
+    }
+  }
+  .group-hover\:underline {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        text-decoration-line: underline;
       }
     }
   }
@@ -1786,11 +1789,6 @@
       max-height: 600px;
     }
   }
-  .sm\:w-\[360px\] {
-    @media (width >= 40rem) {
-      width: 360px;
-    }
-  }
   .sm\:w-fit {
     @media (width >= 40rem) {
       width: fit-content;
@@ -1930,11 +1928,6 @@
   .md\:w-\[300px\] {
     @media (width >= 48rem) {
       width: 300px;
-    }
-  }
-  .md\:w-\[360px\] {
-    @media (width >= 48rem) {
-      width: 360px;
     }
   }
   .md\:w-fit {
