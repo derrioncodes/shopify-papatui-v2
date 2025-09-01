@@ -27,6 +27,7 @@
 
     <!-- Header hook for plugins -->
     {{ 'application.css' | asset_url | stylesheet_tag }}
+    {{ 'styles.css' | asset_url | stylesheet_tag }}
     {{ 'application.js' | asset_url | script_tag }}
 
     <!-- GLIDE SLIDER -->
@@ -36,7 +37,7 @@
     
   </head>
   <body>
-    {% section 'announcement-bar' %}
+    {% comment %} {% section 'announcement-bar' %} {% endcomment %}
     {% section 'header' %}
     <div
       id="cart-toast"
