@@ -153,4 +153,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-/* ========== RECENT SEARCHES ========== */
+/* ========== Sticky Header ========== */
+

@@ -6,12 +6,6 @@
   <div class="relative h-14 md:h-auto md:pt-4 xl:pt-0 xl:h-[88px] ">
     <!-- START OF LOGO -->
     <div class="flex items-center justify-center z-[3]XX h-full">
-      {% comment %}
-        <a href="#">
-            <h1 class="mx-auto text-center text-2xl md:text-3xl font-bold uppercase"> {{ section.settings.header_brand_name }}</h1>
-        </a>
-      {% endcomment %}
-
       <a class="block" href="{{ shop.url }}">
         <img
           class="mx-auto h-9 w-[150px] object-contain md:h-13 md:w-full"
@@ -226,13 +220,13 @@
 <!-- START OF SEARCH SECTION -->
 
 <div
-  class="search-overlay absolute top-0 left-0 w-full h-full z-[40] bg-[#0b0b0b66] opacity-0 invisible transition-opacity duration-500 ease-in-out"
+  class="search-overlay absoluteXX top-0XX left-0XX w-fullXX h-fullXX fixed inset-0 z-[40] bg-[#0b0b0b66] opacity-0 invisible transition-opacity duration-500 ease-in-out"
 >
   <form
     action="{{ routes.search_url }}"
     method="get"
     role="search"
-    class="search-panel absolute top-0 left-0 w-full h-full z-[50] overflow-hidden overflow-y-auto bg-white transition-[top] duration-500 ease-in-out sm:h-fit  sm:max-h-[600px]XX"
+    class="search-panel absoluteXX top-0XX left-0XX w-fullXX h-fullXX fixed inset-0 z-[50] overflow-hidden overflow-y-auto bg-white transition-transform duration-500 ease-in-out -translate-y-full sm:h-fit"
   >
     <div class="border-b border-b-[rgba(33,33,33,0.2)] px-[18px] ">
       <div class="flex justify-between items-center gap-5 h-[72px] max-w-screen-2xl mx-auto">
@@ -308,6 +302,7 @@
 
 <!-- END OF SEARCH SECTION -->
 
+{% comment %} SEARCH  {% endcomment %}
 <style>
   /* Chrome / Safari / Edge (Chromium) */
   input[type='search']::-webkit-search-cancel-button,
@@ -328,6 +323,7 @@
   }
 </style>
 
+{% comment %} MOBILE NAV {% endcomment %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     // === Utility Functions ===
@@ -435,320 +431,83 @@
         }, 125);
       });
     });
-
-    // === SEARCH PANEL: Open ===
-    document.querySelectorAll('.nav-search-button').forEach((btn) => {
-      btn.addEventListener('click', function () {
-        const overlay = document.querySelector('.search-overlay');
-        const panel = document.querySelector('.search-panel');
-
-        removeClasses(overlay, 'opacity-0 invisible');
-        addClasses(overlay, 'opacity-100 visible');
-
-        removeClasses(panel, 'top-[-100%]');
-        addClasses(panel, 'top-0');
-
-        addClasses(body, 'overflow-hidden');
-      });
-    });
-
-    // === SEARCH PANEL: Close ===
-    document.querySelectorAll('.search-close-button').forEach((btn) => {
-      btn.addEventListener('click', function () {
-        const overlay = document.querySelector('.search-overlay');
-        const panel = document.querySelector('.search-panel');
-
-        removeClasses(panel, 'top-0');
-        addClasses(panel, 'top-[-100%]');
-
-        removeClasses(overlay, 'opacity-100 visible');
-        addClasses(overlay, 'opacity-0');
-
-        setTimeout(() => {
-          addClasses(overlay, 'invisible');
-          removeClasses(body, 'overflow-hidden');
-        }, 500);
-      });
-    });
-
-    // Reuse your helpers
-    function closeSearchPanel() {
-      const overlay = document.querySelector('.search-overlay');
-      const panel = document.querySelector('.search-panel');
-      const body = document.body;
-
-      // slide panel up
-      removeClasses(panel, 'top-0');
-      addClasses(panel, 'top-[-100%]');
-
-      // fade overlay out
-      removeClasses(overlay, 'opacity-100 visible');
-      addClasses(overlay, 'opacity-0');
-
-      setTimeout(() => {
-        addClasses(overlay, 'invisible');
-        removeClasses(body, 'overflow-hidden');
-      }, 500);
-    }
-
-    // 1) Click the dim background (outside the panel) to close
-    document.addEventListener('click', (e) => {
-      const overlay = document.querySelector('.search-overlay');
-      const panel = document.querySelector('.search-panel');
-      if (!overlay || !panel) return;
-
-      // only when the overlay is open (not invisible)
-      const isOpen = !overlay.classList.contains('invisible');
-      if (!isOpen) return;
-
-      // Clicked directly on overlay (not inside panel)
-      if (e.target === overlay) {
-        closeSearchPanel();
-      }
-    });
-
-  
-
-    // 3) ESC key to close
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const overlay = document.querySelector('.search-overlay');
-        if (overlay && !overlay.classList.contains('invisible')) {
-          closeSearchPanel();
-        }
-      }
-    });
   });
 </script>
 
-{% comment %}
-  <script>
-    (() => {
-      const KEY = 'recent_searches_v1',
-        MAX_RECENTS = 8,
-        MIN_CHARS = 2,
-        LIMIT = 6;
+{% comment %} SEARCH COMPONENT {% endcomment %}
+<script>
+  // helpers (yours)
+  const addClasses = (el, cls) => cls.split(' ').forEach((c) => el.classList.add(c));
+  const removeClasses = (el, cls) => cls.split(' ').forEach((c) => el.classList.remove(c));
 
-      const esc = (s) =>
-        s.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  const body = document.body;
 
-      function money(cents) {
-        try {
-          if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
-            return Shopify.formatMoney(cents, (window.theme && theme.moneyFormat) || '${{amount}}');
-          }
-        } catch (e) {}
-        return (Number(cents || 0) / 100).toLocaleString(undefined, {
-          style: 'currency',
-          currency: '{{ shop.currency }}',
-        });
-      }
+  function openSearchPanel() {
+    const overlay = document.querySelector('.search-overlay');
+    const panel = document.querySelector('.search-panel');
+    if (!overlay || !panel) return;
 
-      // ---- NEW: normalize any price (string dollars, integer cents, float dollars) → cents (int)
-      function toCents(raw) {
-        if (raw == null) return null;
+    // overlay fade in
+    removeClasses(overlay, 'opacity-0 invisible');
+    addClasses(overlay, 'opacity-100 visible');
 
-        if (typeof raw === 'string') {
-          const s = raw.trim();
-          if (s === '') return null;
-          if (/^\d+$/.test(s)) return parseInt(s, 10); // "1000" (already cents)
-          const n = parseFloat(s.replace(/[^\d.]/g, '')); // "10.00", "$10.00"
-          return Number.isFinite(n) ? Math.round(n * 100) : null; // dollars → cents
-        }
-        if (typeof raw === 'number') {
-          if (!Number.isInteger(raw)) return Math.round(raw * 100); // 10.5 → 1050
-          return raw; // assume integer is cents
-        }
-        return null;
-      }
+    // panel slide in (transform-based)
+    removeClasses(panel, '-translate-y-full');
+    addClasses(panel, 'translate-y-0');
 
-      function recentsGet() {
-        try {
-          return JSON.parse(localStorage.getItem(KEY)) || [];
-        } catch {
-          return [];
-        }
-      }
-      function recentsSet(a) {
-        localStorage.setItem(KEY, JSON.stringify(a));
-      }
-      function recentsSave(q) {
-        q = (q || '').trim();
-        if (!q) return;
-        const lower = q.toLowerCase();
-        let a = recentsGet().filter((x) => x.toLowerCase() !== lower);
-        a.unshift(q);
-        recentsSet(a.slice(0, MAX_RECENTS));
-      }
+    addClasses(body, 'overflow-hidden');
+  }
 
-      function parts(root) {
-        const panel =
-          root.closest('.search-panel[role="search"]') || document.querySelector('.search-panel[role="search"]');
-        if (!panel) return {};
-        return {
-          panel,
-          input: panel.querySelector('input[name="q"]'),
-          recentWrap: panel.querySelector('#SearchRecent'),
-          recentList: panel.querySelector('#SearchRecent [data-recent-list]'),
-          suggestWrap: panel.querySelector('#SearchSuggestWrap'),
-          suggestList: panel.querySelector('#SearchSuggestWrap [data-suggest-products]'),
-          searchUrl: panel.getAttribute('action') || '{{ routes.search_url }}',
-        };
-      }
+  function closeSearchPanel() {
+    const overlay = document.querySelector('.search-overlay');
+    const panel = document.querySelector('.search-panel');
+    if (!overlay || !panel) return;
 
-      const show = (el) => el && el.classList.remove('hidden');
-      const hide = (el) => el && el.classList.add('hidden');
+    // panel slide out
+    removeClasses(panel, 'translate-y-0');
+    addClasses(panel, '-translate-y-full');
 
-      function renderRecents(p) {
-        const { recentWrap, recentList, searchUrl } = p;
-        if (!recentWrap || !recentList) return;
-        const items = recentsGet();
-        if (!items.length) {
-          hide(recentWrap);
-          recentList.innerHTML = '';
-          return;
-        }
-        recentList.innerHTML = items
-          .map(
-            (q) => `
-          <li class="text-xs tracking-[1px]">
-            <a class="py-[3px] px-1.5 block w-full rounded hover:bg-[rgba(33,35,34,0.1)] leading-normal font-secondary"
-               href="${searchUrl}?q=${encodeURIComponent(q)}&type=product">${esc(q)}</a>
-          </li>`
-          )
-          .join('');
-        show(recentWrap);
-      }
+    // overlay fade out
+    removeClasses(overlay, 'opacity-100 visible');
+    addClasses(overlay, 'opacity-0');
 
-      let aborter = null;
-      async function fetchProducts(q) {
-        if (aborter) aborter.abort();
-        aborter = new AbortController();
-        const url =
-          `/search/suggest.json?q=${encodeURIComponent(q)}` +
-          `&resources[type]=product` +
-          `&resources[limit]=${LIMIT}` +
-          `&resources[options][unavailable_products]=last`;
-        const res = await fetch(url, { signal: aborter.signal, headers: { Accept: 'application/json' } });
-        if (!res.ok) return [];
-        const data = await res.json();
-        return data?.resources?.results?.products || [];
-      }
+    // after transition ends, make it non-interactive & re-enable page scroll
+    setTimeout(() => {
+      addClasses(overlay, 'invisible');
+      removeClasses(body, 'overflow-hidden');
+    }, 500); // match your transition duration
+  }
 
-      function renderProducts(p, products, q) {
-        const { suggestWrap, suggestList, recentWrap, searchUrl } = p;
-        hide(recentWrap);
-        show(suggestWrap);
+  // === SEARCH PANEL: Open ===
+  document.querySelectorAll('.nav-search-button').forEach((btn) => {
+    btn.addEventListener('click', openSearchPanel);
+  });
 
-        if (!products.length) {
-          suggestList.innerHTML = `
-            <li class="text-xs tracking-[1px] opacity-70 px-1.5 py-[9px]">No products found</li>
-            <li class="text-xs tracking-[1px]">
-              <a class="py-[3px] px-1.5 block w-full rounded hover:bg-[rgba(33,35,34,0.1)] leading-normal font-secondary"
-                 href="${searchUrl}?q=${encodeURIComponent(q)}&type=product">View all results</a>
-            </li>`;
-          return;
-        }
+  // === SEARCH PANEL: Close (X button) ===
+  document.querySelectorAll('.search-close-button').forEach((btn) => {
+    btn.addEventListener('click', closeSearchPanel);
+  });
 
-        suggestList.innerHTML =
-          products
-            .map((prod) => {
-              // image (string URL or object with url/src)
-              const rawImg =
-                prod.image ||
-                (prod.images && prod.images[0]) ||
-                (prod.featured_image && (prod.featured_image.url || prod.featured_image.src));
-              const imgURL = typeof rawImg === 'string' ? rawImg : rawImg && (rawImg.url || rawImg.src);
-              const imgHTML = imgURL
-                ? `<img class="w-[72px] h-[72px] block object-cover" src="${imgURL}" alt="${esc(prod.title || '')}">`
-                : '';
+  // Close when clicking the dim background
+  document.addEventListener('click', (e) => {
+    const overlay = document.querySelector('.search-overlay');
+    const panel = document.querySelector('.search-panel');
+    if (!overlay || !panel) return;
+    const isOpen = !overlay.classList.contains('invisible');
+    if (!isOpen) return;
 
-              // price: prefer price_min, fall back to price, then first variant
-              let cents = toCents(prod.price_min);
-              if (cents == null) cents = toCents(prod.price);
-              if (cents == null && prod.variants?.[0]?.price != null) cents = toCents(prod.variants[0].price);
+    // Clicked directly on the overlay element (outside the form)
+    if (e.target === overlay) closeSearchPanel();
+  });
 
-              const priceHTML =
-                cents != null
-                  ? `<span class="py-[3px] block w-full leading-normal font-secondary capitalize">${money(cents)}</span>`
-                  : '';
-
-              return `
-            <li class="text-xs tracking-[1px]">
-              <a href="${
-                prod.url
-              }" class="flex gap-x-[18px] px-1.5 py-[9px] rounded hover:bg-[rgba(33,35,34,0.1)] cursor-pointer">
-                ${imgHTML}
-                <div>
-                  <span class="py-[3px] block w-full leading-normal font-secondary capitalize">${esc(prod.title)}</span>
-                  ${priceHTML}
-                </div>
-              </a>
-            </li>`;
-            })
-            .join('') +
-          `
-          <li class="text-xs tracking-[1px] mt-2.5">
-            <a class="py-[3px] px-1.5 block w-full rounded hover:bg-[rgba(33,35,34,0.1)] leading-normal font-secondary"
-               href="${searchUrl}?q=${encodeURIComponent(q)}&type=product">View all results</a>
-          </li>`;
-      }
-
-      const debounce = (fn, ms) => {
-        let t;
-        return (...a) => {
-          clearTimeout(t);
-          t = setTimeout(() => fn(...a), ms);
-        };
-      };
-      const onType = debounce(async (e) => {
-        const p = parts(e.target);
-        const q = (p.input?.value || '').trim();
-        if (!p.input) return;
-
-        if (q.length < MIN_CHARS) {
-          hide(p.suggestWrap);
-          renderRecents(p);
-          return;
-        }
-        const products = await fetchProducts(q);
-        renderProducts(p, products, q);
-      }, 140);
-
-      // wiring
-      document.addEventListener('input', (e) => {
-        if (!(e.target instanceof HTMLInputElement)) return;
-        if (e.target.name !== 'q') return;
-        if (!e.target.closest('.search-panel[role="search"]')) return;
-        onType(e);
-      });
-
-      document.addEventListener('focusin', (e) => {
-        if (!(e.target instanceof HTMLInputElement)) return;
-        if (e.target.name !== 'q') return;
-        const p = parts(e.target);
-        if ((e.target.value || '').trim() === '') renderRecents(p);
-      });
-
-      document.addEventListener(
-        'submit',
-        (e) => {
-          const form = e.target.closest('.search-panel[role="search"]');
-          if (!form) return;
-          const input = form.querySelector('input[name="q"]');
-          if (input) recentsSave(input.value);
-        },
-        true
-      );
-
-      // first paint
-      document.querySelectorAll('.search-panel[role="search"] input[name="q"]').forEach((inp) => {
-        const p = parts(inp);
-        if ((inp.value || '').trim() === '') renderRecents(p);
-      });
-    })();
-  </script>
-{% endcomment %}
+  // Esc to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const overlay = document.querySelector('.search-overlay');
+      if (overlay && !overlay.classList.contains('invisible')) closeSearchPanel();
+    }
+  });
+</script>
 
 {% comment %} SUGGESTED SEARCH {% endcomment %}
 <script>
