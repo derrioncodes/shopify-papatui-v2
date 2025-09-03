@@ -2,7 +2,7 @@
 {% assign search_menu_linklist = linklists[section.settings.menu] %}
 
 <!-- Fixed announcement bar (separate layer) -->
-<div id="announcement-bar" class="fixed top-0 left-0 w-full z-40 bg-[#212322] text-white">
+<div id="announcement-bar" class="fixed top-0 left-0 w-full z-20 bg-[#212322] text-white">
   <div class="w-full px-4 py-2 text-center text-xs md:text-sm">
     Free shipping on orders over $50
     <button
@@ -125,7 +125,6 @@
   </nav>
   <!-- END OF MD:NAV -->
 </div>
-{% comment %} <div class="spacer pb-[56px] md:pb-[132px] lg:pb-[88px]"></div> {% endcomment %}
 <div id="header-spacer" style="height: var(--header-h, 0px);"></div>
 
 <!-- END OF HEADER -->
@@ -319,6 +318,17 @@
 
 <!-- END OF SEARCH SECTION -->
 
+{% comment %} FIXED HEADER {% endcomment %}
+<style>
+  /* Smooth slide for both layers */
+  #announcement-bar,
+  #site-header {
+    will-change: transform;
+    transition: transform 200ms ease;
+    transform: translateY(var(--header-shift, 0px));
+  }
+</style>
+
 {% comment %} SEARCH  {% endcomment %}
 <style>
   /* Chrome / Safari / Edge (Chromium) */
@@ -367,62 +377,272 @@
 {% endcomment %}
 
 {% comment %} FIXED HEADER AND ANNOUCEMENT BAR {% endcomment %}
-<script>
-  (function () {
+{% comment %}
+  <script>
+    (function () {
+      var bar = document.getElementById('announcement-bar');
+      var header = document.getElementById('site-header');
+      var spacer = document.getElementById('header-spacer');
+      var dismissBtn = document.getElementById('announcement-dismiss');
+      var KEY = 'announcement:dismissed:v1';
+
+      if (!header || !spacer) return;
+
+      function isVisible(el) {
+        return !!el && el.style.display !== 'none';
+      }
+
+      function measure() {
+        var barH = bar && isVisible(bar) ? Math.round(bar.getBoundingClientRect().height) : 0;
+        var headerH = Math.round(header.getBoundingClientRect().height);
+        document.documentElement.style.setProperty('--bar-h', barH + 'px');
+        spacer.style.height = barH + headerH + 'px';
+
+        // debug
+        // console.log({ barH, headerH, spacerH: spacer.style.height });
+      }
+
+      // Restore dismissed state ADD THESE BACK WHEN FINISHED
+      {% comment %} if (bar && localStorage.getItem(KEY) === '1') {
+        bar.style.display = 'none';
+      }
+
+      // Dismiss button
+      if (bar && dismissBtn) {
+        dismissBtn.addEventListener('click', function () {
+          bar.style.display = 'none';
+          localStorage.setItem(KEY, '1');
+          measure();
+        });
+      } {% endcomment %}
+
+      // Initial + responsive updates
+      var ready = function () {
+        requestAnimationFrame(() => requestAnimationFrame(measure));
+      };
+      document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
+
+      window.addEventListener('load', measure);
+      window.addEventListener('resize', measure);
+
+      if ('ResizeObserver' in window) {
+        var ro1 = new ResizeObserver(measure);
+        ro1.observe(header);
+        if (bar) {
+          var ro2 = new ResizeObserver(measure);
+          ro2.observe(bar);
+        }
+      }
+    })();
+  </script>
+{% endcomment %}
+{% comment %} FIXED HEADER AND ANNOUCEMENT BAR -- SCROLL ANIMATION {% endcomment %}
+{% comment %}
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      var header = document.getElementById('site-header');
+      if (!header) return;
+
+      var hr = new Headroom(header, {
+        offset: 0,
+        tolerance: { up: 5, down: 5 },
+        onPin: function () {
+          document.documentElement.style.setProperty('--header-shift', '0px');
+        },
+        onUnpin: function () {
+          var stackH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stack-h')) || 0;
+          document.documentElement.style.setProperty('--header-shift', -stackH + 'px');
+        },
+        onTop: function () {
+          document.documentElement.style.setProperty('--header-shift', '0px');
+        },
+      });
+
+      hr.init();
+    });
+  </script>
+{% endcomment %}
+
+{% comment %}
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      var bar = document.getElementById('announcement-bar');
+      var header = document.getElementById('site-header');
+      var spacer = document.getElementById('header-spacer');
+      if (!header || !spacer) return;
+
+      // --- helpers ---
+      function cssNum(name, fallback) {
+        var v = parseInt(getComputedStyle(document.documentElement).getPropertyValue(name), 10);
+        return isNaN(v) ? fallback : v;
+      }
+      function setVar(name, px) {
+        document.documentElement.style.setProperty(name, px + 'px');
+      }
+      function setShift(px) {
+        document.documentElement.style.setProperty('--header-shift', px + 'px');
+      }
+      function isVisible(el) {
+        return !!el && el.style.display !== 'none';
+      }
+
+      // --- measure bar+header and keep spacer synced ---
+      function measure() {
+        var barH = bar && isVisible(bar) ? Math.round(bar.getBoundingClientRect().height) : 0;
+        var headerH = Math.round(header.getBoundingClientRect().height);
+        var stackH = barH + headerH;
+
+        setVar('--bar-h', barH);
+        setVar('--hdr-h', headerH);
+        setVar('--stack-h', stackH);
+
+        spacer.style.height = stackH + 'px';
+
+        // If currently hidden, keep translateY aligned
+        var curShift = getComputedStyle(document.documentElement).getPropertyValue('--header-shift').trim();
+        if (curShift && curShift !== '0px') setShift(-stackH);
+      }
+
+      // --- init Headroom ---
+      var hr = new Headroom(header, {
+        offset: 0,
+        tolerance: { up: 5, down: 5 },
+        onPin: function () {
+          setShift(0);
+        },
+        onUnpin: function () {
+          var stackH = cssNum('--stack-h', 0);
+          setShift(-stackH);
+        },
+        onTop: function () {
+          setShift(0);
+        },
+      });
+      hr.init();
+
+      // --- run measurement on load + resize ---
+      var ready = () => requestAnimationFrame(() => requestAnimationFrame(measure));
+      document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
+      window.addEventListener('load', measure, { passive: true });
+      window.addEventListener('resize', measure, { passive: true });
+
+      if ('ResizeObserver' in window) {
+        var ro = new ResizeObserver(measure);
+        ro.observe(header);
+        if (bar) ro.observe(bar);
+      }
+    });
+  </script>
+{% endcomment %}
+
+<!-- Headroom library -->
+<script src="https://cdn.jsdelivr.net/npm/headroom.js@0.12.0/dist/headroom.min.js" defer></script>
+
+<!-- Header: measure + headroom + dismiss -->
+<script defer>
+  document.addEventListener('DOMContentLoaded', function () {
     var bar = document.getElementById('announcement-bar');
+    var dismiss = document.getElementById('announcement-dismiss');
     var header = document.getElementById('site-header');
     var spacer = document.getElementById('header-spacer');
-    var dismissBtn = document.getElementById('announcement-dismiss');
     var KEY = 'announcement:dismissed:v1';
 
     if (!header || !spacer) return;
 
+    // ---- helpers ----
+    function cssNum(name, fallback) {
+      var v = parseInt(getComputedStyle(document.documentElement).getPropertyValue(name), 10);
+      return isNaN(v) ? fallback : v;
+    }
+    function setVar(name, px) {
+      document.documentElement.style.setProperty(name, px + 'px');
+    }
+    function setShift(px) {
+      document.documentElement.style.setProperty('--header-shift', px + 'px');
+    }
     function isVisible(el) {
       return !!el && el.style.display !== 'none';
     }
 
-    function measure() {
-      var barH = bar && isVisible(bar) ? Math.round(bar.getBoundingClientRect().height) : 0;
-      var headerH = Math.round(header.getBoundingClientRect().height);
-      document.documentElement.style.setProperty('--bar-h', barH + 'px');
-      spacer.style.height = barH + headerH + 'px';
-
-      // debug
-      // console.log({ barH, headerH, spacerH: spacer.style.height });
-    }
-
-    // Restore dismissed state ADD THESE BACK WHEN FINISHED
-    {% comment %} if (bar && localStorage.getItem(KEY) === '1') {
+    // ---- restore dismiss state BEFORE measuring ----
+    if (bar && localStorage.getItem(KEY) === '1') {
       bar.style.display = 'none';
     }
 
-    // Dismiss button
-    if (bar && dismissBtn) {
-      dismissBtn.addEventListener('click', function () {
+    // ---- measure bar+header and keep spacer synced ----
+    function measure() {
+      var barH = bar && isVisible(bar) ? Math.round(bar.getBoundingClientRect().height) : 0;
+      var headerH = Math.round(header.getBoundingClientRect().height);
+      var stackH = barH + headerH;
+
+      setVar('--bar-h', barH);
+      setVar('--hdr-h', headerH);
+      setVar('--stack-h', stackH);
+
+      spacer.style.height = stackH + 'px';
+
+      // If currently hidden (slid up), keep translateY aligned to the new height
+      var curShift = getComputedStyle(document.documentElement).getPropertyValue('--header-shift').trim();
+      if (curShift && curShift !== '0px') setShift(-stackH);
+    }
+
+    // ---- dismiss button wiring ----
+    if (bar && dismiss) {
+      dismiss.addEventListener('click', function () {
+        bar.style.display = 'none';
+        try {
+          localStorage.setItem(KEY, '1');
+        } catch (e) {}
+        measure(); // re-measure immediately so spacer/header shift update
+      });
+    }
+
+    // ---- Headroom init (hide on down, reveal on up) ----
+    var hr = new Headroom(header, {
+      offset: 0,
+      tolerance: { up: 5, down: 5 },
+      onPin: function () {
+        setShift(0);
+      },
+      onUnpin: function () {
+        var stackH = cssNum('--stack-h', 0);
+        setShift(-stackH);
+      },
+      onTop: function () {
+        setShift(0);
+      },
+    });
+    hr.init();
+
+    // ---- run measurement on load + resize ----
+    var ready = () => requestAnimationFrame(() => requestAnimationFrame(measure));
+    document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
+    window.addEventListener('load', measure, { passive: true });
+    window.addEventListener('resize', measure, { passive: true });
+
+    // Keep in sync if sizes change (responsive wrapping, dynamic content)
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(measure);
+      ro.observe(header);
+      if (bar) ro.observe(bar);
+    }
+
+    // Optional: expose a quick tester on window
+    window.__showBar = function () {
+      if (bar) {
+        bar.style.display = '';
+        localStorage.removeItem(KEY);
+        measure();
+      }
+    };
+    window.__hideBar = function () {
+      if (bar) {
         bar.style.display = 'none';
         localStorage.setItem(KEY, '1');
         measure();
-      });
-    } {% endcomment %}
-
-    // Initial + responsive updates
-    var ready = function () {
-      requestAnimationFrame(() => requestAnimationFrame(measure));
-    };
-    document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
-
-    window.addEventListener('load', measure);
-    window.addEventListener('resize', measure);
-
-    if ('ResizeObserver' in window) {
-      var ro1 = new ResizeObserver(measure);
-      ro1.observe(header);
-      if (bar) {
-        var ro2 = new ResizeObserver(measure);
-        ro2.observe(bar);
       }
-    }
-  })();
+    };
+  });
 </script>
 
 {% comment %} MOBILE NAV {% endcomment %}
