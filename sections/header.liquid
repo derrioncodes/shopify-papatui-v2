@@ -2,18 +2,98 @@
 {% assign search_menu_linklist = linklists[section.settings.menu] %}
 
 <!-- Fixed announcement bar (separate layer) -->
-<div id="announcement-bar" class="fixed top-0 left-0 w-full z-20 bg-[#212322] text-white">
-  <div class="w-full px-4 py-2 text-center text-xs md:text-sm">
-    Free shipping on orders over $50
+{% comment %}
+  <div id="announcement-bar" class="fixed top-0 left-0 w-full z-20 bg-[#212322] text-white">
+    <div class="w-full px-4 py-2 text-center text-xs md:text-sm">
+      Free shipping on orders over $50
+      <button
+        id="announcement-dismiss"
+        class="ml-2 px-2 py-[2px] border border-white/30 rounded text-[11px] leading-none hover:bg-white/10"
+        aria-label="Dismiss"
+      >
+        ×
+      </button>
+    </div>
+  </div>
+{% endcomment %}
+
+{% if section.settings.enable_announcement %}
+  <!-- Fixed announcement bar (Headroom-compatible) -->
+  <div
+    id="announcement-bar"
+    class="announcement__banner fixed top-0 left-0 w-full z-20 bg-[#d6d2c4] border-b border-[rgba(33,35,34,0.2)] text-center flex items-center py-2"
+  >
+    <div class="relative w-full max-w-[700px] mx-auto px-0">
+      {% if section.blocks.size > 1 %}
+        <!-- Arrow Left -->
+        <button
+          class="arrow-btn arrow-left absolute top-1/2 left-0 z-10 -translate-y-1/2 cursor-pointer bg-transparent border-none pl-2"
+          id="prevBtn"
+          aria-label="Previous"
+        >
+          {% render 'icon-left-arrow', class: 'size-5 md:size-6' %}
+        </button>
+
+        <!-- Arrow Right -->
+        <button
+          class="arrow-btn arrow-right absolute top-1/2 right-0 z-10 -translate-y-1/2 cursor-pointer bg-transparent border-none pr-2"
+          id="nextBtn"
+          aria-label="Next"
+        >
+          {% render 'icon-right-arrow', class: 'size-5 md:size-6' %}
+        </button>
+      {% endif %}
+
+      <!-- Slider Container -->
+      <div class="announcement-bar slider-container w-full max-w-2xl mx-auto overflow-hidden px-2 md:px-0">
+        <div id="sliderWrapper" class="slider-wrapper flex transition-transform duration-300 ease-in-out">
+          {% if section.blocks.size > 0 %}
+            {% for block in section.blocks %}
+              <div class="slide flex items-center justify-center min-w-full px-4 md:px-0">
+                <p class="max-w-lg px-4 text-[11px] md:text-xs uppercase">
+                  {{ block.settings.text }}
+                  {% if block.settings.link != blank %}
+                    <span class="ml-0.5">
+                      <a
+                        class="underline text-[#212322] opacity-70 hover:opacity-100 transition-opacity duration-200"
+                        href="{{ block.settings.link }}"
+                      >
+                        {{ block.settings.link_text }}
+                      </a>
+                    </span>
+                  {% endif %}
+                </p>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="slide flex items-center justify-center min-w-full px-4 md:px-0">
+              <p class="max-w-lg px-4 text-[11px] md:text-xs uppercase">
+                FREE SHIPPING ON ORDERS $40+
+                <span class="ml-0.5">
+                  <a
+                    class="underline text-[#212322] opacity-70 hover:opacity-100 transition-opacity duration-200"
+                    href="{{ routes.all_products_collection_url }}"
+                  >
+                    SHOP NOW
+                  </a>
+                </span>
+              </p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
     <button
+      class="close-announcement-banner pl-1 px-2 py-3 cursor-pointer"
       id="announcement-dismiss"
-      class="ml-2 px-2 py-[2px] border border-white/30 rounded text-[11px] leading-none hover:bg-white/10"
       aria-label="Dismiss"
     >
-      ×
+      {% render 'icon-close' %}
     </button>
   </div>
-</div>
+{% endif %}
+<!-- END OF ANNOUNCEMENT BAR -->
 
 <!-- START OF HEADER -->
 <div id="site-header" class="bg-[#d6d2c4] fixed top-0 left-0 w-full z-30" style="top: var(--bar-h, 0px);">
@@ -317,6 +397,70 @@
 </div>
 
 <!-- END OF SEARCH SECTION -->
+{% comment %} AANOUNCEMENT {% endcomment %}
+<style>
+  .slider-wrapper {
+      display: flex;
+      transition: transform 0.4s ease-in-out;
+  }
+
+  .slide {
+      min-width: 100%;
+  }
+
+  .arrow-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+  }
+
+  .slider-container {
+      overflow: hidden;
+      position: relative;
+      max-width: 640px;
+      margin: 0 auto;
+  }
+
+
+  .arrow-left {
+      left: 0rem;
+  }
+
+  .arrow-right {
+      right: 0rem;
+  }
+
+  @media (max-width: 480px) {
+      .slider-container {
+          width: 85%;
+          padding-top: 4px;
+          padding-bottom: 4px;
+      }
+
+      {% if section.blocks.size == 1 %}
+        .slider-container {
+          width: 100%;
+      }
+      {% endif %}
+  }
+
+  @media (min-width: 481px) and (max-width: 768px) {
+      .slider-container {
+          width: 80%;
+      }
+      {% if section.blocks.size == 1 %}
+        .slider-container {
+          width: 100%;
+      }
+      {% endif %}
+  }
+
+  @media (min-width: 769px) {
+      .slider-container {
+          width: 100%;
+      }
+  }
+</style>
 
 {% comment %} FIXED HEADER {% endcomment %}
 <style>
@@ -350,195 +494,9 @@
   }
 </style>
 
-{% comment %}
-  <script>
-    function updateHeaderSpacer() {
-      var header = document.getElementById('site-header');
-      var spacer = document.getElementById('header-spacer');
-      if (!header || !spacer) return;
-
-      var height = header.offsetHeight;
-      spacer.style.height = height + 'px';
-
-      // Debug logs
-      console.log('Header height:', height);
-      console.log('Spacer height applied:', spacer.style.height);
-    }
-
-    window.addEventListener('load', updateHeaderSpacer);
-    window.addEventListener('resize', updateHeaderSpacer);
-
-    if ('ResizeObserver' in window) {
-      var headerEl = document.getElementById('site-header');
-      var ro = new ResizeObserver(updateHeaderSpacer);
-      ro.observe(headerEl);
-    }
-  </script>
-{% endcomment %}
-
-{% comment %} FIXED HEADER AND ANNOUCEMENT BAR {% endcomment %}
-{% comment %}
-  <script>
-    (function () {
-      var bar = document.getElementById('announcement-bar');
-      var header = document.getElementById('site-header');
-      var spacer = document.getElementById('header-spacer');
-      var dismissBtn = document.getElementById('announcement-dismiss');
-      var KEY = 'announcement:dismissed:v1';
-
-      if (!header || !spacer) return;
-
-      function isVisible(el) {
-        return !!el && el.style.display !== 'none';
-      }
-
-      function measure() {
-        var barH = bar && isVisible(bar) ? Math.round(bar.getBoundingClientRect().height) : 0;
-        var headerH = Math.round(header.getBoundingClientRect().height);
-        document.documentElement.style.setProperty('--bar-h', barH + 'px');
-        spacer.style.height = barH + headerH + 'px';
-
-        // debug
-        // console.log({ barH, headerH, spacerH: spacer.style.height });
-      }
-
-      // Restore dismissed state ADD THESE BACK WHEN FINISHED
-      {% comment %} if (bar && localStorage.getItem(KEY) === '1') {
-        bar.style.display = 'none';
-      }
-
-      // Dismiss button
-      if (bar && dismissBtn) {
-        dismissBtn.addEventListener('click', function () {
-          bar.style.display = 'none';
-          localStorage.setItem(KEY, '1');
-          measure();
-        });
-      } {% endcomment %}
-
-      // Initial + responsive updates
-      var ready = function () {
-        requestAnimationFrame(() => requestAnimationFrame(measure));
-      };
-      document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
-
-      window.addEventListener('load', measure);
-      window.addEventListener('resize', measure);
-
-      if ('ResizeObserver' in window) {
-        var ro1 = new ResizeObserver(measure);
-        ro1.observe(header);
-        if (bar) {
-          var ro2 = new ResizeObserver(measure);
-          ro2.observe(bar);
-        }
-      }
-    })();
-  </script>
-{% endcomment %}
 {% comment %} FIXED HEADER AND ANNOUCEMENT BAR -- SCROLL ANIMATION {% endcomment %}
-{% comment %}
-  <script defer>
-    document.addEventListener('DOMContentLoaded', function () {
-      var header = document.getElementById('site-header');
-      if (!header) return;
-
-      var hr = new Headroom(header, {
-        offset: 0,
-        tolerance: { up: 5, down: 5 },
-        onPin: function () {
-          document.documentElement.style.setProperty('--header-shift', '0px');
-        },
-        onUnpin: function () {
-          var stackH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stack-h')) || 0;
-          document.documentElement.style.setProperty('--header-shift', -stackH + 'px');
-        },
-        onTop: function () {
-          document.documentElement.style.setProperty('--header-shift', '0px');
-        },
-      });
-
-      hr.init();
-    });
-  </script>
-{% endcomment %}
-
-{% comment %}
-  <script defer>
-    document.addEventListener('DOMContentLoaded', function () {
-      var bar = document.getElementById('announcement-bar');
-      var header = document.getElementById('site-header');
-      var spacer = document.getElementById('header-spacer');
-      if (!header || !spacer) return;
-
-      // --- helpers ---
-      function cssNum(name, fallback) {
-        var v = parseInt(getComputedStyle(document.documentElement).getPropertyValue(name), 10);
-        return isNaN(v) ? fallback : v;
-      }
-      function setVar(name, px) {
-        document.documentElement.style.setProperty(name, px + 'px');
-      }
-      function setShift(px) {
-        document.documentElement.style.setProperty('--header-shift', px + 'px');
-      }
-      function isVisible(el) {
-        return !!el && el.style.display !== 'none';
-      }
-
-      // --- measure bar+header and keep spacer synced ---
-      function measure() {
-        var barH = bar && isVisible(bar) ? Math.round(bar.getBoundingClientRect().height) : 0;
-        var headerH = Math.round(header.getBoundingClientRect().height);
-        var stackH = barH + headerH;
-
-        setVar('--bar-h', barH);
-        setVar('--hdr-h', headerH);
-        setVar('--stack-h', stackH);
-
-        spacer.style.height = stackH + 'px';
-
-        // If currently hidden, keep translateY aligned
-        var curShift = getComputedStyle(document.documentElement).getPropertyValue('--header-shift').trim();
-        if (curShift && curShift !== '0px') setShift(-stackH);
-      }
-
-      // --- init Headroom ---
-      var hr = new Headroom(header, {
-        offset: 0,
-        tolerance: { up: 5, down: 5 },
-        onPin: function () {
-          setShift(0);
-        },
-        onUnpin: function () {
-          var stackH = cssNum('--stack-h', 0);
-          setShift(-stackH);
-        },
-        onTop: function () {
-          setShift(0);
-        },
-      });
-      hr.init();
-
-      // --- run measurement on load + resize ---
-      var ready = () => requestAnimationFrame(() => requestAnimationFrame(measure));
-      document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
-      window.addEventListener('load', measure, { passive: true });
-      window.addEventListener('resize', measure, { passive: true });
-
-      if ('ResizeObserver' in window) {
-        var ro = new ResizeObserver(measure);
-        ro.observe(header);
-        if (bar) ro.observe(bar);
-      }
-    });
-  </script>
-{% endcomment %}
-
 <!-- Headroom library -->
-<script src="https://cdn.jsdelivr.net/npm/headroom.js@0.12.0/dist/headroom.min.js" defer></script>
 
-<!-- Header: measure + headroom + dismiss -->
 <script defer>
   document.addEventListener('DOMContentLoaded', function () {
     var bar = document.getElementById('announcement-bar');
@@ -642,6 +600,72 @@
         measure();
       }
     };
+  });
+</script>
+
+{% comment %} AANOUNCEMENT SLIDER {% endcomment %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    {% if section.blocks.size > 1 %}
+    const sliderWrapper = document.getElementById('sliderWrapper');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+  
+    if (sliderWrapper && prevBtn && nextBtn) {
+      const slides = Array.from(sliderWrapper.children);
+      const totalSlides = slides.length;
+      let currentIndex = 0;
+      let timer;
+  
+      function goToSlide(i) {
+        currentIndex = (i + totalSlides) % totalSlides;
+        sliderWrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+      }
+  
+      function startAutoPlay() {
+        if (!timer) timer = setInterval(() => goToSlide(currentIndex + 1), 5000);
+      }
+  
+      function stopAutoPlay() {
+        clearInterval(timer);
+        timer = null;
+      }
+  
+      // Button clicks
+      prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+      nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+  
+      // Auto-play
+      startAutoPlay();
+  
+      // Pause on hover/focus
+      const banner = document.getElementById('announcement-bar');
+      if (banner) {
+        banner.addEventListener('mouseenter', stopAutoPlay);
+        banner.addEventListener('mouseleave', startAutoPlay);
+        banner.addEventListener('focusin', stopAutoPlay);
+        banner.addEventListener('focusout', startAutoPlay);
+      }
+  
+      // Touch swipe
+      let startX = null;
+      sliderWrapper.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+      }, { passive: true });
+  
+      sliderWrapper.addEventListener('touchmove', (e) => {
+        if (startX === null) return;
+        const dx = e.touches[0].clientX - startX;
+        if (Math.abs(dx) > 40) {
+          if (dx > 0) goToSlide(currentIndex - 1);
+          else goToSlide(currentIndex + 1);
+          startX = null;
+        }
+      }, { passive: true });
+  
+      sliderWrapper.addEventListener('touchend', () => { startX = null; }, { passive: true });
+    }
+    {% endif %}
   });
 </script>
 
@@ -1075,6 +1099,57 @@
       "label": "Search Menu",
       "default": "main-menu",
       "info": "Choose your menu for the search component"
+    },
+
+    /* ——— Announcement Bar controls ——— */
+    {
+      "type": "checkbox",
+      "id": "enable_announcement",
+      "label": "Enable announcement bar",
+      "default": true
+    },
+    
+  ],
+  "max_blocks": 3,
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Banner text",
+          "default": "FREE SHIPPING ON ORDERS $40+"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL (optional)"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text (shown only if Link URL set)",
+          "default": "SHOP NOW"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header",
+      "category": "Header",
+      "blocks": [
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "FREE SHIPPING ON ORDERS $40+",
+            "link": "/collections/all",
+            "link_text": "SHOP NOW"
+          }
+        }
+      ]
     }
   ]
 }
