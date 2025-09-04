@@ -1,0 +1,20 @@
+{% if pagination.pages > 0 %}
+  <nav role="navigation" class="flex justify-center">
+    {% if pagination.previous %}
+      <a class="w-[42px] h-[42px] mx-[3px] text-[12px] box-content rounded-full font-secondary flex items-center justify-center border border-transparent hover:border-[#e5e5e5] transition-colors duration-200" href="{{ pagination.previous.url }}">{% render 'icon-left-arrow', class: 'size-4.5' %}</a>
+    {% endif %}
+
+    {% for part in pagination.parts%}
+        {% if part.is_link %}
+            <a class="w-[42px] h-[42px] mx-[3px] text-[12px] box-content rounded-full font-secondary flex items-center justify-center border border-transparent hover:border-[#e5e5e5] transition-colors duration-200" href="{{ part.url }}">{{ part.title }}</a>
+        {% else %}
+            <span class="w-[42px] h-[42px] mx-[3px] text-[12px] box-content rounded-full font-bold bg-[#212322]/5 font-secondary flex items-center justify-center">{{ part.title }}</span>
+        {% endif %}
+        
+    {% endfor %}
+
+    {% if pagination.next %}
+      <a class="w-[42px] h-[42px] mx-[3px] text-[12px] box-content rounded-full font-secondary flex items-center justify-center border border-transparent hover:border-[#e5e5e5] transition-colors duration-200" href="{{ pagination.next.url }}">{% render 'icon-right-arrow', class: 'size-4.5' %}</a>
+    {% endif %}
+  </nav>
+{% endif %}
