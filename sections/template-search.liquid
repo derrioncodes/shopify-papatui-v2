@@ -4,28 +4,51 @@
   </h1>
 </div>
 
-<form action="{{ routes.search_url }}" method="get" class="w-full max-w-[600px] mx-auto mb-[42px] px-[18px]">
-  <div class="relative w-full">
-    <input
-      type="search"
-      name="q"
-      placeholder="Search our store..."
-      class="
-        w-full h-[54px] pl-[12px] pr-[40px] py-[12px]
-        text-[1.2rem] leading-[32px] m-0 text-base tracking-[1px]
-        block outline-0 placeholder:text-[rgba(33,33,33,0.5)]
-        font-secondary placeholder:tracking-[1px]
-        border border-[rgba(33,35,34,0.2)]
-      "
-      value="{{ search.terms | escape }}"
-    >
-    <button
-      type="submit"
-      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black"
-    >
-      <!-- SEARCH ICON -->
-      {% render 'icon-search' %}
-    </button>
+<form
+  action="{{ routes.search_url }}"
+  method="get"
+  class="w-full max-w-[600px] mx-auto mb-[42px] px-[18px] "
+>
+  <div class="border border-[rgba(33,35,34,0.2)]">
+    <div class="relative w-full">
+      <input
+        type="search"
+        name="q"
+        placeholder="Search our store..."
+        class="
+          w-full h-[54px] pl-[12px] pr-[40px] py-[12px]
+          text-[1.2rem] leading-[32px] m-0 text-base tracking-[1px]
+          block outline-0 placeholder:text-[rgba(33,33,33,0.5)]
+          font-secondary placeholder:tracking-[1px]
+        "
+        value="{{ search.terms | escape }}"
+      >
+
+      <button
+        type="submit"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 cursor-pointer hover:text-black"
+      >
+        <!-- SEARCH ICON -->
+        {% render 'icon-search' %}
+      </button>
+    </div>
+
+    <div class="search-suggestions hidden pl-1.5 mt-[30px] pb-[30px] h-full max-h-[320px] overflow-y-auto">
+      <h4 class="text-sm uppercase mb-1.5 pl-1.5 tracking-[1px] leading-loose font-secondary">Products</h4>
+      <ul>
+        
+      </ul>
+    </div>
+    <div class="search-suggestions_btn sticky bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t border-[rgba(33,33,33,0.2)]">
+      <div class="w-full mx-auto px-[24px] py-[18px]">
+        <button
+          type="submit"
+          class="py-[9px] px-[18px] w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-sm leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer "
+        >
+          Search
+        </button>
+      </div>
+    </div>
   </div>
 </form>
 
@@ -109,3 +132,254 @@
     height: 0;
   }
 </style>
+
+{% comment %}
+  <script>
+    (() => {
+      const MIN_CHARS = 2;
+      const FETCH_LIMIT = 6;
+
+      const esc = (s) =>
+        s.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+
+      function money(cents) {
+        try {
+          if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
+            return Shopify.formatMoney(cents, (window.theme && theme.moneyFormat) || '${{amount}}');
+          }
+        } catch (e) {}
+        return (Number(cents || 0) / 100).toLocaleString(undefined, {
+          style: 'currency',
+          currency: '{{ shop.currency }}',
+        });
+      }
+
+      function toCents(raw) {
+        if (raw == null) return null;
+        if (typeof raw === 'number') return raw;
+        if (typeof raw === 'string') {
+          const n = parseFloat(raw.replace(/[^\d.]/g, ''));
+          return Number.isFinite(n) ? Math.round(n * 100) : null;
+        }
+        return null;
+      }
+
+      async function fetchProducts(q) {
+        const url =
+          `/search/suggest.json?q=${encodeURIComponent(q)}` +
+          `&resources[type]=product` +
+          `&resources[limit]=${FETCH_LIMIT}` +
+          `&resources[options][unavailable_products]=last`;
+        const res = await fetch(url, { headers: { Accept: 'application/json' } });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data?.resources?.results?.products || [];
+      }
+
+      function renderProducts(container, products, q) {
+        if (!container) return;
+
+        if (!products.length) {
+          container.innerHTML = `
+            <li class="text-xs tracking-[1px] opacity-70 px-1.5 py-[9px]">No products found</li>
+            <li class="text-xs tracking-[1px]">
+              <a class="py-[3px] px-1.5 block w-full rounded hover:bg-[rgba(33,35,34,0.1)] leading-normal font-secondary"
+                 href="{{ routes.search_url }}?q=${encodeURIComponent(q)}&type=product">View all results</a>
+            </li>`;
+          return;
+        }
+
+        container.innerHTML = products
+          .map((prod) => {
+            const rawImg =
+              prod.image ||
+              (prod.images && prod.images[0]) ||
+              (prod.featured_image && (prod.featured_image.url || prod.featured_image.src));
+            const imgURL = typeof rawImg === 'string' ? rawImg : rawImg && (rawImg.url || rawImg.src);
+
+            let cents = toCents(prod.price_min);
+            if (cents == null) cents = toCents(prod.price);
+            if (cents == null && prod.variants?.[0]?.price != null) cents = toCents(prod.variants[0].price);
+
+            return `
+            <li class="text-xs tracking-[1px]">
+              <a href="${
+                prod.url
+              }" class="flex gap-x-[18px] px-1.5 py-[9px] rounded hover:bg-[rgba(33,35,34,0.1)] cursor-pointer">
+                ${
+                  imgURL
+                    ? `<img class="w-[72px] h-[72px] block object-cover" src="${imgURL}" alt="${esc(prod.title || '')}">`
+                    : ''
+                }
+                <div>
+                  <span class="py-[3px] block w-full leading-normal font-secondary capitalize">${esc(prod.title)}</span>
+                  ${
+                    cents != null
+                      ? `<span class="py-[3px] block w-full leading-normal font-secondary capitalize">${money(
+                          cents
+                        )}</span>`
+                      : ''
+                  }
+                </div>
+              </a>
+            </li>`;
+          })
+          .join('');
+      }
+
+      const debounce = (fn, ms) => {
+        let t;
+        return (...a) => {
+          clearTimeout(t);
+          t = setTimeout(() => fn(...a), ms);
+        };
+      };
+
+      const onType = debounce(async (e) => {
+        if (!(e.target instanceof HTMLInputElement) || e.target.name !== 'q') return;
+        const q = (e.target.value || '').trim();
+        const container = e.target.closest('form')?.querySelector('.search-suggestions ul');
+        if (!container) return;
+
+        if (q.length < MIN_CHARS) {
+          container.innerHTML = '';
+          return;
+        }
+
+        const products = await fetchProducts(q);
+        renderProducts(container, products, q);
+      }, 160);
+
+      document.addEventListener('input', onType);
+    })();
+  </script>
+{% endcomment %}
+
+<script>
+  (() => {
+    const MIN_CHARS = 2;
+    const FETCH_LIMIT = 6;
+
+    const esc = (s) =>
+      s.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+
+    function money(cents) {
+      try {
+        if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
+          return Shopify.formatMoney(cents, (window.theme && theme.moneyFormat) || '${{amount}}');
+        }
+      } catch (e) {}
+      return (Number(cents || 0) / 100).toLocaleString(undefined, {
+        style: 'currency',
+        currency: '{{ shop.currency }}',
+      });
+    }
+
+    function toCents(raw) {
+      if (raw == null) return null;
+      if (typeof raw === 'number') return raw;
+      if (typeof raw === 'string') {
+        const n = parseFloat(raw.replace(/[^\d.]/g, ''));
+        return Number.isFinite(n) ? Math.round(n * 100) : null;
+      }
+      return null;
+    }
+
+    async function fetchProducts(q) {
+      const url =
+        `/search/suggest.json?q=${encodeURIComponent(q)}` +
+        `&resources[type]=product` +
+        `&resources[limit]=${FETCH_LIMIT}` +
+        `&resources[options][unavailable_products]=last`;
+      const res = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return data?.resources?.results?.products || [];
+    }
+
+    function renderProducts(container, products, q) {
+      if (!container) return;
+
+      if (!products.length) {
+        container.innerHTML = `
+          <li class="text-xs tracking-[1px] text-center opacity-70 px-1.5 py-[18px]">
+            No products found. Try another search term.
+          </li>`;
+        return;
+      }
+
+      container.innerHTML = products
+        .map((prod) => {
+          const rawImg =
+            prod.image ||
+            (prod.images && prod.images[0]) ||
+            (prod.featured_image && (prod.featured_image.url || prod.featured_image.src));
+          const imgURL = typeof rawImg === 'string' ? rawImg : rawImg && (rawImg.url || rawImg.src);
+
+          let cents = toCents(prod.price_min);
+          if (cents == null) cents = toCents(prod.price);
+          if (cents == null && prod.variants?.[0]?.price != null) cents = toCents(prod.variants[0].price);
+
+          return `
+          <li class="text-xs tracking-[1px]">
+            <a href="${
+              prod.url
+            }" class="flex gap-x-[18px] px-1.5 py-[9px] rounded hover:bg-[rgba(33,35,34,0.1)] cursor-pointer">
+              ${
+                imgURL
+                  ? `<img class="w-[72px] h-[72px] block object-cover" src="${imgURL}" alt="${esc(prod.title || '')}">`
+                  : ''
+              }
+              <div>
+                <span class="py-[3px] block w-full leading-normal font-secondary capitalize">${esc(prod.title)}</span>
+                ${
+                  cents != null
+                    ? `<span class="py-[3px] block w-full leading-normal font-secondary capitalize">${money(
+                        cents
+                      )}</span>`
+                    : ''
+                }
+              </div>
+            </a>
+          </li>`;
+        })
+        .join('');
+    }
+
+    const debounce = (fn, ms) => {
+      let t;
+      return (...a) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...a), ms);
+      };
+    };
+
+    const onType = debounce(async (e) => {
+      if (!(e.target instanceof HTMLInputElement) || e.target.name !== 'q') return;
+      const q = (e.target.value || '').trim();
+
+      const form = e.target.closest('form');
+      const container = form?.querySelector('.search-suggestions ul');
+      const suggestionsDiv = form?.querySelector('.search-suggestions'); // wrapper
+      const stickyBtn = form?.querySelector('.search-suggestions_btn'); // sticky button wrapper
+
+      if (!container || !suggestionsDiv || !stickyBtn) return;
+
+      if (q.length < MIN_CHARS) {
+        container.innerHTML = '';
+        suggestionsDiv.classList.add('hidden');
+        stickyBtn.classList.add('hidden');
+        return;
+      }
+
+      const products = await fetchProducts(q);
+      renderProducts(container, products, q);
+
+      // Show wrappers now
+      suggestionsDiv.classList.remove('hidden');
+      stickyBtn.classList.remove('hidden');
+    }, 160);
+
+    document.addEventListener('input', onType);
+  })();
+</script>
