@@ -54,8 +54,10 @@
 
 <div class="text-[18px] font-secondary text-center mb-[60px]">{{ search.results_count }} results</div>
 
+
 {% if search.performed %}
   {% if search.results.size > 0 %}
+    {% paginate search.results by 24 %}
     <div class="collection-container grid [justify-items:center] grid-cols-1 px-[10px] mx-auto md:grid-cols-2 lg:grid-cols-3 lg:px-[30px] xl:grid-cols-4">
       {% for item in search.results %}
         {% case item.object_type %}
@@ -108,6 +110,10 @@
 
       {% endfor %}
     </div>
+    <div class="mx-auto mt-6 mb-[42px] md:mb-[60px]">
+      {% render 'pagination-1', pagination: paginate %}
+    </div>
+    {% endpaginate %}
   {% else %}
     <p class="mt-4 mb-6 font-secondary text-center">No results found for the search term: {{ search.terms }}</p>
   {% endif %}
