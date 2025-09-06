@@ -1,0 +1,80 @@
+<section class="px-[18px] mb-6 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto">
+  <!-- Login Section -->
+  <div class="login-container">
+    <div
+      class="page-title text-center mt-[30px] mb-[24px] max-w-2xl mx-auto flex flex-col justify-center items-center"
+    >
+      <h1
+        class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0"
+      >
+        Create account
+      </h1>
+    </div>
+    {% form 'create_customer' %}
+      {% if form.errors %}
+        <div class="max-w-[680px] mb-4 mx-auto text-red-600">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+      <div class="max-w-[680px] mx-auto">
+        <div class="full-name flex flex-col md:flex-row md:gap-x-[30px]">
+          <div class="mb-4 w-full">
+            <label for="first_name" class="block text-base leading-6 font-secondary mb-1">First Name</label>
+            <input
+              class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              type="text"
+              name="customer[first_name]"
+              id="first_name"
+              autocomplete="given-name"
+            >
+          </div>
+          <div class="mb-4 w-full">
+            <label for="last_name" class="block text-base leading-6 font-secondary mb-1">Last Name</label>
+            <input
+              class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              type="text"
+              name="customer[last_name]"
+              id="last_name"
+              autocomplete="family-name"
+            >
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="email_address" class="block text-base leading-6 font-secondary mb-1">Email</label>
+          <input
+            class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+            type="email"
+            name="customer[email]"
+            id="email_address"
+            autocomplete="email"
+          >
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block text-base leading-6 font-secondary mb-1">Password</label>
+          <input
+            class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+            type="password"
+            name="customer[password]"
+            autocomplete="new-password"
+            id="password"
+          >
+        </div>
+
+        <div class="account-buttons flex items-center flex-col gap-4 md:flex-row md:gap-6 ">
+          <button
+            type="submit"
+            class="py-[9px] px-[30px] text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-sm tracking-[1px] leading-[30px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer md:w-fit"
+          >
+            Create
+          </button>
+          <a
+            href="{{ shop.secure_url }}"
+            class="block text-center w-full bg-[#ffffff] uppercase text-sm tracking-[1px] leading-[30px] opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer md:w-fit"
+          >
+            Return to store
+          </a>
+        </div>
+      </div>
+    {% endform %}
+  </div>
+</section>

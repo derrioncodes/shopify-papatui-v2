@@ -24,3 +24,9 @@
   {{ paginate | default_pagination }}
   {% endpaginate %}
 </div>
+<a 
+  href="{{ routes.account_logout_url }}" 
+  class="inline-block bg-[#212322] text-white px-4 py-2 rounded hover:bg-[#444]"
+>
+  Log out
+</a>

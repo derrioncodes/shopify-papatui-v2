@@ -1,0 +1,151 @@
+<section class="px-[18px] mb-6 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto">
+  <!-- Login Section -->
+  <div id="login-section" class="login-container">
+    <div
+      class="page-title text-center mt-[30px] mb-[24px] max-w-2xl mx-auto flex flex-col justify-center items-center"
+    >
+      <h1
+        class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0"
+      >
+        Login
+      </h1>
+    </div>
+
+    {% form 'customer_login' %}
+      {% if form.errors %}
+        <div class="max-w-[680px] mb-4 mx-auto text-red-600">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+      <div class="max-w-[680px] mx-auto">
+        <div class="mb-4">
+          <label for="email_address" class="block text-base leading-6 font-secondary mb-1">Email</label>
+          <input
+            class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+            type="email"
+            name="customer[email]"
+            id="email_address"
+            autocomplete="email"
+          >
+        </div>
+        {% if form.password_needed %}
+          <div class="mb-4">
+            <label for="password" class="block text-base leading-6 font-secondary mb-1">Password</label>
+            <input
+              class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              type="password"
+              name="customer[password]"
+              autocomplete="current-password"
+              id="password"
+            >
+          </div>
+          <div class="flex mb-4 md:justify-end">
+            <p
+              id="forgot-link"
+              class="w-fit font-secondary mb-3 text-right text-sm opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer"
+            >
+              Forgot your password?
+            </p>
+          </div>
+        {% endif %}
+
+        <div class="account-buttons flex flex-col items-center gap-4 md:flex-row md:gap-6 ">
+          <button
+            type="submit"
+            class="py-[9px] px-[30px] text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-sm tracking-[1px] leading-[30px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer md:w-fit"
+          >
+            Sign in
+          </button>
+          <a
+            href="{{ routes.account_register_url }}"
+            class="block text-center w-full bg-[#ffffff] uppercase text-sm tracking-[1px] leading-[30px] opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer md:w-fit"
+          >
+            Create account
+          </a>
+        </div>
+      </div>
+    {% endform %}
+  </div>
+
+  <!-- Forgot Section (hidden by default) -->
+  <div id="forgot-section" class="reset-password-container hidden">
+    <div
+      class="page-title text-center mt-[30px] mb-[24px] max-w-2xl mx-auto flex flex-col justify-center items-center"
+    >
+      <h1
+        class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0"
+      >
+        Reset your password
+      </h1>
+    </div>
+
+    {% form 'recover_customer_password' %}
+      {% if form.errors %}
+        <div class="max-w-[680px] mb-4 mx-auto text-red-600">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+
+      {%- if form.posted_successfully? -%}
+        <div class="max-w-[680px] mx-auto mb-4 rounded border border-green-600/30 bg-green-50 p-4 text-green-700">
+          If an account exists for that email, a reset link was sent. Please check your inbox (and spam/promotions).
+        </div>
+      {%- else -%}
+        <div class="max-w-[680px] mx-auto">
+          <div class="mb-4">
+            <label for="email" class="block text-base leading-6 font-secondary mb-1">Email</label>
+            <input
+              class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              type="email"
+              name="email"
+              id="email"
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="flex mb-4">
+            <p
+              class="w-fit font-secondary mb-3 text-right text-sm"
+            >
+              We will send you an email to reset your password.
+            </p>
+          </div>
+          <div class="account-buttons flex flex-col gap-4 md:flex-row md:gap-6 ">
+            <button
+              type="submit"
+              class="py-[9px] px-[30px] text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-sm tracking-[1px] leading-[30px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer md:w-fit"
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              id="back-link"
+              class="text-center w-full bg-[#ffffff] uppercase text-sm tracking-[1px] leading-[30px] opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer md:w-fit"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      {%- endif -%}
+    {% endform %}
+  </div>
+</section>
+
+<script>
+  const loginSection = document.getElementById('login-section');
+  const forgotSection = document.getElementById('forgot-section');
+  const forgotLink = document.getElementById('forgot-link');
+  const backLink = document.getElementById('back-link');
+
+  // Show Forgot Password
+  forgotLink.addEventListener('click', () => {
+    loginSection.classList.add('hidden');
+    forgotSection.classList.remove('hidden');
+  });
+
+  // Back to Login
+  backLink.addEventListener('click', () => {
+    forgotSection.classList.add('hidden');
+    loginSection.classList.remove('hidden');
+  });
+</script>
