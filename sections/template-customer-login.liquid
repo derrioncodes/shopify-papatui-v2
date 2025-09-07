@@ -67,6 +67,30 @@
     {% endform %}
   </div>
 
+  {% if shop.checkout.guest_login %}
+    <div class="continue-guest">
+      <div
+        class="page-title text-center mt-[60px] mb-[24px] max-w-2xl mx-auto flex flex-col justify-center items-center"
+      >
+        <h1
+          class="text-[20px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0"
+        >
+          Continue as a guest
+        </h1>
+      </div>
+      {% form 'guest_login' %}
+        <div class="flex justify-center">
+          <button
+            type="submit"
+            class="py-[9px] px-[30px] text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-sm tracking-[1px] leading-[30px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer md:w-fit"
+          >
+            Continue
+          </button>
+        </div>
+      {% endform %}
+    </div>
+  {% endif %}
+
   <!-- Forgot Section (hidden by default) -->
   <div id="forgot-section" class="reset-password-container hidden">
     <div

@@ -20,7 +20,6 @@
     --breakpoint-2xl: 96rem;
     --container-lg: 32rem;
     --container-2xl: 42rem;
-    --container-6xl: 72rem;
     --container-7xl: 80rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
@@ -38,7 +37,6 @@
     --font-weight-bold: 700;
     --leading-normal: 1.5;
     --leading-loose: 2;
-    --radius-sm: 0.25rem;
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -406,6 +404,9 @@
   }
   .mt-\[30px\] {
     margin-top: 30px;
+  }
+  .mt-\[60px\] {
+    margin-top: 60px;
   }
   .mr-0 {
     margin-right: calc(var(--spacing) * 0);
