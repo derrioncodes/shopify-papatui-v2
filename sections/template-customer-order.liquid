@@ -1,0 +1,257 @@
+<section class="px-[18px] lg:px-[30px] max-w-[1100px] mx-auto my-6 lg:my-10">
+  <div
+    class="page-title text-center mt-[30px] mb-[24px] max-w-2xl mx-auto flex flex-col justify-center items-center"
+  >
+    <h1
+      class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0"
+    >
+      My account
+    </h1>
+  </div>
+  <a
+    href="{{ routes.account_url }}"
+    class="font-secondary w-fit mx-auto flex justify-center items-center gap-1 text-sm uppercase opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer mb-6"
+  >
+    <span class="block">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-3.5"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+    </span>
+    <span class="block">Return to Account Details</span>
+  </a>
+
+  <!-- Breadcrumb -->
+  <!--
+    <nav class="mb-4 text-sm">
+        <a href="/account" class="text-[#212322] hover:opacity-70">Account</a>
+        <span class="mx-2 text-gray-400">/</span>
+        <a href="/account#orders" class="text-[#212322] hover:opacity-70">Orders</a>
+        <span class="mx-2 text-gray-400">/</span>
+        <span class="text-gray-500">#FRD0402-34415</span>
+    </nav>
+  -->
+
+  <!-- Header -->
+  <div class="bg-white border border-[rgba(33,35,34,0.2)] rounded-md p-4 sm:p-5 mb-5">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="min-w-0">
+        <h1 class="text-xl font-medium text-[#212322] truncate">Order {{ order.name }}</h1>
+        <p class="text-sm text-gray-600 mt-0.5">Placed on {{ order.created_at | date: '%b %-d, %Y' }}</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span
+          class="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs px-2.5 py-1.5"
+        >
+          {{- order.financial_status_label -}}
+        </span>
+        <span
+          class="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs px-2.5 py-1.5"
+        >
+          {{- order.fulfillment_status_label -}}
+        </span>
+      </div>
+    </div>
+
+    <!-- Top totals -->
+    <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+      <div class="p-3 rounded-sm border border-[rgba(33,35,34,0.12)]">
+        <p class="text-gray-600">Subtotal</p>
+        <p class="font-medium">{{ order.subtotal_price | money }}</p>
+      </div>
+      <div class="p-3 rounded-sm border border-[rgba(33,35,34,0.12)]">
+        <p class="text-gray-600">Shipping</p>
+        <p class="font-medium">{{ order.shipping_price | money }}</p>
+      </div>
+      <div class="p-3 rounded-sm border border-[rgba(33,35,34,0.12)]">
+        <p class="text-gray-600">Tax</p>
+        <p class="font-medium">{{ order.tax_price | money }}</p>
+      </div>
+      <div class="p-3 rounded-sm border border-[rgba(33,35,34,0.12)]">
+        <p class="text-gray-600">Total</p>
+        <p class="font-semibold text-[#212322]">{{ order.total_price | money }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content grid -->
+  <div class="grid lg:grid-cols-3 gap-5">
+    <!-- Line items -->
+    <section class="lg:col-span-2 bg-white border border-[rgba(33,35,34,0.2)] rounded-md overflow-hidden">
+      <div class="px-4 sm:px-5 py-4 border-b border-[rgba(33,35,34,0.2)]">
+        <h2 class="text-base font-semibold text-[#212322]">Items</h2>
+      </div>
+
+      <ul class="divide-y divide-[rgba(33,35,34,0.2)]">
+        {% for line_item in order.line_items %}
+          {% assign line_tax = 0 %}
+          {% for tl in line_item.tax_lines %}
+            {% assign line_tax = line_tax | plus: tl.price %}
+          {% endfor %}
+          {% assign price_ex = line_item.final_line_price | minus: line_tax %}
+          <li class="p-4 sm:p-5">
+            <div class="flex items-start gap-3">
+              <a
+                class="block opacity-100 hover:opacity-70 transition-opacity duration-200"
+                href="{{ line_item.product.url }}"
+              >
+                {% if line_item.image %}
+                  <img
+                    src="{{ line_item.image | image_url }}"
+                    alt="{{ line_item.image.alt }}"
+                    class="w-16 h-16 rounded-lg object-cover border border-[rgba(33,35,34,0.12)]"
+                  >
+                {% else %}
+                  {{
+                    'product-1'
+                    | placeholder_svg_tag: 'w-16 h-16 rounded-lg object-cover border border-[rgba(33,35,34,0.12)]'
+                  }}
+                {% endif %}
+              </a>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-start justify-between gap-3">
+                  <a
+                    href="{{ line_item.product.url }}"
+                    class="block min-w-0 opacity-100 hover:opacity-70 transition-opacity duration-200"
+                  >
+                    <p class="text-sm font-medium text-[#212322] truncate">{{ line_item.title }}</p>
+                    {% unless line_item.product.has_only_default_variant %}
+                      <p class="text-xs text-gray-600 mt-0.5">{{ line_item.variant.options | join: ' / ' }}</p>
+                    {% endunless %}
+                    {% if line_item.sku != blank %}
+                      <p class="text-xs text-gray-400 mt-0.5">SKU: {{ line_item.sku }}</p>
+                    {% endif %}
+                  </a>
+                  <span class="text-xs text-gray-600 shrink-0">Qty {{ line_item.quantity }}</span>
+                </div>
+
+                <div class="mt-3 grid grid-cols-2 gap-x-4 text-sm">
+                  
+                    <div class="text-gray-600">Price (excl. tax)</div>
+                    <div class="text-right">{{ price_ex | money }}</div>
+
+                    <div class="text-gray-600">Price (incl. tax)</div>
+                    <div class="text-right">{{ line_item.final_line_price | money }}</div>
+                  
+                </div>
+              </div>
+            </div>
+
+            <!-- Fulfillment info (optional) -->
+            <div class="mt-3 rounded-sm bg-gray-50 p-3 text-xs text-gray-700">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span class="font-medium">Fulfillment:</span>
+                <span>—</span>
+                {% if line_item.successfully_fulfilled_quantity > 0 %}
+                  <span> {{ line_item.fulfillment.tracking_company }}</span>
+                  <span> #{{ line_item.fulfillment.tracking_number }}</span>
+                  <a
+                    href="{{ line_item.fulfillment.tracking_url }}"
+                    target="_blank"
+                    class="text-[#212322] underline underline-offset-2 hover:opacity-70"
+                    >Track package</a
+                  >
+                {% else %}
+                  <span>Not yet fullfilled</span>
+                {% endif %}
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+        <!-- Item -->
+
+        <!-- Duplicate the <li> above for more items -->
+      </ul>
+
+      <!-- Bottom totals -->
+      <div class="px-4 sm:px-5 py-4 border-t border-[rgba(33,35,34,0.2)]">
+        <dl class="text-sm space-y-2 max-w-sm ml-auto">
+          <div class="flex justify-between">
+            <dt class="text-gray-600">Subtotal</dt>
+            <dd class="font-medium">{{ order.subtotal_price | money }}</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-gray-600">Shipping</dt>
+            <dd class="font-medium">{{ order.shipping_price | money }}</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-gray-600">Tax</dt>
+            <dd class="font-medium">{{ order.tax_price | money }}</dd>
+          </div>
+          <div class="flex justify-between text-base border-t border-[rgba(33,35,34,0.2)] pt-2 mt-1">
+            <dt class="font-semibold text-[#212322]">Total</dt>
+            <dd class="font-semibold text-[#212322]">{{ order.total_price | money }}</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Right column: shipping/payment/details -->
+    <aside class="space-y-5">
+      <!-- Shipping Address -->
+      <div class="bg-white border border-[rgba(33,35,34,0.2)] rounded-md p-4 sm:p-5">
+        <h3 class="text-sm font-semibold text-[#212322] mb-2">Shipping address</h3>
+        <div class="text-sm text-gray-700 leading-6">
+          {{ order.shipping_address | format_address }}
+        </div>
+      </div>
+
+      <!-- Billing Address -->
+      <div class="bg-white border border-[rgba(33,35,34,0.2)] rounded-md p-4 sm:p-5">
+        <h3 class="text-sm font-semibold text-[#212322] mb-2">Billing address</h3>
+        <div class="text-sm text-gray-700 leading-6">
+          {{ order.billing_address | format_address }}
+        </div>
+      </div>
+
+      <!-- Shipping method / Payment -->
+      <div class="bg-white border border-[rgba(33,35,34,0.2)] rounded-md p-4 sm:p-5">
+        <h3 class="text-sm font-semibold text-[#212322] mb-2">Delivery & payment</h3>
+
+        <dl class="text-sm space-y-2">
+          <div class="flex justify-between gap-3">
+            <dt class="text-gray-600">Shipping method</dt>
+            <dd class="text-right">{{ order.shipping_method.title | default: "—" }}</dd>
+          </div>
+          <div class="flex justify-between gap-3">
+            <dt class="text-gray-600">Payment</dt>
+            <dd class="text-right">
+              {% for transaction in order.transactions %}
+                {% assign credit_card_company = transaction.payment_details.credit_card_company %}
+                {% assign credit_card_last_four_digits = transaction.payment_details.credit_card_last_four_digits %}
+
+                {% if credit_card_company %}
+                  <span>{{ credit_card_company }} •••• {{ credit_card_last_four_digits }}</span>
+                {% endif %}
+              {% endfor %}
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Actions -->
+      <div class="bg-white border border-[rgba(33,35,34,0.2)] rounded-md p-4 sm:p-5">
+        <div class="flex flex-wrap items-center gap-3">
+          <a
+            href="{{routes.account_url}}"
+            class="px-4 py-2 rounded-lg border border-[rgba(33,35,34,0.2)] text-sm hover:bg-gray-50"
+          >
+            Back to orders
+          </a>
+          <button
+            onclick="window.print();"
+            class="px-4 py-2 rounded-lg bg-[#212322] text-white text-sm hover:opacity-90"
+          >
+            Print
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
