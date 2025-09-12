@@ -1,0 +1,581 @@
+<section class="px-[18px] mb-16 lg:px-[30px] max-w-[1900px] mx-auto">
+  <div
+    class="page-title text-center mt-[30px] mb-[24px] max-w-2xl mx-auto flex flex-col justify-center items-center"
+  >
+    <h1
+      class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0"
+    >
+      My account
+    </h1>
+  </div>
+  <a
+    href="{{ routes.account_url }}"
+    class="font-secondary w-fit mx-auto  flex justify-center items-center gap-1 text-sm uppercase opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer mb-6"
+  >
+    <span class="block">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-3.5"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+    </span>
+    <span class="block">Return to Account Details</span>
+  </a>
+  <div class="flex justify-center">
+    <a
+      id="add-new-address-btn"
+      class="py-[9px] px-[30px] text-center w-full bg-[#f0f0f0] uppercase text-xs md:text-sm tracking-[1px] leading-[30px] transition-all duration-200 ease-in-out hover:bg-[#e5e5e5] cursor-pointer md:w-fit"
+    >
+      Add a new address
+    </a>
+  </div>
+
+  <!-- Add address form -->
+  <div id="add-new-address-form" class="add-address-form max-w-[920px] mx-auto hidden mt-6">
+    <h3 class="text-[#3e4827] text-[18px] md:text-[20px] uppercase mb-4">Add a New Address</h3>
+    {% form 'customer_address', customer.new_address %}
+      <div class="">
+        <div class="full-name flex flex-col md:flex-row md:gap-x-[30px]">
+          <div class="mb-4 w-full">
+            <label for="address_fname_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+              >First Name</label
+            >
+            <input
+              class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              type="text"
+              name="address[first_name]"
+              id="address_fname_{{ form.id }}"
+              value="{{ form.first_name }}"
+            >
+          </div>
+          <div class="mb-4 w-full">
+            <label for="address_lname_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+              >Last Name</label
+            >
+            <input
+              class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              type="text"
+              name="address[last_name]"
+              id="address_lname_{{ form.id }}"
+              value="{{ form.last_name }}"
+            >
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="address_company_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+            >Company</label
+          >
+          <input
+            class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+            type="text"
+            name="address[company]"
+            id="address_company_{{ form.id }}"
+            value="{{ form.company }}"
+          >
+        </div>
+        <div class="mb-4">
+          <label for="address_address1_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+            >Address1</label
+          >
+          <input
+            class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+            type="text"
+            name="address[address1]"
+            id="address_address1_{{ form.id }}"
+            value="{{ form.address1 }}"
+          >
+        </div>
+        <div class="mb-4">
+          <label for="address_address2_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+            >Address2</label
+          >
+          <input
+            class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+            type="text"
+            name="address[address2]"
+            id="address_address2_{{ form.id }}"
+            value="{{ form.address2 }}"
+          >
+        </div>
+
+        <div class="full-name flex flex-col md:flex-row md:gap-x-[30px]">
+          <div class="mb-4 w-full">
+            <label for="address_city_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1">City</label>
+            <input
+              class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              type="text"
+              name="address[city]"
+              id="address_city_{{ form.id }}"
+              value="{{ form.city }}"
+            >
+          </div>
+          <div class="mb-4 w-full">
+            <label for="address_country_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+              >Country</label
+            >
+            <select
+              class="appearance-none rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              name="address[country]"
+              id="address_country_{{ form.id }}"
+              value="{{form.country}}"
+              data-country-selector
+              data-id="{{ form.id }}"
+            >
+              {{ all_country_option_tags }}
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="address_province_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+            >Province</label
+          >
+          <select
+            class="appearance-none rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+            name="address[province]"
+            id="address_province_{{ form.id }}"
+            value="{{form.province}}"
+          ></select>
+        </div>
+
+        <div class="full-name flex flex-col md:flex-row md:gap-x-[30px]">
+          <div class="mb-4 w-full">
+            <label for="address_zip_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+              >Postal/Zip Code</label
+            >
+            <input
+              class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              type="text"
+              name="address[zip]"
+              id="address_zip_{{ form.id }}"
+              value="{{ form.zip }}"
+            >
+          </div>
+          <div class="mb-4 w-full">
+            <label for="address_phone_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1">Phone</label>
+            <input
+              class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+              type="tel"
+              name="address[phone]"
+              id="address_phone_{{ form.id }}"
+              value="{{ form.phone }}"
+            >
+          </div>
+        </div>
+        <div class="mb-6">
+          <label for="address_default_address_{{ form.id }}" class="flex items-center gap-2 w-fit">
+            <!-- Checkbox wrapper -->
+            <span class="relative h-5 w-5">
+              {{
+                form.set_as_default_checkbox
+                | replace: 'type="checkbox"',
+                  'type="checkbox" class="peer cursor-pointer appearance-none h-5 w-5 border border-[#212322] hover:bg-[#212322]/20 checked:bg-[#212322] checked:border-[#212322] checked:hover:bg-[#212322] transition-colors duration-200 ease-in-out focus:outline-none"'
+              }}
+
+              <!-- Custom checkmark SVG -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="3"
+                stroke="white"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 hidden peer-checked:flex items-center justify-center pointer-events-none"
+              >
+                <path d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+            </span>
+
+            <!-- Label text -->
+            <span class="text-sm font-secondary">Set as default address</span>
+          </label>
+        </div>
+
+        <div class="flex flex-col gap-4 md:flex-row md:gap-6 ">
+          <button
+            type="submit"
+            class="py-[9px] px-[30px] text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-sm tracking-[1px] leading-[30px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer md:w-fit"
+          >
+            Add address
+          </button>
+          <button
+            type="reset"
+            id="back-to-address"
+            class="text-center w-full bg-[#ffffff] uppercase text-sm tracking-[1px] leading-[30px] opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer md:w-fit"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    {% endform %}
+  </div>
+
+  <!-- Address list -->
+  <div id="address-list" class="user-address max-w-[680px] mx-auto mt-6">
+    <div class="address-list">
+      <div class="divide-y divide-[rgba(33,35,34,0.2)]">
+        {% paginate customer.addresses by 10 %}
+          {% for address in customer.addresses %}
+            <div class="single-address py-6">
+              {% if address == customer.default_address %}
+                <h3 class="text-[#3e4827] text-[16px] font-medium font-secondary uppercase text-center mb-6">
+                  Default
+                </h3>
+              {% endif %}
+              <div class="address-details  flex flex-col justify-center items-center text-center">
+                <div class="font-secondary text-[15px] leading-8">{{ address | format_address }}</div>
+
+                <div class="edit-delete-container mt-2">
+                  <button
+                    data-address-id="{{ address.id }}"
+                    class="edit-address-btn mr-2 font-secondary text-[15px] uppercase opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer"
+                  >
+                    Edit
+                  </button>
+                  <span>&bull;</span>
+                  <span
+                    class="ml-2 font-secondary text-[15px] uppercase opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer"
+                    ><a
+                      href="#"
+                      >Delete</a
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Edit address form -->
+            <div id="edit_address_{{ address.id }}" class="edit-address-form max-w-[920px] mx-auto hidden mt-6 pb-6">
+              <h3 class="text-[#3e4827] text-[18px] md:text-[20px] uppercase mb-4">Edit Address</h3>
+              {% form 'customer_address', address %}
+                <div class="">
+                  <div class="full-name flex flex-col md:flex-row md:gap-x-[30px]">
+                    <div class="mb-4 w-full">
+                      <label for="address_fname_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                        >First Name</label
+                      >
+                      <input
+                        class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                        type="text"
+                        name="address[first_name]"
+                        id="address_fname_{{ form.id }}"
+                        value="{{ form.first_name }}"
+                      >
+                    </div>
+                    <div class="mb-4 w-full">
+                      <label for="address_lname_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                        >Last Name</label
+                      >
+                      <input
+                        class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                        type="text"
+                        name="address[last_name]"
+                        id="address_lname_{{ form.id }}"
+                        value="{{ form.last_name }}"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="address_company_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                      >Company</label
+                    >
+                    <input
+                      class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                      type="text"
+                      name="address[company]"
+                      id="address_company_{{ form.id }}"
+                      value="{{ form.company }}"
+                    >
+                  </div>
+                  <div class="mb-4">
+                    <label for="address_address1_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                      >Address1</label
+                    >
+                    <input
+                      class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                      type="text"
+                      name="address[address1]"
+                      id="address_address1_{{ form.id }}"
+                      value="{{ form.address1 }}"
+                    >
+                  </div>
+                  <div class="mb-4">
+                    <label for="address_address2_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                      >Address2</label
+                    >
+                    <input
+                      class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                      type="text"
+                      name="address[address2]"
+                      id="address_address2_{{ form.id }}"
+                      value="{{ form.address2 }}"
+                    >
+                  </div>
+
+                  <div class="full-name flex flex-col md:flex-row md:gap-x-[30px]">
+                    <div class="mb-4 w-full">
+                      <label for="address_city_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                        >City</label
+                      >
+                      <input
+                        class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                        type="text"
+                        name="address[city]"
+                        id="address_city_{{ form.id }}"
+                        value="{{ form.city }}"
+                      >
+                    </div>
+                    <div class="mb-4 w-full">
+                      <label for="address_country_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                        >Country</label
+                      >
+                      <select
+                        class="appearance-none rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                        name="address[country]"
+                        id="address_country_{{ form.id }}"
+                        value="{{form.country}}"
+                        data-country-selector
+                        data-id="{{ form.id }}"
+                      >
+                        {{ all_country_option_tags }}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="address_province_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                      >Province</label
+                    >
+                    <select
+                      class="appearance-none rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                      name="address[province]"
+                      id="address_province_{{ form.id }}"
+                      value="{{form.province}}"
+                    ></select>
+                  </div>
+
+                  <div class="full-name flex flex-col md:flex-row md:gap-x-[30px]">
+                    <div class="mb-4 w-full">
+                      <label for="address_zip_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                        >Postal/Zip Code</label
+                      >
+                      <input
+                        class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                        type="text"
+                        name="address[zip]"
+                        id="address_zip_{{ form.id }}"
+                        value="{{ form.zip }}"
+                      >
+                    </div>
+                    <div class="mb-4 w-full">
+                      <label for="address_phone_{{ form.id }}" class="block text-base leading-6 font-secondary mb-1"
+                        >Phone</label
+                      >
+                      <input
+                        class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+                        type="tel"
+                        name="address[phone]"
+                        id="address_phone_{{ form.id }}"
+                        value="{{ form.phone }}"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="mb-6">
+                    <label for="address_default_address_{{ form.id }}" class="flex items-center gap-2 w-fit">
+                      <!-- Checkbox wrapper -->
+                      <span class="relative h-5 w-5">
+                        {{
+                          form.set_as_default_checkbox
+                          | replace: 'type="checkbox"',
+                            'type="checkbox" class="peer cursor-pointer appearance-none h-5 w-5 border border-[#212322] hover:bg-[#212322]/20 checked:bg-[#212322] checked:border-[#212322] checked:hover:bg-[#212322] transition-colors duration-200 ease-in-out focus:outline-none"'
+                        }}
+
+                        <!-- Custom checkmark SVG -->
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="3"
+                          stroke="white"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 hidden peer-checked:flex items-center justify-center pointer-events-none"
+                        >
+                          <path d="m4.5 12.75 6 6 9-13.5" />
+                        </svg>
+                      </span>
+
+                      <!-- Label text -->
+                      <span class="text-sm font-secondary">Set as default address</span>
+                    </label>
+                  </div>
+
+                  <div class="flex flex-col gap-4 md:flex-row md:gap-6 ">
+                    <button
+                      type="submit"
+                      class="py-[9px] px-[30px] text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-sm tracking-[1px] leading-[30px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer md:w-fit"
+                    >
+                      Update address
+                    </button>
+                    <button
+                      data-address-id="{{ address.id }}"
+                      type="button"
+                      class="cancel-edit text-center w-full bg-[#ffffff] uppercase text-sm tracking-[1px] leading-[30px] opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer md:w-fit"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              {% endform %}
+            </div>
+          {% endfor %}
+        {% endpaginate %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %} ADD NEW ADDRESS {% endcomment %}
+<script>
+  const addAddressBtn = document.getElementById('add-new-address-btn');
+  const addAddressForm = document.getElementById('add-new-address-form');
+  const addressList = document.getElementById('address-list');
+  const backLink = document.getElementById('back-to-address');
+
+  addAddressBtn.addEventListener('click', () => {
+    addAddressForm.classList.remove('hidden');
+  });
+
+  backLink.addEventListener('click', () => {
+    addAddressForm.classList.add('hidden');
+  });
+</script>
+
+{% comment %} Edit ADDRESS {% endcomment %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const editButtons = document.querySelectorAll('.edit-address-btn');
+    const cancelButtons = document.querySelectorAll('.cancel-edit');
+
+    // Show form on edit click
+    editButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.addressId;
+        const form = document.getElementById(`edit_address_${id}`);
+        if (form) {
+          form.classList.remove('hidden');
+        }
+      });
+    });
+
+    // Hide form on cancel click
+    cancelButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.addressId;
+        const form = document.getElementById(`edit_address_${id}`);
+        if (form) {
+          form.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>
+
+{% comment %} PROVINCES {% endcomment %}
+<script>
+  class CustomerAddress {
+    constructor() {
+      this.initCustomerAddress();
+      this.customerAddressesSelector();
+    }
+
+    initCustomerAddress() {
+      const allAddressesSelector = document.querySelectorAll('select[data-country-selector]');
+      if (allAddressesSelector.length < 1) return;
+
+      //console.log(allAddressesSelector);
+
+      allAddressesSelector.forEach((select) => {
+        var selectedCountry = this.getSelectedCountry(select);
+
+        if (!selectedCountry) return;
+
+        var provinces = selectedCountry.dataset.provinces;
+        var arrayOfProvince = JSON.parse(provinces);
+
+        var provinceSelector = document.querySelector(`#address_province_${select.dataset.id}`);
+
+        if (arrayOfProvince.length < 1) {
+          provinceSelector.setAttribute('disabled', 'disabled');
+        } else {
+          provinceSelector.removeAttribute('disabled');
+        }
+
+        provinceSelector.innerHTML = '';
+        var options = '';
+        for (var index = 0; index < arrayOfProvince.length; index++) {
+          if (arrayOfProvince[index][0] === provinceSelector.getAttribute('value')) {
+            options += `<option value="${arrayOfProvince[index][0]}" selected>${arrayOfProvince[index][0]}</option>`;
+          } else {
+            options += `<option value="${arrayOfProvince[index][0]}">${arrayOfProvince[index][0]}</option>`;
+          }
+        }
+
+        provinceSelector.innerHTML = options;
+      });
+    }
+
+    getSelectedCountry(select) {
+      var option, selectedOption;
+      for (var index = 0; index < select.options.length; index++) {
+        option = select.options[index];
+
+        if (option.value === select.getAttribute('value')) {
+          selectedOption = option;
+          selectedOption.setAttribute('selected', 'selected');
+          break;
+        }
+      }
+
+      return selectedOption;
+    }
+
+    customerAddressesSelector() {
+      const addressesSelector = document.querySelectorAll('select[data-country-selector]');
+      if (addressesSelector.length < 1) return;
+
+      addressesSelector.forEach((select) => {
+        select.addEventListener('change', function (e) {
+          var provinces = this.options[this.selectedIndex].dataset.provinces;
+          var arrayOfProvince = JSON.parse(provinces);
+
+          var provinceSelector = document.querySelector(`#address_province_${this.dataset.id}`);
+
+          if (arrayOfProvince.length < 1) {
+            provinceSelector.setAttribute('disabled', 'disabled');
+          } else {
+            provinceSelector.removeAttribute('disabled');
+          }
+
+          provinceSelector.innerHTML = '';
+          var options = '';
+          for (var index = 0; index < arrayOfProvince.length; index++) {
+            options += `<option value="${arrayOfProvince[index][0]}">${arrayOfProvince[index][0]}</option>`;
+          }
+
+          provinceSelector.innerHTML = options;
+        });
+      });
+    }
+  }
+
+  const customerAddress = new CustomerAddress();
+</script>
