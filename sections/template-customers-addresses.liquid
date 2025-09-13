@@ -240,14 +240,17 @@
                     Edit
                   </button>
                   <span>&bull;</span>
-                  <span
+                  <button
+                    data-delete-address
+                    data-url={{ address.url }}
                     class="ml-2 font-secondary text-[15px] uppercase opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer"
-                    ><a
-                      href="#"
-                      >Delete</a
-                    ></span
                   >
+                    Delete
+                  </button>
                 </div>
+                <form method="post" action="{{ address.url }}">
+                  <input type="hidden" name="_method" value="delete">
+                </form>
               </div>
             </div>
             <!-- Edit address form -->
@@ -495,6 +498,27 @@
     constructor() {
       this.initCustomerAddress();
       this.customerAddressesSelector();
+      this.initDeleteAddressesButtons();
+    }
+
+    initDeleteAddressesButtons(){
+    const deleteButtons = document.querySelectorAll("button[data-delete-address]");
+    if(deleteButtons.length < 1) return;
+
+      deleteButtons.forEach(button => {
+        button.addEventListener("click", function(e){
+          var url = this.dataset.url;
+
+          var confirmation = window.confirm("Are you sure you wish to delete this address?");
+
+          if(confirmation) {
+            document.querySelector(`form[action="${url}"]`).submit();
+          }
+
+          
+        })
+      })
+    
     }
 
     initCustomerAddress() {
