@@ -1,0 +1,64 @@
+<section class="px-[18px] mb-6 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto">
+  <!-- Login Section -->
+  {% form 'activate_customer_password', id: 'activate_account_form' %}
+    <div class="login-container">
+      <div
+        class="page-title text-center mt-[30px] mb-[24px] max-w-2xl mx-auto flex flex-col justify-center items-center"
+      >
+        <h1
+          class="text-[23px] font-normal text-[#212322] uppercase leading-[1.8] relative pb-3 after:content-[''] after:w-9 after:h-[3px] after:bg-[#db864e] after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0"
+        >
+          Activate account
+        </h1>
+        <p class="text-sm font-secondary mt-3">Create your password to activate your account</p>
+      </div>
+
+      {% if form.errors %}
+        <div class="max-w-[680px] mb-4 mx-auto text-red-600">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+      <div class="max-w-[680px] mx-auto">
+        <div class="mb-4">
+          <label for="password" class="block text-base leading-6 font-secondary mb-1">Password</label>
+          <input
+            class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+            type="password"
+            name="customer[password]"
+            autocomplete="new-password"
+            id="password"
+          >
+        </div>
+        <div class="mb-4">
+          <label for="confirm_password" class="block text-base leading-6 font-secondary mb-1"
+            >Confirm Password</label
+          >
+          <input
+            class="rounded-none p-3 h-[48px] font-secondary text-left text-black text-base font-normal tracking-[0px] bg-white border border-[#949596]/50 w-full focus:outline-none"
+            type="password"
+            name="customer[password_confirmation]"
+            autocomplete="new-password"
+            id="confirm_password"
+          >
+        </div>
+
+        <div class="account-buttons flex items-center flex-col gap-4 md:flex-row md:gap-6 ">
+          <button
+            type="submit"
+            class="py-[9px] px-[30px] text-center w-full bg-[#d6d2c4] text-[#3e4827] uppercase text-sm tracking-[1px] leading-[30px] transition-all duration-200 ease-in-out hover:bg-[#ccc7b5] cursor-pointer md:w-fit"
+          >
+            Activate account
+          </button>
+          <button
+            type="submit"
+            name="decline"
+            href="#"
+            class="block text-center w-full bg-[#ffffff] uppercase text-sm tracking-[1px] leading-[30px] opacity-100 hover:opacity-70 transition-opacity duration-200 cursor-pointer md:w-fit"
+          >
+            Decline invitation
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endform %}
+</section>

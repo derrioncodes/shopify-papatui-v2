@@ -31,12 +31,20 @@
     {{ 'application.js' | asset_url | script_tag }}
 
     <!-- GLIDE SLIDER -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.core.min.css"></link>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.core.min.css"/>
 
-    
+    <style>
+      [data-cloak] { display: none !important; }
+    </style>
+    <script>
+      // remove all cloaks as soon as JS runs
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll("[data-cloak]").forEach(el => el.removeAttribute("data-cloak"));
+      });
+    </script>
     
   </head>
-  <body>
+  <body data-cloak>
     {% comment %} {% section 'announcement-bar' %} {% endcomment %}
     {% section 'header' %}
     <div

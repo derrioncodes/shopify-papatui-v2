@@ -1,22 +1,6 @@
 {% assign main_menu_linklist = linklists[section.settings.menu] %}
 {% assign search_menu_linklist = linklists[section.settings.menu] %}
 
-<!-- Fixed announcement bar (separate layer) -->
-{% comment %}
-  <div id="announcement-bar" class="fixed top-0 left-0 w-full z-20 bg-[#212322] text-white">
-    <div class="w-full px-4 py-2 text-center text-xs md:text-sm">
-      Free shipping on orders over $50
-      <button
-        id="announcement-dismiss"
-        class="ml-2 px-2 py-[2px] border border-white/30 rounded text-[11px] leading-none hover:bg-white/10"
-        aria-label="Dismiss"
-      >
-        ×
-      </button>
-    </div>
-  </div>
-{% endcomment %}
-
 {% if section.settings.enable_announcement %}
   <!-- Fixed announcement bar (Headroom-compatible) -->
   <div
@@ -1107,8 +1091,7 @@
       "id": "enable_announcement",
       "label": "Enable announcement bar",
       "default": true
-    },
-    
+    }
   ],
   "max_blocks": 3,
   "blocks": [
