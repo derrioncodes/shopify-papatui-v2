@@ -16,9 +16,9 @@
     <div class="order-history md:w-2/3">
       <h2 class="uppercase text-[#3e4827] font-normal text-base md:text-[19px] leading-relaxed mb-4">Order history</h2>
       
-      {% comment %} {% assign number_of_orders = customer.orders | size %}  {% endcomment %}
-      {% assign initial_show = 2 %}
-      {% assign batch_size = 2 %}
+      
+      {% assign initial_show = 10 %}
+      {% assign batch_size = 5 %}
       {% assign total_orders = customer.orders | size %}
       
       {% if total_orders > 0 %}
