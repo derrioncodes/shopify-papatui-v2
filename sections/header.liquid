@@ -212,7 +212,7 @@
           <!-- USER ICON -->
           {% render 'icon-account-user' %}
 
-          <span class="pl-1.5 text-xs font-secondary">Log in</span>
+          <span class="pl-1.5 text-xs font-secondary">{% if customer %}Account{% else %}Log in{% endif %}</span>
         </a>
       </div>
     </div>
@@ -237,11 +237,19 @@
             >
               <div class="relative">
                 <div class="relative">
+                  {% if section.settings.mobilebanner != blank %}
                   <img
                     class="h-60 w-full object-cover"
-                    src="{{ 'mobile-secondary-subnav-banner_completefacecare_scent_uncented__01.png' | asset_url }}"
+                    src="{{ section.setting.mobilebanner | asset_url }}"
                     alt=""
                   >
+                  {% else %}
+                    <img
+                      class="h-60 w-full object-cover"
+                      src="{{ 'mobile-secondary-subnav-banner_completefacecare_scent_uncented__01.png' | asset_url }}"
+                      alt=""
+                    >
+                  {% endif %}
                   <div
                     class="mobile-subnav__close-btn absolute top-[24px] left-[8px] cursor-pointer z-[60]"
                   >
@@ -286,10 +294,10 @@
     <!-- START OF MOBILE SOCIALS -->
     <div class="ml-4.5 mr-3 flex items-center gap-2">
       <a class="w-7 h-7 flex items-center justify-center">
-        <img class="w-5 h-5" src="{{ 'papatui_instagram.png' | asset_url }}" alt="">
+        <img class="w-5 h-5" src="{{ 'papatui_instagram.png' | asset_url }}" alt="{{ section.settings.mobilealt | default: '' | escape }}">
       </a>
       <a class="w-7 h-7 flex items-center justify-center">
-        <img class="w-5 h-5" src="{{ 'papatui-tiktok.png' | asset_url }}" alt="">
+        <img class="w-5 h-5" src="{{ 'papatui-tiktok.png' | asset_url }}" alt="{{ section.settings.mobilealt | default: '' | escape }}">
       </a>
     </div>
     <!-- END OF MOBILE SOCIALS -->
@@ -1083,6 +1091,17 @@
       "label": "Search Menu",
       "default": "main-menu",
       "info": "Choose your menu for the search component"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobilebanner",
+      "label": "Mobile Subnav Banner image"
+    },
+    {
+      "type": "text",
+      "id": "mobilealt",
+      "label": "Mobile Subnav Alt text",
+      "default": "Subnav banner"
     },
 
     /* ——— Announcement Bar controls ——— */
