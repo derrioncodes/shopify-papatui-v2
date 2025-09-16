@@ -217,24 +217,6 @@
           </div>
         </div>
 
-        <!-- SINGLE ADD-TO-CART BUTTON (JS toggles state/text) -->
-        {% comment %}
-          <button
-            type="submit"
-            name="add"
-            data-add-to-cart
-            class="
-              py-[9px] px-[18px] mb-6 text-center w-full uppercase text-xs leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out
-              bg-[#d6d2c4] text-[#3e4827] hover:bg-[#ccc7b5] cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed border border-[#212322]
-            "
-            {% if v.available == false %}
-              disabled
-            {% endif %}
-          >
-            {% if v.available %}Add to cart{% else %}Sold out{% endif %}
-          </button>
-        {% endcomment %}
-
         <button
           data-add-to-cart
           type="{% if v.available %}submit{% else %}button{% endif %}"

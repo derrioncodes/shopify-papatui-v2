@@ -1,51 +1,51 @@
 {% if section.settings.image_position == 'right' %}
-<!-- START OF IMAGE-TEXT COLUMN SECTION -->
-<section class="px-[18px] mb-8 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto ">
-  <div class="image-text-container lg:flex lg:flex-row-reverse lg:items-center lg:relative">
-    {% if section.settings.image %}
-      <div class="image lg:w-2/3 lg:ml-auto lg:aspect-[4/3]">
-        <img
-          class="w-full h-full object-cover"
-          src="{{ section.settings.image | image_url }}"
-          alt="{{ section.settings.alt_text }}"
-        >
-      </div>
-    {% else %}
-      <div class="image lg:w-2/3 lg:ml-auto lg:aspect-[4/3]">
-        <img class="w-full h-full object-cover" src="{{ 'AboutPage_image.png' | asset_url }}" alt="Fallback image">
-      </div>
-    {% endif %}
+  <!-- START OF IMAGE-TEXT COLUMN SECTION -->
+  <section class="px-[18px] mb-8 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto ">
+    <div class="image-text-container lg:flex lg:flex-row-reverse lg:items-center lg:relative">
+      {% if section.settings.image %}
+        <div class="image lg:w-2/3 lg:ml-auto lg:aspect-[4/3]">
+          <img
+            class="w-full h-full object-cover"
+            src="{{ section.settings.image | image_url }}"
+            alt="{{ section.settings.alt_text }}"
+          >
+        </div>
+      {% else %}
+        <div class="image lg:w-2/3 lg:ml-auto lg:aspect-[4/3]">
+          <img class="w-full h-full object-cover" src="{{ 'AboutPage_image.png' | asset_url }}" alt="Fallback image">
+        </div>
+      {% endif %}
 
-    <div
-      class="
-        text-content p-9 text-left bg-[#f3f1ec] md:p-[48px] md:max-w-[480px] md:mr-0 md:z-[1] md:w-full md:relative md:left-[30px] md:top-[-30px]
-        lg:w-1/2 lg:max-w-[640px] lg:h-fit lg:p-[60px] lg:z-[1] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 2xl:left-[100px]
-      "
-    >
-      <h2
-        class="relative text-[#212121] mb-5 pb-[12px] text-[18px] leading-[32px] lg:leading-[40px] font-normal uppercase after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-9 after:h-[3px] after:bg-[#db864e] lg:text-[32px]"
+      <div
+        class="
+          text-content p-9 text-left bg-[#f3f1ec] md:p-[48px] md:max-w-[480px] md:mr-0 md:z-[1] md:w-full md:relative md:left-[30px] md:top-[-30px]
+          lg:w-1/2 lg:max-w-[640px] lg:h-fit lg:p-[60px] lg:z-[1] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 2xl:left-[100px]
+        "
       >
-        {{ section.settings.heading }}
-      </h2>
-      <p class="text-sm lg:text-base text-[#3e4827] mb-5 leading-[30px] font-secondary">
-        {{ section.settings.subtext }}
-      </p>
-      <a
-        href="{{ section.settings.button_link }}"
-        class="block w-[150px] text-center bg-transparent text-[#212121] shadow-[inset_0_0_0_1px_#212121] uppercase text-xs py-[9px] px-[18px] leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#212121] hover:text-white "
-      >
-        {{ section.settings.button_text }}
-      </a>
+        <h2
+          class="relative text-[#212121] mb-5 pb-[12px] text-[18px] leading-[32px] lg:leading-[40px] font-normal uppercase after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-9 after:h-[3px] after:bg-[#db864e] lg:text-[32px]"
+        >
+          {{ section.settings.heading }}
+        </h2>
+        <p class="text-sm lg:text-base text-[#3e4827] mb-5 leading-[30px] font-secondary">
+          {{ section.settings.subtext }}
+        </p>
+        <a
+          href="{{ section.settings.button_link }}"
+          class="block w-[150px] text-center bg-transparent text-[#212121] shadow-[inset_0_0_0_1px_#212121] uppercase text-xs py-[9px] px-[18px] leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#212121] hover:text-white "
+        >
+          {{ section.settings.button_text }}
+        </a>
+      </div>
     </div>
-  </div>
-</section>
-<!-- END OF IMAGE-TEXT COLUMN SECTION -->
+  </section>
+  <!-- END OF IMAGE-TEXT COLUMN SECTION -->
 {% else %}
-<!-- START OF TWO COLUMN REVERSE SECTION -->
-<section class="px-[18px] mb-8 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto">
-  <div class="image-text-container lg:flex lg:flex-row lg:items-center lg:relative">
-    <!-- Image on the left -->
-    {% if section.settings.image %}
+  <!-- START OF TWO COLUMN REVERSE SECTION -->
+  <section class="px-[18px] mb-8 lg:mb-16 lg:px-[30px] max-w-[1900px] mx-auto">
+    <div class="image-text-container lg:flex lg:flex-row lg:items-center lg:relative">
+      <!-- Image on the left -->
+      {% if section.settings.image %}
         <div class="image lg:w-2/3 lg:mr-auto lg:aspect-[4/3]">
           <img
             class="w-full h-full object-cover"
@@ -59,31 +59,31 @@
         </div>
       {% endif %}
 
-    <!-- Text on the right -->
-    <div
-      class="
-        text-content p-9 text-left bg-[#f3f1ec] md:p-[48px] md:max-w-[480px] md:mr-0 md:ml-auto md:z-[1] md:w-full md:relative md:right-[30px] md:top-[-30px]
-        lg:w-1/2 lg:max-w-[640px] lg:h-fit lg:p-[60px] lg:z-[1] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 2xl:right-[100px]
-      "
-    >
-      <h2
-        class="relative text-[#212121] mb-5 pb-[12px] text-[18px] leading-[32px] lg:leading-[40px] font-normal uppercase after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-9 after:h-[3px] after:bg-[#db864e] lg:text-[32px]"
+      <!-- Text on the right -->
+      <div
+        class="
+          text-content p-9 text-left bg-[#f3f1ec] md:p-[48px] md:max-w-[480px] md:mr-0 md:ml-auto md:z-[1] md:w-full md:relative md:right-[30px] md:top-[-30px]
+          lg:w-1/2 lg:max-w-[640px] lg:h-fit lg:p-[60px] lg:z-[1] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 2xl:right-[100px]
+        "
       >
-        {{ section.settings.heading }}
-      </h2>
-      <p class="text-sm lg:text-base text-[#3e4827] mb-5 leading-[30px] font-secondary">
-        {{ section.settings.subtext }}
-      </p>
-      <a
-        href="{{ section.settings.button_link }}"
-        class="block w-[150px] text-center bg-transparent text-[#212121] shadow-[inset_0_0_0_1px_#212121] uppercase text-xs py-[9px] px-[18px] leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#212121] hover:text-white "
-      >
-        {{ section.settings.button_text }}
-      </a>
+        <h2
+          class="relative text-[#212121] mb-5 pb-[12px] text-[18px] leading-[32px] lg:leading-[40px] font-normal uppercase after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-9 after:h-[3px] after:bg-[#db864e] lg:text-[32px]"
+        >
+          {{ section.settings.heading }}
+        </h2>
+        <p class="text-sm lg:text-base text-[#3e4827] mb-5 leading-[30px] font-secondary">
+          {{ section.settings.subtext }}
+        </p>
+        <a
+          href="{{ section.settings.button_link }}"
+          class="block w-[150px] text-center bg-transparent text-[#212121] shadow-[inset_0_0_0_1px_#212121] uppercase text-xs py-[9px] px-[18px] leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#212121] hover:text-white "
+        >
+          {{ section.settings.button_text }}
+        </a>
+      </div>
     </div>
-  </div>
-</section>
-<!-- END OF TWO COLUMN REVERSE SECTION -->
+  </section>
+  <!-- END OF TWO COLUMN REVERSE SECTION -->
 {% endif %}
 {% schema %}
 {
@@ -137,19 +137,19 @@
     }
   ],
   "presets": [
-  {
-    "name": "Image Text Default",
-    "category": "Custom",
-    "settings": {
-      "image_position": "right",
-      "alt_text": "Promotional Image",
-      "heading": "DERMATOLOGIST TESTED MEN'S CARE THAT WORKS",
-      "subtext": "Science backed formulations built for performance",
-      "button_text": "Shop all",
-      "button_link": "/",
-      "image": "shopify:\/\/shop_images\/AboutPage_image.png"
+    {
+      "name": "Image Text Default",
+      "category": "Custom",
+      "settings": {
+        "image_position": "right",
+        "alt_text": "Promotional Image",
+        "heading": "DERMATOLOGIST TESTED MEN'S CARE THAT WORKS",
+        "subtext": "Science backed formulations built for performance",
+        "button_text": "Shop all",
+        "button_link": "/",
+        "image": "shopify:\/\/shop_images\/AboutPage_image.png"
+      }
     }
-  }
-]
+  ]
 }
 {% endschema %}
