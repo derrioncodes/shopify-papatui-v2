@@ -28,7 +28,7 @@
     <!-- Header hook for plugins -->
     {{ 'application.css' | asset_url | stylesheet_tag }}
     {{ 'styles.css' | asset_url | stylesheet_tag }}
-    {{ 'application.js' | asset_url | script_tag }}
+    {% comment %} {{ 'application.js' | asset_url | script_tag }} {% endcomment %}
 
     <!-- GLIDE SLIDER -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.core.min.css">
@@ -55,13 +55,21 @@
     <main role="main">
       {{ content_for_layout }}
     </main>
+    
     {% section 'footer' %}
+
+    <div id="CartDrawerMount">
+      {% section 'cart-drawer' %}
+    </div>
 
     <!-- Glide.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide" defer></script> 
 
     {% comment %} Headroom js {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/headroom.js@0.12.0/dist/headroom.min.js" defer></script>
+
+    {% comment %} GLOBAL JS {% endcomment %}
+    <script src="{{ 'application.js' | asset_url }}" defer></script>
 
   </body>
 </html>

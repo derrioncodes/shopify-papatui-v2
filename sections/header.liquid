@@ -108,7 +108,7 @@
         <!-- USER ICON -->
         {% render 'icon-account-user' %}
       </a>
-      <a href="{{ routes.cart_url }}" class=" flex items-center relative cursor-pointer">
+      <a href="{{ routes.cart_url }}" data-cart-open aria-controls="cart-root" aria-expanded="false" aria-haspopup="dialog" class=" flex items-center relative cursor-pointer">
         <!-- CART ICON -->
         <svg
           xmlns="http://www.w3.org/2000/svg"

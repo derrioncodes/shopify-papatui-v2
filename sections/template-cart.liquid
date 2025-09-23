@@ -49,22 +49,24 @@
                 <div class="flex gap-5">
                   <div>
                     <a href="{{ item.url }}">
+                      <div class="shrink-0 w-[clamp(80px,10vw,120px)] h-[clamp(80px,10vw,120px)]">
                       {% if item.image %}
                         <img
-                          class="w-[clamp(80px,10vw,120px)] object-contain transition-opacity duration-200 hover:opacity-70"
+                          class="w-full h-full object-contain transition-opacity duration-200 hover:opacity-70"
                           src="{{ item.image | image_url }}"
                           alt="{{ item.title | escape }}"
                         >
                       {% else %}
                         {{ 'product-1' | placeholder_svg_tag: 'w-[clamp(80px,10vw,120px)] object-contain' }}
                       {% endif %}
+                      </div>
                     </a>
                   </div>
                   <div class="product-details">
                     <div class="product-name  mb-3.5">
                       <a
                         href="{{ item.url }}"
-                        class="font-secondary text-base text-[#3e4827] hover:text-[rgba(62,72,39,0.7)] transition-colors duration-200 font-normal capitalize"
+                        class="font-secondary text-sm md:text-base text-[#3e4827] hover:text-[rgba(62,72,39,0.7)] transition-colors duration-200 font-normal capitalize"
                       >
                         {{ item.product.title }}
                       </a>

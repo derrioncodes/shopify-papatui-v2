@@ -1,0 +1,186 @@
+<!-- Overlay + Drawer -->
+<div id="cart-root" class="fixed inset-0 z-[999] hidden" aria-hidden="true" data-cart-root>
+  <!-- Overlay -->
+  <button
+    class="absolute inset-0 bg-black/30 opacity-0 transition-opacity duration-300"
+    data-cart-overlay
+    data-cart-close
+    aria-label="Close cart overlay"
+    type="button"
+  ></button>
+
+  <!-- Drawer -->
+  <aside
+    class="absolute right-0 top-0 h-full w-full sm:max-w-md bg-white shadow-xl translate-x-full transition-transform duration-300 flex flex-col"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cart-title"
+    data-cart-panel
+  >
+    <!-- Header -->
+    <div class="px-5 py-4 border-b border-[rgba(33,35,34,0.2)] flex items-center justify-between">
+      <h2 id="cart-title" class="text-base font-medium uppercase">Your cart</h2>
+      <button class="p-2 -mr-2 hover:opacity-70 cursor-pointer" data-cart-close aria-label="Close cart" type="button">
+        <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    {% if cart.item_count > 0 %}
+      <!-- Items -->
+      <div class="flex-1 overflow-y-auto px-5 py-5" data-cart-items>
+        {% for item in cart.items %}
+          {% assign line = forloop.index %}
+          <div
+            class="cart-drawer-item flex justify-between gap-5 mb-[30px] pb-[30px] border-b border-[rgba(33,35,34,0.2)] last:border-b-0 last:mb-0"
+            data-item
+            data-line="{{ line }}"
+          >
+            <div class="flex gap-5">
+              <a href="{{ item.url }}">
+                <div class="shrink-0 w-[clamp(80px,10vw,120px)] h-[clamp(80px,10vw,120px)]">
+                {% if item.image %}
+                  <img
+                    class="w-full h-full object-contain transition-opacity duration-200 hover:opacity-70"
+                    src="{{ item.image | image_url }}"
+                    alt="{{ item.title | escape }}"
+                  >
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'w-[clamp(80px,10vw,120px)] object-contain' }}
+                {% endif %}
+                </div>
+              </a>
+
+              <div class="cart-drawer_product-details">
+                <div class="product-name mb-3.5">
+                  <a
+                    href="{{ item.url }}"
+                    class="font-secondary !leading-0 text-sm md:text-base text-[#3e4827] hover:text-[rgba(62,72,39,0.7)] transition-colors duration-200 font-normal"
+                  >
+                    {{ item.product.title }}
+                  </a>
+                  {% unless item.product.has_only_default_variant %}
+                    <div class="font-secondary text-[#535353] text-xs mt-0.5">{{ item.variant.title }}</div>
+                  {% endunless %}
+
+                  {% if item.properties and item.properties != empty %}
+                    <dl class="mt-1 space-y-0.5 text-xs text-gray-600">
+                      {% for p in item.properties %}
+                        {% assign key = p.first -%}
+                        {%- assign val = p.last %}
+                        {% unless val == blank %}
+                          <div>
+                            <dt class="inline">{{ key }}:</dt>
+                            <dd class="inline">{{ val }}</dd>
+                          </div>
+                        {% endunless %}
+                      {% endfor %}
+                    </dl>
+                  {% endif %}
+                </div>
+
+                <!-- Qty controls -->
+                <div class="cart-drawer_item__quantity flex flex-wrap gap-[12px] items-center justify-start w-full">
+                  <div class="item__quantity__input flex border border-[rgba(33,35,34,0.2)]">
+                    <button
+                      class="input__minus text-[0.865rem] w-[1.9rem] h-[1.9rem] bg-transparent p-0 text-center border-0 leading-none cursor-pointer"
+                      data-qty-decrease
+                      data-line="{{ line }}"
+                      type="button"
+                      aria-label="Decrease quantity"
+                    >
+                      -
+                    </button>
+
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      name="updates[]"
+                      value="{{ item.quantity }}"
+                      class="p-0 rounded-none bg-transparent border-l border-r border-t-0 border-b-0 border-[rgba(33,35,34,0.2)] text-center w-[2.375rem] h-[1.9rem] text-[#212121] text-[0.865rem] appearance-none"
+                      data-line="{{ line }}"
+                      data-line-qty="{{ line }}"
+                      aria-label="Quantity"
+                    >
+
+                    <button
+                      class="input__plus text-[0.865rem] w-[1.9rem] h-[1.9rem] bg-transparent p-0 text-center border-0 leading-none cursor-pointer"
+                      data-qty-increase
+                      data-line="{{ line }}"
+                      type="button"
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <button
+                    class="cart-drawer-item__remove block cursor-pointer hover:opacity-70"
+                    data-remove-line
+                    data-line="{{ line }}"
+                    type="button"
+                    aria-label="Remove item"
+                  >
+                    <!-- trash icon -->
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-5"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="cart-drawer_product-price font-secondary" data-line-total>
+              {{ item.final_line_price | money }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Footer -->
+      <div class="px-5 py-5 border-t border-[rgba(33,35,34,0.2)]">
+        <div class="flex items-center justify-between text-lg mb-3 font-secondary">
+          <span class="font-secondary">Subtotal</span>
+          <span data-subtotal>{{ cart.total_price | money }}</span>
+        </div>
+        <p class="text-xs text-gray-500 mb-4 font-secondary">Taxes and shipping calculated at checkout.</p>
+        <div class="flex flex-col gap-3">
+          <a
+            href="{{ routes.cart_url }}"
+            class="flex-1 w-full px-4 py-2 border border-[rgba(33,35,34,0.2)] uppercase tracking-[1px] text-xs leading-[30px] hover:bg-gray-50 text-center"
+            >View cart</a
+          >
+          <form action="{{ routes.cart_url }}" method="post" class="flex-1">
+            <button
+              type="submit"
+              name="checkout"
+              class="w-full px-4 py-2 bg-[#212322] text-white uppercase tracking-[1px] text-xs hover:opacity-90 cursor-pointer leading-[30px]"
+            >
+              Checkout
+            </button>
+          </form>
+        </div>
+      </div>
+    {% else %}
+      <!-- Empty -->
+      <div class="px-5 py-10 text-center">
+        <h3 class="uppercase mb-2 text-[#3e4827] text-base">Your cart is empty!</h3>
+        <p class="font-secondary mb-4">Add items to your cart.</p>
+        <a
+          href="{{ routes.all_products_collection_url }}"
+          class="block text-center bg-[#3e4827] text-[#ffffff] uppercase text-sm py-[9px] px-[30px] leading-[30px] tracking-[1px] transition-all duration-200 ease-in-out hover:bg-[#5a6939] w-full"
+          >Shop now</a
+        >
+      </div>
+    {% endif %}
+  </aside>
+</div>
