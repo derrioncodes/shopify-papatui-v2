@@ -298,14 +298,13 @@
   itemsWrap?.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
 </script>
 
-<script>
+{% comment %} <script>
   document.querySelectorAll('[data-acc-root]').forEach((root) => {
     const trigger = root.querySelector('[data-acc-trigger]');
     const body = root.querySelector('[data-acc-body]');
     const icon = root.querySelector('[data-acc-icon]');
 
     function open() {
-      trigger.setAttribute('aria-expanded', 'true');
       body.style.setProperty('grid-template-rows', '1fr');
       body.classList.remove('opacity-0', 'pointer-events-none');
       body.classList.add('opacity-100');
@@ -313,7 +312,7 @@
     }
 
     function close() {
-      trigger.setAttribute('aria-expanded', 'false');
+      
       body.style.setProperty('grid-template-rows', '0fr');
       body.classList.add('opacity-0', 'pointer-events-none');
       body.classList.remove('opacity-100');
@@ -334,4 +333,55 @@
       if (e.key === 'Escape') close();
     });
   });
-</script> 
+</script>  {% endcomment %}
+
+<script>
+  document.querySelectorAll('[data-acc-root]').forEach((root) => {
+    const trigger = root.querySelector('[data-acc-trigger]');
+    const body    = root.querySelector('[data-acc-body]');
+    const icon    = root.querySelector('[data-acc-icon]'); // ← the <span> around the SVG
+
+    const isOpen = () => !body.classList.contains('opacity-0');
+    const open = () => {
+      body.style.setProperty('grid-template-rows', '1fr');
+      body.classList.remove('opacity-0', 'pointer-events-none');
+      body.classList.add('opacity-100');
+      icon?.classList.add('rotate-45');
+      trigger?.setAttribute('aria-expanded', 'true');
+    };
+    const close = () => {
+      body.style.setProperty('grid-template-rows', '0fr');
+      body.classList.add('opacity-0', 'pointer-events-none');
+      body.classList.remove('opacity-100');
+      icon?.classList.remove('rotate-45');
+      trigger?.setAttribute('aria-expanded', 'false');
+    };
+    const toggle = () => (isOpen() ? close() : open());
+
+    // start open
+    open();
+
+    // header button toggles
+    trigger?.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggle();
+    });
+
+    // ✅ icon toggles too; stop bubbling so it doesn't double-trigger the header button
+    if (icon) {
+      icon.setAttribute('role', 'button');
+      icon.setAttribute('tabindex', '0');
+      icon.style.cursor = 'pointer';
+
+      const onIcon = (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // important
+        toggle();
+      };
+      icon.addEventListener('click', onIcon);
+      icon.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') onIcon(e);
+      });
+    }
+  });
+</script>
