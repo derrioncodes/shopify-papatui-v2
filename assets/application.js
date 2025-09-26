@@ -105,9 +105,6 @@ async function renderCartDrawer({ open = false } = {}) {
 }
 
 
-
-
-
 // Open drawer from any [data-cart-open] trigger (fresh render every time)
 document.addEventListener('click', async (e) => {
   const opener = e.target.closest('[data-cart-open]');
