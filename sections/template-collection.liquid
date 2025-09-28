@@ -195,15 +195,11 @@
     <div class="px-5 py-5 border-t border-[rgba(33,35,34,0.2)]">
       <div class="flex gap-3">
         <a
-          href="#"
+          href="{{ collection.url }}"
           class="flex-1 border border-[rgba(33,35,34,0.4)] uppercase text-sm py-[9px] px-[30px] leading-[30px] text-[rgba(33,35,34,0.8)] text-center"
           >Clear all</a
         >
-        <a
-          href="{{ collection.url }}"
-          class="flex-1 bg-[#d6d2c4] text-[#3e4827] uppercase text-sm py-[9px] px-[30px] leading-[30px] hover:opacity-90 text-center"
-          >View</a
-        >
+        
       </div>
     </div>
   </div>
@@ -348,16 +344,15 @@
 </script>
 
 {% comment %} Checkboxes {% endcomment %}
+
 <script>
   (() => {
     const PREVIEW_KEYS = ['preview_theme_id', '_fd', 'pb'];
 
-    // Reuse the grid + section id we used for checkboxes
     const gridEl = document.querySelector('.collection-container');
     if (!gridEl) return;
     const gridSectionId = gridEl.dataset.gridSectionId || gridEl.dataset.sectionId;
 
-    // Reuse helper if defined; otherwise define a tiny one
     const fetchAndSwap =
       window.__fetchAndSwap__ ||
       function (targetUrl) {
@@ -380,34 +375,58 @@
           .finally(() => gridEl.removeAttribute('aria-busy'));
       };
 
-    // Set the select to current sort (or the collection default)
     const select = document.getElementById('sort-by');
     if (!select) return;
 
     const current = new URL(window.location.href);
     const currentSort = current.searchParams.get('sort_by') || select.dataset.defaultSort || 'manual';
-    // Some themes return 'featured' instead of 'manual'
     select.value = currentSort === 'featured' ? 'manual' : currentSort;
 
-    // Change handler (AJAX)
+    // ------- SORT CHANGE (already working) -------
     select.addEventListener('change', () => {
-      const rawValue = select.value; // e.g. "price-ascending"
+      const rawValue = select.value;
       const sortValue = rawValue === 'featured' ? 'manual' : rawValue;
 
       const target = new URL(window.location.href);
 
-      // Preserve CLI preview params
       PREVIEW_KEYS.forEach((k) => {
         if (!target.searchParams.has(k) && current.searchParams.has(k)) {
           target.searchParams.set(k, current.searchParams.get(k));
         }
       });
 
-      // Set sort, reset to first page
       target.searchParams.set('sort_by', sortValue);
       target.searchParams.delete('page');
 
       fetchAndSwap(target);
+    });
+
+    // ------- FILTER CHECKBOXES (the missing piece) -------
+    document.querySelectorAll('input[type="checkbox"][data-add-url][data-remove-url]').forEach((input) => {
+      input.addEventListener('change', () => {
+        // Pick the URL Shopify gave you for this state
+        const urlStr = input.checked ? input.dataset.addUrl : input.dataset.removeUrl;
+
+        // Build a URL we can tweak
+        const target = new URL(urlStr, window.location.origin);
+
+        // Preserve preview params and current sort choice
+        PREVIEW_KEYS.forEach((k) => {
+          if (!target.searchParams.has(k) && current.searchParams.has(k)) {
+            target.searchParams.set(k, current.searchParams.get(k));
+          }
+        });
+
+        const sortValue = current.searchParams.get('sort_by') || select.value || 'manual';
+        if (!target.searchParams.has('sort_by') && sortValue) {
+          target.searchParams.set('sort_by', sortValue === 'featured' ? 'manual' : sortValue);
+        }
+
+        // Reset to first page when filters change
+        target.searchParams.delete('page');
+
+        fetchAndSwap(target);
+      });
     });
 
     // Keep grid in sync with back/forward
