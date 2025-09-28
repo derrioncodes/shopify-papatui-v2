@@ -382,7 +382,7 @@
     const currentSort = current.searchParams.get('sort_by') || select.dataset.defaultSort || 'manual';
     select.value = currentSort === 'featured' ? 'manual' : currentSort;
 
-    // ------- SORT CHANGE (already working) -------
+    // ------- SORT CHANGE -------
     select.addEventListener('change', () => {
       const rawValue = select.value;
       const sortValue = rawValue === 'featured' ? 'manual' : rawValue;
@@ -401,7 +401,7 @@
       fetchAndSwap(target);
     });
 
-    // ------- FILTER CHECKBOXES (the missing piece) -------
+    // ------- FILTER CHECKBOXES -------
     document.querySelectorAll('input[type="checkbox"][data-add-url][data-remove-url]').forEach((input) => {
       input.addEventListener('change', () => {
         // Pick the URL Shopify gave you for this state
