@@ -1,0 +1,42 @@
+{% comment %} sections/email-capture-klaviyo.liquid {% endcomment %}
+<section
+  class="px-[18px] lg:px-[30px] mx-auto pt-[60px] pb-[60px]"
+  style="background-color: {{ section.settings.bg_color }};"
+>
+  <div class="email-container flex flex-col w-full max-w-[950px] mx-auto m-0 justify-center items-center">
+    
+
+    <!-- Paste/render the exact Klaviyo embed here -->
+    <div class="klaviyo-form-U3FcjZ w-full"></div>
+    <div class="klaviyo-form-S2dhCy w-full"></div>
+
+    {% if section.settings.disclaimer != blank %}
+      <div class="email-capture__disclaimer text-[#544e38] text-center text-[12px] py-[20px]">
+        {{ section.settings.disclaimer }}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+    .email-capture__disclaimer a{
+        color: #0066cc;
+        text-decoration: underline;
+    }
+</style>
+
+{% schema %}
+{
+  "name": "Email capture (Klaviyo)",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "<p>You can unsubscribe from our mailing list at any time. Further details of how we handle your personal information can be found in our <a href='/policies/privacy-policy'>Privacy Policy</a>. By subscribing you agree to our <a href='/policies/terms-of-service'>Terms and Conditions</a>.</p>"
+    },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#f3f1ec" }
+  ],
+  "presets": [{ "name": "Email capture (Klaviyo)" }]
+}
+{% endschema %}

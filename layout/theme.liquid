@@ -55,12 +55,20 @@
     <main role="main">
       {{ content_for_layout }}
     </main>
-    
+    {% section 'email-capture-klaviyo' %}
     {% section 'footer' %}
 
     <div id="CartDrawerMount">
       {% section 'cart-drawer' %}
     </div>
+    
+    {% comment %} Lets Klaviyo know logged-in customers {% endcomment %}
+    {% if customer and customer.email %}
+      <script>
+        window.klaviyo = window.klaviyo || [];
+        window.klaviyo.push(['identify', { '$email': '{{ customer.email | escape }}' }]);
+      </script>
+      {% endif %}
 
     <!-- Glide.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide" defer></script> 
