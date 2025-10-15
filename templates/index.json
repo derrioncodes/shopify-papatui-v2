@@ -130,11 +130,19 @@
       ],
       "name": "Multi Columns",
       "settings": {}
+    },
+    "collection_slider_ABwGtn": {
+      "type": "collection-slider",
+      "name": "Collection Slider",
+      "settings": {
+        "collection": "bestsellers"
+      }
     }
   },
   "order": [
     "hero_FHUqVW",
     "image_text_fEeB7i",
-    "multi_columns_wJKctj"
+    "multi_columns_wJKctj",
+    "collection_slider_ABwGtn"
   ]
 }
