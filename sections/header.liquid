@@ -511,176 +511,8 @@
 {% comment %} FIXED HEADER AND ANNOUCEMENT BAR -- SCROLL ANIMATION {% endcomment %}
 <!-- Headroom library -->
 
-{% comment %}
-  <script defer>
-    document.addEventListener('DOMContentLoaded', function () {
-      var bar = document.getElementById('announcement-bar');
-      var dismiss = document.getElementById('announcement-dismiss');
-      var header = document.getElementById('site-header');
-      var spacer = document.getElementById('header-spacer');
-      var KEY = 'announcement:dismissed:v1';
 
-      if (!header || !spacer) return;
-
-      // ---- helpers ----
-      function cssNum(name, fallback) {
-        var v = parseInt(getComputedStyle(document.documentElement).getPropertyValue(name), 10);
-        return isNaN(v) ? fallback : v;
-      }
-      function setVar(name, px) {
-        document.documentElement.style.setProperty(name, px + 'px');
-      }
-      function setShift(px) {
-        document.documentElement.style.setProperty('--header-shift', px + 'px');
-      }
-      function isVisible(el) {
-        return !!el && el.style.display !== 'none';
-      }
-
-      // ---- restore dismiss state BEFORE measuring ----
-      if (bar && localStorage.getItem(KEY) === '1') {
-        bar.style.display = 'none';
-      }
-
-      // ---- measure bar+header and keep spacer synced ----
-      function measure() {
-        var barH = bar && isVisible(bar) ? Math.round(bar.getBoundingClientRect().height) : 0;
-        var headerH = Math.round(header.getBoundingClientRect().height);
-        var stackH = barH + headerH;
-
-        setVar('--bar-h', barH);
-        setVar('--hdr-h', headerH);
-        setVar('--stack-h', stackH);
-
-        spacer.style.height = stackH + 'px';
-
-        // If currently hidden (slid up), keep translateY aligned to the new height
-        var curShift = getComputedStyle(document.documentElement).getPropertyValue('--header-shift').trim();
-        if (curShift && curShift !== '0px') setShift(-stackH);
-      }
-
-      // ---- dismiss button wiring ----
-      if (bar && dismiss) {
-        dismiss.addEventListener('click', function () {
-          bar.style.display = 'none';
-          try {
-            localStorage.setItem(KEY, '1');
-          } catch (e) {}
-          measure(); // re-measure immediately so spacer/header shift update
-        });
-      }
-
-      // ---- Headroom init (hide on down, reveal on up) ----
-      var hr = new Headroom(header, {
-        offset: 0,
-        tolerance: { up: 5, down: 5 },
-        onPin: function () {
-          setShift(0);
-        },
-        onUnpin: function () {
-          var stackH = cssNum('--stack-h', 0);
-          setShift(-stackH);
-        },
-        onTop: function () {
-          setShift(0);
-        },
-      });
-      hr.init();
-
-      // ---- run measurement on load + resize ----
-      var ready = () => requestAnimationFrame(() => requestAnimationFrame(measure));
-      document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
-      window.addEventListener('load', measure, { passive: true });
-      window.addEventListener('resize', measure, { passive: true });
-
-      // Keep in sync if sizes change (responsive wrapping, dynamic content)
-      if ('ResizeObserver' in window) {
-        var ro = new ResizeObserver(measure);
-        ro.observe(header);
-        if (bar) ro.observe(bar);
-      }
-
-      // Optional: expose a quick tester on window
-      window.__showBar = function () {
-        if (bar) {
-          bar.style.display = '';
-          localStorage.removeItem(KEY);
-          measure();
-        }
-      };
-      window.__hideBar = function () {
-        if (bar) {
-          bar.style.display = 'none';
-          localStorage.setItem(KEY, '1');
-          measure();
-        }
-      };
-    });
-  </script>
-{% endcomment %}
-
-{% comment %}
-  <script defer>
-    document.addEventListener('DOMContentLoaded', function () {
-      var header = document.getElementById('site-header');
-      var spacer = document.getElementById('header-spacer');
-
-      if (!header || !spacer) return;
-
-      // ---- helpers ----
-      function cssNum(name, fallback) {
-        var v = parseInt(getComputedStyle(document.documentElement).getPropertyValue(name), 10);
-        return isNaN(v) ? fallback : v;
-      }
-      function setVar(name, px) {
-        document.documentElement.style.setProperty(name, px + 'px');
-      }
-      function setShift(px) {
-        document.documentElement.style.setProperty('--header-shift', px + 'px');
-      }
-
-      // ---- measure header and keep spacer synced ----
-      function measure() {
-        var headerH = Math.round(header.getBoundingClientRect().height);
-        setVar('--hdr-h', headerH);
-        spacer.style.height = headerH + 'px';
-
-        var curShift = getComputedStyle(document.documentElement).getPropertyValue('--header-shift').trim();
-        if (curShift && curShift !== '0px') setShift(-headerH);
-      }
-
-      // ---- Headroom init (hide on down, reveal on up) ----
-      var hr = new Headroom(header, {
-        offset: 0,
-        tolerance: { up: 5, down: 5 },
-        onPin: function () {
-          setShift(0);
-        },
-        onUnpin: function () {
-          var headerH = cssNum('--hdr-h', 0);
-          setShift(-headerH);
-        },
-        onTop: function () {
-          setShift(0);
-        },
-      });
-      hr.init();
-
-      // ---- run measurement on load + resize ----
-      var ready = () => requestAnimationFrame(() => requestAnimationFrame(measure));
-      document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
-      window.addEventListener('load', measure, { passive: true });
-      window.addEventListener('resize', measure, { passive: true });
-
-      if ('ResizeObserver' in window) {
-        var ro = new ResizeObserver(measure);
-        ro.observe(header);
-      }
-    });
-  </script>
-{% endcomment %}
-
-<script defer>
+{% comment %} <script defer>
   document.addEventListener('DOMContentLoaded', function () {
     var header = document.getElementById('site-header');
     var spacer = document.getElementById('header-spacer');
@@ -734,75 +566,74 @@
 
     if ('ResizeObserver' in window) new ResizeObserver(measure).observe(header);
   });
+</script> {% endcomment %}
+
+<script defer>
+  document.addEventListener('DOMContentLoaded', function () {
+    var header = document.getElementById('site-header');
+    var spacer = document.getElementById('header-spacer');
+    if (!header || !spacer) return;
+
+    function cssNum(name, fallback) {
+      var v = parseInt(getComputedStyle(document.documentElement).getPropertyValue(name), 10);
+      return isNaN(v) ? fallback : v;
+    }
+    function setVar(name, px) {
+      document.documentElement.style.setProperty(name, px + 'px');
+    }
+    function setShift(px) {
+      document.documentElement.style.setProperty('--header-shift', px + 'px');
+    }
+
+    // OPTIONAL: prevent re-entrant measure() calls
+    let measuringHeader = false;
+
+    function measure() {
+      if (measuringHeader) return;           // <-- guard
+      measuringHeader = true;
+
+      var barH = cssNum('--bar-h', 0);       // read bar height
+      var headerH = Math.round(header.getBoundingClientRect().height);
+      var stackH = barH + headerH;           // total stack
+
+      setVar('--hdr-h', headerH);
+      spacer.style.height = stackH + 'px';   // spacer = bar + header
+
+      var curShift = getComputedStyle(document.documentElement).getPropertyValue('--header-shift').trim();
+      if (curShift && curShift !== '0px') setShift(-stackH); // keep slide aligned
+
+      measuringHeader = false;
+    }
+
+    // 🔔 Listen for the announcement bar's custom "measured" event
+    document.addEventListener('announcement:measured', function () {
+      measure();
+    });
+
+    var hr = new Headroom(header, {
+      offset: 0,
+      tolerance: { up: 5, down: 5 },
+      onPin: function () { setShift(0); },
+      onUnpin: function () {
+        var barH = cssNum('--bar-h', 0);
+        var headerH = cssNum('--hdr-h', 0);
+        setShift(-(barH + headerH));
+      },
+      onTop: function () { setShift(0); },
+    });
+    hr.init();
+
+    // Initial + responsive measuring
+    var ready = () => requestAnimationFrame(() => requestAnimationFrame(measure));
+    document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
+    window.addEventListener('load', measure, { passive: true });
+    window.addEventListener('resize', measure, { passive: true });
+
+    if ('ResizeObserver' in window) new ResizeObserver(measure).observe(header);
+  });
 </script>
 
-{% comment %} AANOUNCEMENT SLIDER {% endcomment %}
-{% comment %}
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      {% if section.blocks.size > 1 %}
-      const sliderWrapper = document.getElementById('sliderWrapper');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
 
-      if (sliderWrapper && prevBtn && nextBtn) {
-        const slides = Array.from(sliderWrapper.children);
-        const totalSlides = slides.length;
-        let currentIndex = 0;
-        let timer;
-
-        function goToSlide(i) {
-          currentIndex = (i + totalSlides) % totalSlides;
-          sliderWrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
-
-        function startAutoPlay() {
-          if (!timer) timer = setInterval(() => goToSlide(currentIndex + 1), 5000);
-        }
-
-        function stopAutoPlay() {
-          clearInterval(timer);
-          timer = null;
-        }
-
-        // Button clicks
-        prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
-        nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
-
-        // Auto-play
-        startAutoPlay();
-
-        // Pause on hover/focus
-        const banner = document.getElementById('announcement-bar');
-        if (banner) {
-          banner.addEventListener('mouseenter', stopAutoPlay);
-          banner.addEventListener('mouseleave', startAutoPlay);
-          banner.addEventListener('focusin', stopAutoPlay);
-          banner.addEventListener('focusout', startAutoPlay);
-        }
-
-        // Touch swipe
-        let startX = null;
-        sliderWrapper.addEventListener('touchstart', (e) => {
-          startX = e.touches[0].clientX;
-        }, { passive: true });
-
-        sliderWrapper.addEventListener('touchmove', (e) => {
-          if (startX === null) return;
-          const dx = e.touches[0].clientX - startX;
-          if (Math.abs(dx) > 40) {
-            if (dx > 0) goToSlide(currentIndex - 1);
-            else goToSlide(currentIndex + 1);
-            startX = null;
-          }
-        }, { passive: true });
-
-        sliderWrapper.addEventListener('touchend', () => { startX = null; }, { passive: true });
-      }
-      {% endif %}
-    });
-  </script>
-{% endcomment %}
 
 {% comment %} MOBILE NAV {% endcomment %}
 <script>

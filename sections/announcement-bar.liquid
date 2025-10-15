@@ -120,14 +120,32 @@
         bar.style.display = 'none';
       }
 
-      // Set CSS variables so header can offset itself
+      {% comment %} // Set CSS variables so header can offset itself
       function setVar(name, px){ document.documentElement.style.setProperty(name, (px||0) + 'px'); }
       function barH(){ return bar && bar.style.display !== 'none' ? Math.round(bar.getBoundingClientRect().height) : 0; }
       function measure(){
         var h = barH();
         setVar('--bar-h', h);
         window.dispatchEvent(new Event('resize')); // nudge header measure if needed
+      } {% endcomment %}
+
+      // Set CSS variables so header can offset itself
+      function setVar(name, px){ document.documentElement.style.setProperty(name, (px||0) + 'px'); }
+      function barH(){ return bar && bar.style.display !== 'none' ? Math.round(bar.getBoundingClientRect().height) : 0; }
+
+      let measuringBar = false;
+      function measure(){
+        if (measuringBar) return;         // re-entry guard
+        measuringBar = true;
+        requestAnimationFrame(() => {
+          const h = barH();
+          setVar('--bar-h', h);
+          // tell header we updated, WITHOUT triggering resize loop
+          document.dispatchEvent(new CustomEvent('announcement:measured', { detail: { height: h } }));
+          measuringBar = false;
+        });
       }
+
 
       // Dismiss button
       if (dismiss) {
