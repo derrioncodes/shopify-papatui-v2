@@ -1,7 +1,7 @@
 {% assign main_menu_linklist = linklists[section.settings.menu] %}
 {% assign search_menu_linklist = linklists[section.settings.menu] %}
 
-{% if section.settings.enable_announcement %}
+{% comment %} {% if section.settings.enable_announcement %}
   <!-- Fixed announcement bar (Headroom-compatible) -->
   <div
     id="announcement-bar"
@@ -76,7 +76,7 @@
       {% render 'icon-close' %}
     </button>
   </div>
-{% endif %}
+{% endif %} {% endcomment %}
 <!-- END OF ANNOUNCEMENT BAR -->
 
 <!-- START OF HEADER -->
