@@ -26,7 +26,7 @@
       {% endif %}
 
       <!-- Slider Container -->
-      <div class="announcement-bar slider-container w-full max-w-2xl mx-auto overflow-hidden px-2 md:px-0">
+      <div class="ann-slider slider-container w-full max-w-2xl mx-auto overflow-hidden px-2 md:px-0">
         <div id="ann-sliderWrapper" class="slider-wrapper flex transition-transform duration-300 ease-in-out">
           {% if section.blocks.size > 0 %}
             {% for block in section.blocks %}
@@ -75,35 +75,93 @@
       </button>
     {% endif %}
   </div>
+  {% comment %}
+    <style>
+      #announcement-bar, #announcement-bar p, #announcement-bar a {
+        color: #212322 !important;
+        opacity: 1 !important;
+      }
+    </style>
+    <style>
+      /* Slide together with header */
+      #announcement-bar { will-change: transform; transition: transform 200ms ease; }
+
+      .slider-wrapper { display:flex; transition: transform 0.4s ease-in-out; }
+      .slide { min-width:100%; }
+      .arrow-btn { background:none; border:0; cursor:pointer; }
+
+      .slider-container { overflow:hidden; position:relative; max-width:640px; margin:0 auto; }
+      @media (max-width: 480px) {
+        .slider-container { width:85%; padding-top:4px; padding-bottom:4px; }
+        {% if section.blocks.size == 1 %}
+        .slider-container { width:100%; }
+        {% endif %}
+      }
+      @media (min-width: 481px) and (max-width: 768px) {
+        .slider-container { width:80%; }
+        {% if section.blocks.size == 1 %}
+        .slider-container { width:100%; }
+        {% endif %}
+      }
+      @media (min-width: 769px) {
+        .slider-container { width:100%; }
+      }
+    </style>
+  {% endcomment %}
+
   <style>
+    /* Force readable text */
     #announcement-bar, #announcement-bar p, #announcement-bar a {
       color: #212322 !important;
       opacity: 1 !important;
     }
-  </style>
-  <style>
+
     /* Slide together with header */
-    #announcement-bar { will-change: transform; transition: transform 200ms ease; }
+    #announcement-bar {
+      will-change: transform;
+      transition: transform 200ms ease;
+    }
 
-    .slider-wrapper { display:flex; transition: transform 0.4s ease-in-out; }
-    .slide { min-width:100%; }
-    .arrow-btn { background:none; border:0; cursor:pointer; }
+    /* Slider flow (scoped to new class/id) */
+    #ann-sliderWrapper {
+      display: flex;
+      align-items: center;
+      transition: transform 0.4s ease-in-out;
+    }
+    #ann-sliderWrapper .slide {
+      flex: 0 0 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 1.5rem; /* avoids zero-height collapse */
+    }
 
-    .slider-container { overflow:hidden; position:relative; max-width:640px; margin:0 auto; }
+    .arrow-btn { background: none; border: 0; cursor: pointer; }
+
+    /* Container (renamed from .slider-container → .ann-slider to avoid global collisions) */
+    .ann-slider {
+      overflow: hidden;
+      position: relative;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
     @media (max-width: 480px) {
-      .slider-container { width:85%; padding-top:4px; padding-bottom:4px; }
+      .ann-slider { width: 85%; padding-top: 4px; padding-bottom: 4px; }
       {% if section.blocks.size == 1 %}
-      .slider-container { width:100%; }
+        .ann-slider { width: 100%; }
       {% endif %}
     }
+
     @media (min-width: 481px) and (max-width: 768px) {
-      .slider-container { width:80%; }
+      .ann-slider { width: 80%; }
       {% if section.blocks.size == 1 %}
-      .slider-container { width:100%; }
+        .ann-slider { width: 100%; }
       {% endif %}
     }
+
     @media (min-width: 769px) {
-      .slider-container { width:100%; }
+      .ann-slider { width: 100%; }
     }
   </style>
 
