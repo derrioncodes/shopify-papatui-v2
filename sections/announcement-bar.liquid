@@ -1,7 +1,7 @@
 {% if section.settings.enabled %}
   <div
     id="announcement-bar"
-    class="announcement__banner fixed top-0 left-0 w-full z-40 bg-[#d6d2c4] border-b border-[rgba(33,35,34,0.2)] text-center flex items-center py-2"
+    class="announcement__banner fixed top-0 left-0 w-full z-40 bg-[#d6d2c4] text-[#212322] border-b border-[rgba(33,35,34,0.2)] text-center flex items-center py-2"
     style="transform: translateY(var(--header-shift, 0px));"
   >
     <div class="relative w-full max-w-[700px] mx-auto">
@@ -75,7 +75,12 @@
       </button>
     {% endif %}
   </div>
-
+  <style>
+    #announcement-bar, #announcement-bar p, #announcement-bar a {
+      color: #212322 !important;
+      opacity: 1 !important;
+    }
+  </style>
   <style>
     /* Slide together with header */
     #announcement-bar { will-change: transform; transition: transform 200ms ease; }
