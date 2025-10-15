@@ -1,10 +1,140 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-    "sections": {
-        // "hero": {
-        //     "type": "hero"
-        // }
+  "sections": {
+    "hero_FHUqVW": {
+      "type": "hero",
+      "blocks": {
+        "slide_gajHRR": {
+          "type": "slide",
+          "settings": {
+            "asset_type": "image",
+            "image": "shopify://shop_images/Dwayne_Johnson_Papatui_Home_Page_Skincare_Main.png",
+            "alt_text": "Promotional banner",
+            "text_position": "left",
+            "heading": "It's time to take better care",
+            "enable_subtext": true,
+            "subtext": "Everything you need to stay fresh & confident",
+            "button_text": "Shop skincare",
+            "button_link": "shopify://collections/shop-all"
+          }
+        },
+        "slide_z6WRUt": {
+          "type": "slide",
+          "settings": {
+            "asset_type": "video",
+            "alt_text": "Promotional banner",
+            "text_position": "left",
+            "heading": "The Rock's got your routine covered",
+            "enable_subtext": false,
+            "subtext": "Everything you need to stay fresh & confident",
+            "button_text": "Shop now",
+            "button_link": "shopify://collections/bestsellers"
+          }
+        },
+        "slide_DwAHmb": {
+          "type": "slide",
+          "settings": {
+            "asset_type": "image",
+            "alt_text": "Promotional banner",
+            "text_position": "left",
+            "heading": "New full body Deodorant",
+            "enable_subtext": true,
+            "subtext": "Sweat doesn't stop at your pits, neither does your deodorant",
+            "button_text": "Shop now",
+            "button_link": "shopify://collections/antiperspirant-deodorant"
+          }
+        }
+      },
+      "block_order": [
+        "slide_gajHRR",
+        "slide_z6WRUt",
+        "slide_DwAHmb"
+      ],
+      "name": "Hero Slider",
+      "settings": {}
     },
-    "order": [
-        // "hero"
-    ]
+    "image_text_fEeB7i": {
+      "type": "image-text",
+      "name": "Image Text Default",
+      "settings": {
+        "image_position": "right",
+        "image": "shopify://shop_images/AboutPage_image.png",
+        "alt_text": "Promotional Image",
+        "heading": "DERMATOLOGIST TESTED MEN'S CARE THAT WORKS",
+        "subtext": "Science backed formulations built for performance",
+        "button_text": "Shop all",
+        "button_link": "shopify://collections/shop-all"
+      }
+    },
+    "multi_columns_wJKctj": {
+      "type": "multi-columns",
+      "blocks": {
+        "column_XbkMD9": {
+          "type": "column",
+          "settings": {
+            "alt_text": "Icon Image",
+            "heading": "FORMULATED WITHOUT SULFATES",
+            "subtext": "Sulfates can compromise the balance of your skin. Our cleansers don't have them."
+          }
+        },
+        "column_xL7xWh": {
+          "type": "column",
+          "settings": {
+            "column_image": "shopify://shop_images/Papatui_Paraben_Free_Icon_Ingredient.png",
+            "alt_text": "Icon Image",
+            "heading": "PARABEN FREE",
+            "subtext": "Parabens are not good for you. So we formulated without them."
+          }
+        },
+        "column_withVA": {
+          "type": "column",
+          "settings": {
+            "column_image": "shopify://shop_images/Papatui_Phalate_Free_Icon_Ingredient.png",
+            "alt_text": "Icon Image",
+            "heading": "PHTHALATE FREE",
+            "subtext": "Phthalates, aka Potential Hormone Disruptors. You don't need them, so we don't use them."
+          }
+        },
+        "column_LdxhcU": {
+          "type": "column",
+          "settings": {
+            "column_image": "shopify://shop_images/Papatui_Cruelty_Free_Icon_Ingredient.png",
+            "alt_text": "Icon Image",
+            "heading": "CRUELTY FREE",
+            "subtext": "These products were never tested on animals. But lots of humans have tried them. And they like them."
+          }
+        },
+        "column_6GEjXk": {
+          "type": "column",
+          "settings": {
+            "alt_text": "Icon Image",
+            "heading": "VEGAN",
+            "subtext": "You'll never find animal-derived ingredients in our products. Just premium formulations at the right price"
+          }
+        }
+      },
+      "block_order": [
+        "column_XbkMD9",
+        "column_xL7xWh",
+        "column_withVA",
+        "column_LdxhcU",
+        "column_6GEjXk"
+      ],
+      "name": "Multi Columns",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero_FHUqVW",
+    "image_text_fEeB7i",
+    "multi_columns_wJKctj"
+  ]
 }
