@@ -12,6 +12,19 @@
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",
+        "blocks": {
+          "announcement_FWUnBP": {
+            "type": "announcement",
+            "settings": {
+              "text": "FREE SHIPPING ON ORDERS $40+",
+              "link": "shopify://collections/shop-all",
+              "link_text": "SHOP NOW"
+            }
+          }
+        },
+        "block_order": [
+          "announcement_FWUnBP"
+        ],
         "settings": {
           "enabled": true,
           "show_close": true,
