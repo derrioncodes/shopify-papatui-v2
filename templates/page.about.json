@@ -1,9 +1,9 @@
 {
-  "sections": {
-    "template": {
-      "type": "page-about",
-      "settings": {}
-    }
-  },
-  "order": ["template"]
+    "sections": {
+        "about": {
+            "type": "about-section",
+            "settings": {}
+        }
+    },
+    "order":["about"]
 }
