@@ -137,12 +137,55 @@
       "settings": {
         "collection": "bestsellers"
       }
+    },
+    "customer_reviews_cWcWmt": {
+      "type": "customer-reviews",
+      "blocks": {
+        "column_hAACnB": {
+          "type": "column",
+          "settings": {
+            "alt_text": "Star Icon",
+            "heading": "ENHANCING TATTOO STICK",
+            "subtext": "My tattoos haven't looked so good!! Even My 30 year old tatts look fresh! Outstanding product!!!",
+            "customer_name": "Michael B."
+          }
+        },
+        "column_WKqzk7": {
+          "type": "column",
+          "settings": {
+            "alt_text": "Star Icon",
+            "heading": "48-HOUR ANTIPERSPIRANT DEODORANT",
+            "subtext": "PAPATUI deodorant smells amazing! I bought a few for my husband and two sons to use. I bought the coconut deodorants and my whole family smells amazing!",
+            "customer_name": "Nicole S."
+          }
+        },
+        "column_KDXmga": {
+          "type": "column",
+          "settings": {
+            "alt_text": "Star Icon",
+            "heading": "RESTORING DAILY FACIAL MOISTURIZER",
+            "subtext": "I use this almost as religiously as the facial cleanser and the results have been great for my face so far. These 2 face products alone have done wonders for my skin care routine.",
+            "customer_name": "Dennis F."
+          }
+        }
+      },
+      "block_order": [
+        "column_hAACnB",
+        "column_WKqzk7",
+        "column_KDXmga"
+      ],
+      "name": "Customer Reviews",
+      "settings": {
+        "title": "What real guys are saying",
+        "enable_margin_bottom": true
+      }
     }
   },
   "order": [
     "hero_FHUqVW",
     "image_text_fEeB7i",
     "multi_columns_wJKctj",
-    "collection_slider_ABwGtn"
+    "collection_slider_ABwGtn",
+    "customer_reviews_cWcWmt"
   ]
 }
