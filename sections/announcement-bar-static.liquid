@@ -1,8 +1,15 @@
 <div id="announcement-bar" class="announcement-static">
   <div class="announcement-inner">
     <p class="announcement-text">
-      FREE SHIPPING ON ORDERS $40+
-      <a href="/collections/shop-all" class="announcement-link">SHOP NOW</a>
+      {{ section.settings.banner_text | escape }}
+      {% if section.settings.show_link and section.settings.link_url != blank %}
+        <a
+          href="{{ section.settings.link_url }}"
+          class="announcement-link"
+        >
+          {{ section.settings.link_text | default: 'SHOP NOW' | escape }}
+        </a>
+      {% endif %}
     </p>
   </div>
 </div>
@@ -10,7 +17,7 @@
 <style>
   /* 1) Set a fixed height and expose it as --bar-h for the header */
   :root {
-    --bar-h: 36px;
+    --bar-h: 50px;
   }
 
   /* 2) Fixed bar at very top */
@@ -34,7 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 12px;
+    padding: 8px 12px;
   }
 
   /* 4) Readable text, no surprises */
@@ -62,7 +69,34 @@
 {% schema %}
 {
   "name": "Announcement bar (static)",
-  "settings": [],
-  "presets": [{ "name": "Announcement bar (static)" }]
+  "settings": [
+    {
+      "type": "text",
+      "id": "banner_text",
+      "label": "Banner text",
+      "default": "FREE SHIPPING ON ORDERS $40+"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_link",
+      "label": "Show link",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL",
+      "info": "Shown only when “Show link” is enabled."
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text",
+      "default": "SHOP NOW"
+    }
+  ],
+  "presets": [
+    { "name": "Announcement bar (static)" }
+  ]
 }
 {% endschema %}
