@@ -608,7 +608,7 @@
 
     // 🔔 Listen for the announcement bar's custom "measured" event
     document.addEventListener('announcement:measured', function () {
-      measure();
+      measure(); // your header's measure() that sets spacer using --bar-h
     });
 
     var hr = new Headroom(header, {
