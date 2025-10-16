@@ -41,108 +41,110 @@
 </div>
 
 <style>
-  /* 1) Set a fixed height and expose it as --bar-h for the header */
-  :root {
-    --bar-h: 50px;
-  } /* 2) Fixed bar at very top */
-  #announcement-bar.announcement-static {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: var(--bar-h);
-    z-index: 40;
-    background: #d6d2c4;
-    border-bottom: 1px solid rgba(33, 35, 34, 0.2);
-    transform: translateY(var(--header-shift, 0px));
-  } /* 3) Simple centering */
-  #announcement-bar .announcement-inner {
-    position: relative;
-    max-width: 700px;
-    margin: 0 auto;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 12px;
-  } /* 4) Readable text, no surprises */
-  #announcement-bar .announcement-text,
-  #announcement-bar .announcement-link {
-    color: #212322 !important;
-  }
-  #announcement-bar .announcement-text {
-    margin: 0;
-    font-size: 11px;
-    text-transform: uppercase;
-    line-height: 1.2;
-    text-align: center;
-  }
-  #announcement-bar .announcement-link {
-    margin-left: 4px;
-    text-decoration: underline;
-    opacity: 0.8;
-  }
-  #announcement-bar .announcement-link:hover {
-    opacity: 1;
-  }
+    /* 1) Set a fixed height and expose it as --bar-h for the header */
+    :root {
+      --bar-h: 50px;
+    } /* 2) Fixed bar at very top */
+    #announcement-bar.announcement-static {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--bar-h);
+      min-height: 44px;         /* ← floor so it never looks tiny */
+      padding: 12px 0;
+      z-index: 40;
+      background: #d6d2c4;
+      border-bottom: 1px solid rgba(33, 35, 34, 0.2);
+      transform: translateY(var(--header-shift, 0px));
+    } /* 3) Simple centering */
+    #announcement-bar .announcement-inner {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+    } /* 4) Readable text, no surprises */
+    #announcement-bar .announcement-text,
+    #announcement-bar .announcement-link {
+      color: #212322 !important;
+    }
+    #announcement-bar .announcement-text {
+      margin: 0;
+      font-size: 11px;
+      text-transform: uppercase;
+      line-height: 1.4;
+      text-align: center;
+    }
+    #announcement-bar .announcement-link {
+      margin-left: 4px;
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+    #announcement-bar .announcement-link:hover {
+      opacity: 1;
+    }
 
-  /* Slider layout: no movement yet */
-  .ann-slider {
-    overflow: hidden; /* hide extra slides */
-    position: relative;
-    height: 100%;
-  }
-  #ann-sliderWrapper {
-    display: flex; /* horizontal strip of slides */
-    align-items: center;
-    height: 100%;
-    /* no transform yet – we’ll add it in Step 3 */
-
-    transition: transform 0.35s ease-in-out;
-  }
-  .ann-slide {
-    flex: 0 0 100%; /* each slide takes full width */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-
-  /* Shared arrow styles */
-  .ann-arrow {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px; /* tappable target */
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-    padding: 0;
-    line-height: 0;
-    opacity: 0.85;
-    z-index: 1; /* above slides */
-  }
-  .ann-arrow:hover {
-    opacity: 1;
-  }
-
-  /* Left/right placement */
-  .ann-left {
-    left: 6px;
-  }
-  .ann-right {
-    right: 6px;
-  }
-
-  /* Nudge the slider content so arrows don’t overlap text too much on very small screens */
-  @media (max-width: 480px) {
+    /* Slider layout: no movement yet */
     .ann-slider {
-      padding: 0 36px;
-    } /* create space for arrows */
-  }
+      overflow: hidden; /* hide extra slides */
+      position: relative;
+      {% comment %} height: 100%; {% endcomment %}
+    }
+    #ann-sliderWrapper {
+      display: flex; /* horizontal strip of slides */
+      align-items: center;
+      {% comment %} height: 100%; {% endcomment %}
+      /* no transform yet – we’ll add it in Step 3 */
+
+      transition: transform 0.35s ease-in-out;
+    }
+    .ann-slide {
+      flex: 0 0 100%; /* each slide takes full width */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      {% comment %} height: 100%; {% endcomment %}
+    }
+
+    /* Shared arrow styles */
+    .ann-arrow {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; /* tappable target */
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      padding: 0;
+      line-height: 0;
+      opacity: 0.85;
+      z-index: 1; /* above slides */
+    }
+    .ann-arrow:hover {
+      opacity: 1;
+    }
+
+    /* Left/right placement */
+    .ann-left {
+      left: 6px;
+    }
+    .ann-right {
+      right: 6px;
+    }
+
+    /* Nudge the slider content so arrows don’t overlap text too much on very small screens */
+    @media (max-width: 480px) {
+      .ann-slider {
+        padding: 0 36px;
+      } /* create space for arrows */
+    }
 </style>
 
 <script>
@@ -162,7 +164,6 @@
       i = (n + total) % total;
       wrap.style.transform = 'translateX(' + -i * 100 + '%)';
 
-      {% comment %} making height dynamic {% endcomment %}
       const bar = document.getElementById('announcement-bar');
       if (bar && typeof bar.__measure === 'function') bar.__measure();
     }
@@ -177,6 +178,12 @@
         timer = null;
       }
     }
+
+    wrap.addEventListener('transitionend', (e) => {
+      if (e.propertyName !== 'transform') return;
+      const bar = document.getElementById('announcement-bar');
+      if (bar && typeof bar.__measure === 'function') bar.__measure();
+    });
 
     // Wire buttons (only present if total > 1)
     const btnPrev = document.getElementById('ann-prev');
@@ -250,13 +257,6 @@
       { passive: true }
     );
 
-    wrap.addEventListener('transitionend', (e) => {
-      if (e.propertyName !== 'transform') return;
-      const bar = document.getElementById('announcement-bar');
-      if (bar && typeof bar.__measure === 'function') bar.__measure();
-    });
-
-    
     // Kick off
     start();
   });
@@ -267,34 +267,30 @@
     const bar = document.getElementById('announcement-bar');
     if (!bar) return;
 
-    function setVar(name, px) {
-      document.documentElement.style.setProperty(name, (px || 0) + 'px');
+    function setBarVar(px) {
+      document.documentElement.style.setProperty('--bar-h', (px || 0) + 'px');
     }
 
     let measuring = false;
     function measure() {
       if (measuring) return;
       measuring = true;
-      // two RAFs → after layout/paint/fonts
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          const h = Math.round(bar.getBoundingClientRect().height);
-          setVar('--bar-h', h);
+          const h = Math.round(bar.getBoundingClientRect().height); // measure OUTER bar (includes padding/border)
+          setBarVar(h);
           document.dispatchEvent(new CustomEvent('announcement:measured', { detail: { height: h } }));
           measuring = false;
         });
       });
     }
 
-    // Initial + events
     measure();
     window.addEventListener('load', measure, { passive: true });
     window.addEventListener('resize', measure, { passive: true });
-    if ('ResizeObserver' in window) {
-      new ResizeObserver(measure).observe(bar);
-    }
+    if ('ResizeObserver' in window) new ResizeObserver(measure).observe(bar);
 
-    // Make it callable from the slider script
+    // allow slider to nudge measurement after slide changes:
     bar.__measure = measure;
   })();
 </script>
