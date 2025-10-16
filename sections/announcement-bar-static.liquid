@@ -161,6 +161,10 @@
     function go(n) {
       i = (n + total) % total;
       wrap.style.transform = 'translateX(' + -i * 100 + '%)';
+
+      {% comment %} making height dynamic {% endcomment %}
+      const bar = document.getElementById('announcement-bar');
+      if (bar && typeof bar.__measure === 'function') bar.__measure();
     }
 
     let timer = null;
@@ -246,9 +250,53 @@
       { passive: true }
     );
 
+    wrap.addEventListener('transitionend', (e) => {
+      if (e.propertyName !== 'transform') return;
+      const bar = document.getElementById('announcement-bar');
+      if (bar && typeof bar.__measure === 'function') bar.__measure();
+    });
+
+    
     // Kick off
     start();
   });
+</script>
+
+<script>
+  (function () {
+    const bar = document.getElementById('announcement-bar');
+    if (!bar) return;
+
+    function setVar(name, px) {
+      document.documentElement.style.setProperty(name, (px || 0) + 'px');
+    }
+
+    let measuring = false;
+    function measure() {
+      if (measuring) return;
+      measuring = true;
+      // two RAFs → after layout/paint/fonts
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const h = Math.round(bar.getBoundingClientRect().height);
+          setVar('--bar-h', h);
+          document.dispatchEvent(new CustomEvent('announcement:measured', { detail: { height: h } }));
+          measuring = false;
+        });
+      });
+    }
+
+    // Initial + events
+    measure();
+    window.addEventListener('load', measure, { passive: true });
+    window.addEventListener('resize', measure, { passive: true });
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(measure).observe(bar);
+    }
+
+    // Make it callable from the slider script
+    bar.__measure = measure;
+  })();
 </script>
 
 {% schema %}
