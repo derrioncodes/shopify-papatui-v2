@@ -1,5 +1,13 @@
 <div id="announcement-bar" class="announcement-static">
   <div class="announcement-inner">
+    {% if section.blocks.size > 1 %}
+      <button id="ann-prev" class="ann-arrow ann-left" aria-label="Previous announcement">
+        {% render 'icon-left-arrow', class: 'size-5 md:size-6' %}
+      </button>
+      <button id="ann-next" class="ann-arrow ann-right" aria-label="Next announcement">
+        {% render 'icon-right-arrow', class: 'size-5 md:size-6' %}
+      </button>
+    {% endif %}
     <div class="ann-slider">
       <div id="ann-sliderWrapper">
         {% if section.blocks.size > 0 %}
@@ -49,6 +57,7 @@
     transform: translateY(var(--header-shift, 0px));
   } /* 3) Simple centering */
   #announcement-bar .announcement-inner {
+    position: relative;
     max-width: 700px;
     margin: 0 auto;
     height: 100%;
@@ -98,6 +107,42 @@
     justify-content: center;
     height: 100%;
   }
+
+  /* Shared arrow styles */
+  .ann-arrow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; /* tappable target */
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+    line-height: 0;
+    opacity: 0.85;
+    z-index: 1; /* above slides */
+  }
+  .ann-arrow:hover {
+    opacity: 1;
+  }
+
+  /* Left/right placement */
+  .ann-left {
+    left: 6px;
+  }
+  .ann-right {
+    right: 6px;
+  }
+
+  /* Nudge the slider content so arrows don’t overlap text too much on very small screens */
+  @media (max-width: 480px) {
+    .ann-slider {
+      padding: 0 36px;
+    } /* create space for arrows */
+  }
 </style>
 
 <script>
@@ -115,12 +160,53 @@
 
     function go(n) {
       i = (n + total) % total;
-      wrap.style.transform = 'translateX(' + (-i * 100) + '%)';
+      wrap.style.transform = 'translateX(' + -i * 100 + '%)';
     }
 
     let timer = null;
-    function start() { if (!prefersReduced && !timer) timer = setInterval(() => go(i + 1), intervalMs); }
-    function stop()  { if (timer) { clearInterval(timer); timer = null; } }
+    function start() {
+      if (!prefersReduced && !timer) timer = setInterval(() => go(i + 1), intervalMs);
+    }
+    function stop() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    // Wire buttons (only present if total > 1)
+    const btnPrev = document.getElementById('ann-prev');
+    const btnNext = document.getElementById('ann-next');
+    if (btnPrev)
+      btnPrev.addEventListener('click', () => {
+        stop();
+        go(i - 1);
+        start();
+      });
+    if (btnNext)
+      btnNext.addEventListener('click', () => {
+        stop();
+        go(i + 1);
+        start();
+      });
+
+    // (Optional) keyboard support on the whole bar
+    const bar = document.getElementById('announcement-bar');
+    if (bar) {
+      bar.setAttribute('tabindex', '0');
+      bar.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          stop();
+          go(i - 1);
+          start();
+        }
+        if (e.key === 'ArrowRight') {
+          stop();
+          go(i + 1);
+          start();
+        }
+      });
+    }
 
     // Pause on hover/focus (nice UX)
     const slider = document.querySelector('.ann-slider');
@@ -133,22 +219,37 @@
 
     // Basic touch swipe
     let startX = null;
-    wrap.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-    wrap.addEventListener('touchmove',  e => {
-      if (startX == null) return;
-      const dx = e.touches[0].clientX - startX;
-      if (Math.abs(dx) > 40) {
-        go(i + (dx < 0 ? 1 : -1));
+    wrap.addEventListener(
+      'touchstart',
+      (e) => {
+        startX = e.touches[0].clientX;
+      },
+      { passive: true }
+    );
+    wrap.addEventListener(
+      'touchmove',
+      (e) => {
+        if (startX == null) return;
+        const dx = e.touches[0].clientX - startX;
+        if (Math.abs(dx) > 40) {
+          go(i + (dx < 0 ? 1 : -1));
+          startX = null;
+        }
+      },
+      { passive: true }
+    );
+    wrap.addEventListener(
+      'touchend',
+      () => {
         startX = null;
-      }
-    }, { passive: true });
-    wrap.addEventListener('touchend', () => { startX = null; }, { passive: true });
+      },
+      { passive: true }
+    );
 
     // Kick off
     start();
   });
 </script>
-
 
 {% schema %}
 {
