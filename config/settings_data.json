@@ -53,6 +53,15 @@
       "cart-drawer": {
         "type": "cart-drawer",
         "settings": {}
+      },
+      "announcement-bar-static": {
+        "type": "announcement-bar-static",
+        "settings": {
+          "banner_text": "FREE SHIPPING ON ORDERS $40+",
+          "show_link": true,
+          "link_url": "shopify://collections/shop-all",
+          "link_text": "SHOP NOW"
+        }
       }
     },
     "content_for_index": [],
