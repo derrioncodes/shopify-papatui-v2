@@ -1,0 +1,68 @@
+<div id="announcement-bar" class="announcement-static">
+  <div class="announcement-inner">
+    <p class="announcement-text">
+      FREE SHIPPING ON ORDERS $40+
+      <a href="/collections/shop-all" class="announcement-link">SHOP NOW</a>
+    </p>
+  </div>
+</div>
+
+<style>
+  /* 1) Set a fixed height and expose it as --bar-h for the header */
+  :root {
+    --bar-h: 36px;
+  }
+
+  /* 2) Fixed bar at very top */
+  #announcement-bar.announcement-static {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--bar-h);
+    z-index: 40;
+    background: #d6d2c4;
+    border-bottom: 1px solid rgba(33, 35, 34, 0.2);
+    transform: translateY(var(--header-shift, 0px));
+  }
+
+  /* 3) Simple centering */
+  #announcement-bar .announcement-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+  }
+
+  /* 4) Readable text, no surprises */
+  #announcement-bar .announcement-text,
+  #announcement-bar .announcement-link {
+    color: #212322 !important;
+  }
+  #announcement-bar .announcement-text {
+    margin: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    line-height: 1.2;
+    text-align: center;
+  }
+  #announcement-bar .announcement-link {
+    margin-left: 4px;
+    text-decoration: underline;
+    opacity: 0.8;
+  }
+  #announcement-bar .announcement-link:hover {
+    opacity: 1;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Announcement bar (static)",
+  "settings": [],
+  "presets": [{ "name": "Announcement bar (static)" }]
+}
+{% endschema %}
