@@ -1,16 +1,26 @@
 <div id="announcement-bar" class="announcement-static">
   <div class="announcement-inner">
-    <p class="announcement-text">
-      {{ section.settings.banner_text | escape }}
-      {% if section.settings.show_link and section.settings.link_url != blank %}
-        <a
-          href="{{ section.settings.link_url }}"
-          class="announcement-link"
-        >
-          {{ section.settings.link_text | default: 'SHOP NOW' | escape }}
-        </a>
-      {% endif %}
-    </p>
+    {% if section.blocks.size > 0 %}
+      {%- for block in section.blocks limit: 1 -%}
+        <p class="announcement-text" {{ block.shopify_attributes }}>
+          {{ block.settings.text | escape }}
+          {% if block.settings.show_link and block.settings.link_url != blank %}
+            <a href="{{ block.settings.link_url }}" class="announcement-link">
+              {{ block.settings.link_text | default: 'SHOP NOW' | escape }}
+            </a>
+          {% endif %}
+        </p>
+      {%- endfor -%}
+    {% else %}
+      <p class="announcement-text">
+        {{ section.settings.banner_text | escape }}
+        {% if section.settings.show_link and section.settings.link_url != blank %}
+          <a href="{{ section.settings.link_url }}" class="announcement-link">
+            {{ section.settings.link_text | default: 'SHOP NOW' | escape }}
+          </a>
+        {% endif %}
+      </p>
+    {% endif %}
   </div>
 </div>
 
@@ -18,9 +28,7 @@
   /* 1) Set a fixed height and expose it as --bar-h for the header */
   :root {
     --bar-h: 50px;
-  }
-
-  /* 2) Fixed bar at very top */
+  } /* 2) Fixed bar at very top */
   #announcement-bar.announcement-static {
     position: fixed;
     top: 0;
@@ -31,9 +39,7 @@
     background: #d6d2c4;
     border-bottom: 1px solid rgba(33, 35, 34, 0.2);
     transform: translateY(var(--header-shift, 0px));
-  }
-
-  /* 3) Simple centering */
+  } /* 3) Simple centering */
   #announcement-bar .announcement-inner {
     max-width: 700px;
     margin: 0 auto;
@@ -42,9 +48,7 @@
     align-items: center;
     justify-content: center;
     padding: 8px 12px;
-  }
-
-  /* 4) Readable text, no surprises */
+  } /* 4) Readable text, no surprises */
   #announcement-bar .announcement-text,
   #announcement-bar .announcement-link {
     color: #212322 !important;
@@ -65,7 +69,6 @@
     opacity: 1;
   }
 </style>
-
 {% schema %}
 {
   "name": "Announcement bar (static)",
@@ -95,8 +98,35 @@
       "default": "SHOP NOW"
     }
   ],
+
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Banner text", "default": "FREE SHIPPING ON ORDERS $40+" },
+        { "type": "checkbox", "id": "show_link", "label": "Show link", "default": true },
+        { "type": "url", "id": "link_url", "label": "Link URL" },
+        { "type": "text", "id": "link_text", "label": "Link text", "default": "SHOP NOW" }
+      ]
+    }
+  ],
+  "max_blocks": 5,
   "presets": [
-    { "name": "Announcement bar (static)" }
+    {
+      "name": "Announcement bar (static)",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "text": "FREE SHIPPING ON ORDERS $40+",
+            "show_link": true,
+            "link_text": "SHOP NOW",
+            "link_url": "/collections/shop-all"
+          }
+        }
+      ]
+    }
   ]
 }
 {% endschema %}
