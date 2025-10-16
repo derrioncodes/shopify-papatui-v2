@@ -1,301 +1,372 @@
-{% if section.settings.enabled %}
-  <div
-    id="announcement-bar"
-    class="announcement__banner fixed top-0 left-0 w-full z-40 bg-[#d6d2c4] text-[#212322] border-b border-[rgba(33,35,34,0.2)] text-center flex items-center py-2"
-    style="transform: translateY(var(--header-shift, 0px));"
-  >
-    <div class="relative w-full max-w-[700px] mx-auto">
-      {% if section.blocks.size > 1 %}
-        <!-- Arrow Left -->
-        <button
-          class="arrow-btn arrow-left absolute top-1/2 left-0 z-10 -translate-y-1/2 cursor-pointer bg-transparent border-none pl-2"
-          id="ann-prevBtn"
-          aria-label="Previous"
-        >
-          {% render 'icon-left-arrow', class: 'size-5 md:size-6' %}
-        </button>
+{% comment %}
+  {% if section.settings.enabled %}
+    <div
+      id="announcement-bar"
+      class="announcement__banner fixed top-0 left-0 w-full z-40 bg-[#d6d2c4] text-[#212322] border-b border-[rgba(33,35,34,0.2)] text-center flex items-center py-2"
+      style="transform: translateY(var(--header-shift, 0px));"
+    >
+      <div class="relative w-full max-w-[700px] mx-auto">
+        {% if section.blocks.size > 1 %}
+          <!-- Arrow Left -->
+          <button
+            class="arrow-btn arrow-left absolute top-1/2 left-0 z-10 -translate-y-1/2 cursor-pointer bg-transparent border-none pl-2"
+            id="ann-prevBtn"
+            aria-label="Previous"
+          >
+            {% render 'icon-left-arrow', class: 'size-5 md:size-6' %}
+          </button>
 
-        <!-- Arrow Right -->
-        <button
-          class="arrow-btn arrow-right absolute top-1/2 right-0 z-10 -translate-y-1/2 cursor-pointer bg-transparent border-none pr-2"
-          id="ann-nextBtn"
-          aria-label="Next"
-        >
-          {% render 'icon-right-arrow', class: 'size-5 md:size-6' %}
-        </button>
-      {% endif %}
+          <!-- Arrow Right -->
+          <button
+            class="arrow-btn arrow-right absolute top-1/2 right-0 z-10 -translate-y-1/2 cursor-pointer bg-transparent border-none pr-2"
+            id="ann-nextBtn"
+            aria-label="Next"
+          >
+            {% render 'icon-right-arrow', class: 'size-5 md:size-6' %}
+          </button>
+        {% endif %}
 
-      <!-- Slider Container -->
-      <div class="ann-slider slider-container w-full max-w-2xl mx-auto overflow-hidden px-2 md:px-0">
-        <div id="ann-sliderWrapper" class="slider-wrapper flex transition-transform duration-300 ease-in-out">
-          {% if section.blocks.size > 0 %}
-            {% for block in section.blocks %}
+        <!-- Slider Container -->
+        <div class="ann-slider slider-container w-full max-w-2xl mx-auto overflow-hidden px-2 md:px-0">
+          <div id="ann-sliderWrapper" class="slider-wrapper flex transition-transform duration-300 ease-in-out">
+            {% if section.blocks.size > 0 %}
+              {% for block in section.blocks %}
+                <div class="slide flex items-center justify-center min-w-full px-4 md:px-0">
+                  <p class="max-w-lg px-4 text-[11px] md:text-xs uppercase">
+                    {{ block.settings.text }}
+                    {% if block.settings.link != blank %}
+                      <span class="ml-0.5">
+                        <a
+                          class="underline text-[#212322] opacity-70 hover:opacity-100 transition-opacity duration-200"
+                          href="{{ block.settings.link }}"
+                        >
+                          {{ block.settings.link_text }}
+                        </a>
+                      </span>
+                    {% endif %}
+                  </p>
+                </div>
+              {% endfor %}
+            {% else %}
               <div class="slide flex items-center justify-center min-w-full px-4 md:px-0">
                 <p class="max-w-lg px-4 text-[11px] md:text-xs uppercase">
-                  {{ block.settings.text }}
-                  {% if block.settings.link != blank %}
-                    <span class="ml-0.5">
-                      <a
-                        class="underline text-[#212322] opacity-70 hover:opacity-100 transition-opacity duration-200"
-                        href="{{ block.settings.link }}"
-                      >
-                        {{ block.settings.link_text }}
-                      </a>
-                    </span>
-                  {% endif %}
+                  FREE SHIPPING ON ORDERS $40+
+                  <span class="ml-0.5">
+                    <a
+                      class="underline text-[#212322] opacity-70 hover:opacity-100 transition-opacity duration-200"
+                      href="{{ routes.all_products_collection_url }}"
+                    >
+                      SHOP NOW
+                    </a>
+                  </span>
                 </p>
               </div>
-            {% endfor %}
-          {% else %}
-            <div class="slide flex items-center justify-center min-w-full px-4 md:px-0">
-              <p class="max-w-lg px-4 text-[11px] md:text-xs uppercase">
-                FREE SHIPPING ON ORDERS $40+
-                <span class="ml-0.5">
-                  <a
-                    class="underline text-[#212322] opacity-70 hover:opacity-100 transition-opacity duration-200"
-                    href="{{ routes.all_products_collection_url }}"
-                  >
-                    SHOP NOW
-                  </a>
-                </span>
-              </p>
-            </div>
-          {% endif %}
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
 
-    {% if section.settings.show_close %}
-      <button
-        class="close-announcement-banner pl-1 px-2 py-3 cursor-pointer"
-        id="announcement-dismiss"
-        aria-label="Dismiss"
-      >
-        {% render 'icon-close' %}
-      </button>
-    {% endif %}
-  </div>
-  {% comment %}
+      {% if section.settings.show_close %}
+        <button
+          class="close-announcement-banner pl-1 px-2 py-3 cursor-pointer"
+          id="announcement-dismiss"
+          aria-label="Dismiss"
+        >
+          {% render 'icon-close' %}
+        </button>
+      {% endif %}
+    </div>
+    {% comment %}
+      <style>
+        #announcement-bar, #announcement-bar p, #announcement-bar a {
+          color: #212322 !important;
+          opacity: 1 !important;
+        }
+      </style>
+      <style>
+        /* Slide together with header */
+        #announcement-bar { will-change: transform; transition: transform 200ms ease; }
+
+        .slider-wrapper { display:flex; transition: transform 0.4s ease-in-out; }
+        .slide { min-width:100%; }
+        .arrow-btn { background:none; border:0; cursor:pointer; }
+
+        .slider-container { overflow:hidden; position:relative; max-width:640px; margin:0 auto; }
+        @media (max-width: 480px) {
+          .slider-container { width:85%; padding-top:4px; padding-bottom:4px; }
+          {% if section.blocks.size == 1 %}
+          .slider-container { width:100%; }
+          {% endif %}
+        }
+        @media (min-width: 481px) and (max-width: 768px) {
+          .slider-container { width:80%; }
+          {% if section.blocks.size == 1 %}
+          .slider-container { width:100%; }
+          {% endif %}
+        }
+        @media (min-width: 769px) {
+          .slider-container { width:100%; }
+        }
+      </style>
+    {% endcomment %}
+
     <style>
+      /* Force readable text */
       #announcement-bar, #announcement-bar p, #announcement-bar a {
         color: #212322 !important;
         opacity: 1 !important;
       }
-    </style>
-    <style>
+
       /* Slide together with header */
-      #announcement-bar { will-change: transform; transition: transform 200ms ease; }
+      #announcement-bar {
+        will-change: transform;
+        transition: transform 200ms ease;
+      }
 
-      .slider-wrapper { display:flex; transition: transform 0.4s ease-in-out; }
-      .slide { min-width:100%; }
-      .arrow-btn { background:none; border:0; cursor:pointer; }
+      /* Slider flow (scoped to new class/id) */
+      #ann-sliderWrapper {
+        display: flex;
+        align-items: center;
+        transition: transform 0.4s ease-in-out;
+      }
+      #ann-sliderWrapper .slide {
+        flex: 0 0 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 1.5rem; /* avoids zero-height collapse */
+      }
 
-      .slider-container { overflow:hidden; position:relative; max-width:640px; margin:0 auto; }
+      .arrow-btn { background: none; border: 0; cursor: pointer; }
+
+      /* Container (renamed from .slider-container → .ann-slider to avoid global collisions) */
+      .ann-slider {
+        overflow: hidden;
+        position: relative;
+        max-width: 640px;
+        margin: 0 auto;
+      }
+
       @media (max-width: 480px) {
-        .slider-container { width:85%; padding-top:4px; padding-bottom:4px; }
+        .ann-slider { width: 85%; padding-top: 4px; padding-bottom: 4px; }
         {% if section.blocks.size == 1 %}
-        .slider-container { width:100%; }
+          .ann-slider { width: 100%; }
         {% endif %}
       }
+
       @media (min-width: 481px) and (max-width: 768px) {
-        .slider-container { width:80%; }
+        .ann-slider { width: 80%; }
         {% if section.blocks.size == 1 %}
-        .slider-container { width:100%; }
+          .ann-slider { width: 100%; }
         {% endif %}
       }
+
       @media (min-width: 769px) {
-        .slider-container { width:100%; }
+        .ann-slider { width: 100%; }
       }
     </style>
-  {% endcomment %}
 
-  <style>
-    /* Force readable text */
-    #announcement-bar, #announcement-bar p, #announcement-bar a {
-      color: #212322 !important;
-      opacity: 1 !important;
-    }
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var bar = document.getElementById('announcement-bar');
+        if (!bar) return;
 
-    /* Slide together with header */
-    #announcement-bar {
-      will-change: transform;
-      transition: transform 200ms ease;
-    }
+        var KEY = 'announcement:dismissed:v1';
+        var dismiss = document.getElementById('announcement-dismiss');
 
-    /* Slider flow (scoped to new class/id) */
-    #ann-sliderWrapper {
-      display: flex;
-      align-items: center;
-      transition: transform 0.4s ease-in-out;
-    }
-    #ann-sliderWrapper .slide {
-      flex: 0 0 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 1.5rem; /* avoids zero-height collapse */
-    }
-
-    .arrow-btn { background: none; border: 0; cursor: pointer; }
-
-    /* Container (renamed from .slider-container → .ann-slider to avoid global collisions) */
-    .ann-slider {
-      overflow: hidden;
-      position: relative;
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
-    @media (max-width: 480px) {
-      .ann-slider { width: 85%; padding-top: 4px; padding-bottom: 4px; }
-      {% if section.blocks.size == 1 %}
-        .ann-slider { width: 100%; }
-      {% endif %}
-    }
-
-    @media (min-width: 481px) and (max-width: 768px) {
-      .ann-slider { width: 80%; }
-      {% if section.blocks.size == 1 %}
-        .ann-slider { width: 100%; }
-      {% endif %}
-    }
-
-    @media (min-width: 769px) {
-      .ann-slider { width: 100%; }
-    }
-  </style>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var bar = document.getElementById('announcement-bar');
-      if (!bar) return;
-
-      var KEY = 'announcement:dismissed:v1';
-      var dismiss = document.getElementById('announcement-dismiss');
-
-      // Restore dismiss state before measuring
-      if (dismiss && localStorage.getItem(KEY) === '1') {
-        bar.style.display = 'none';
-      }
-
-      {% comment %} // Set CSS variables so header can offset itself
-      function setVar(name, px){ document.documentElement.style.setProperty(name, (px||0) + 'px'); }
-      function barH(){ return bar && bar.style.display !== 'none' ? Math.round(bar.getBoundingClientRect().height) : 0; }
-      function measure(){
-        var h = barH();
-        setVar('--bar-h', h);
-        window.dispatchEvent(new Event('resize')); // nudge header measure if needed
-      } {% endcomment %}
-
-      // Set CSS variables so header can offset itself
-      function setVar(name, px){ document.documentElement.style.setProperty(name, (px||0) + 'px'); }
-      function barH(){ return bar && bar.style.display !== 'none' ? Math.round(bar.getBoundingClientRect().height) : 0; }
-
-      let measuringBar = false;
-      function measure(){
-        if (measuringBar) return;         // re-entry guard
-        measuringBar = true;
-        requestAnimationFrame(() => {
-          const h = barH();
-          setVar('--bar-h', h);
-          // tell header we updated, WITHOUT triggering resize loop
-          document.dispatchEvent(new CustomEvent('announcement:measured', { detail: { height: h } }));
-          measuringBar = false;
-        });
-      }
-
-
-      // Dismiss button
-      if (dismiss) {
-        dismiss.addEventListener('click', function(){
+        // Restore dismiss state before measuring
+        if (dismiss && localStorage.getItem(KEY) === '1') {
           bar.style.display = 'none';
-          try { localStorage.setItem(KEY, '1'); } catch(e){}
-          measure();
-        });
+        }
+
+        {% comment %} // Set CSS variables so header can offset itself
+        function setVar(name, px){ document.documentElement.style.setProperty(name, (px||0) + 'px'); }
+        function barH(){ return bar && bar.style.display !== 'none' ? Math.round(bar.getBoundingClientRect().height) : 0; }
+        function measure(){
+          var h = barH();
+          setVar('--bar-h', h);
+          window.dispatchEvent(new Event('resize')); // nudge header measure if needed
+        } {% endcomment %}
+
+        // Set CSS variables so header can offset itself
+        function setVar(name, px){ document.documentElement.style.setProperty(name, (px||0) + 'px'); }
+        function barH(){ return bar && bar.style.display !== 'none' ? Math.round(bar.getBoundingClientRect().height) : 0; }
+
+        let measuringBar = false;
+        function measure(){
+          if (measuringBar) return;         // re-entry guard
+          measuringBar = true;
+          requestAnimationFrame(() => {
+            const h = barH();
+            setVar('--bar-h', h);
+            // tell header we updated, WITHOUT triggering resize loop
+            document.dispatchEvent(new CustomEvent('announcement:measured', { detail: { height: h } }));
+            measuringBar = false;
+          });
+        }
+
+
+        // Dismiss button
+        if (dismiss) {
+          dismiss.addEventListener('click', function(){
+            bar.style.display = 'none';
+            try { localStorage.setItem(KEY, '1'); } catch(e){}
+            measure();
+          });
+        }
+
+        // Slider (only if > 1 slide)
+        {% if section.blocks.size > 1 %}
+        (function(){
+          const wrap = document.getElementById('ann-sliderWrapper');
+          const prev = document.getElementById('ann-prevBtn');
+          const next = document.getElementById('ann-nextBtn');
+          if (!wrap || !prev || !next) return;
+
+          const slides = Array.from(wrap.children);
+          const total = slides.length;
+          let i = 0, t = null;
+
+          function go(n){ i = (n + total) % total; wrap.style.transform = 'translateX(-' + (i*100) + '%)'; }
+          function start(){ if (!t) t = setInterval(() => go(i+1), {{ section.settings.interval | default: 5000 }}); }
+          function stop(){ clearInterval(t); t = null; }
+
+          prev.addEventListener('click', () => go(i-1));
+          next.addEventListener('click', () => go(i+1));
+
+          bar.addEventListener('mouseenter', stop);
+          bar.addEventListener('mouseleave', start);
+          start();
+        })();
+        {% endif %}
+
+        // First paint + observers
+        var ready = () => requestAnimationFrame(() => requestAnimationFrame(measure));
+        document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
+        window.addEventListener('load', measure, { passive:true });
+        window.addEventListener('resize', measure, { passive:true });
+        if ('ResizeObserver' in window) new ResizeObserver(measure).observe(bar);
+      });
+    </script>
+  {% else %}
+    {%- comment -%}
+      Disabled: make sure header sits at the very top by zeroing the CSS var.
+      Not strictly necessary because header uses top: var(--bar-h, 0px), but this prevents stale values.
+    {%- endcomment -%}
+    <script>
+      document.documentElement.style.setProperty('--bar-h', '0px');
+    </script>
+  {% endif %}
+
+  {% schema %}
+  {
+    "name": "Announcement bar",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enabled",
+        "label": "Enable announcement bar",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_close",
+        "label": "Show close (dismiss) button",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "interval",
+        "min": 3000,
+        "max": 5000,
+        "step": 500,
+        "unit": "ms",
+        "label": "Slide interval",
+        "default": 5000
       }
+    ],
+    "blocks": [
+      {
+        "type": "announcement",
+        "name": "Announcement",
+        "settings": [
+          { "type": "text", "id": "text", "label": "Banner text", "default": "FREE SHIPPING ON ORDERS $40+" },
+          { "type": "url", "id": "link", "label": "Link URL (optional)" },
+          { "type": "text", "id": "link_text", "label": "Link text", "default": "SHOP NOW" }
+        ]
+      }
+    ],
+    "max_blocks": 5,
+    "presets": [{ "name": "Announcement bar" }]
+  }
+  {% endschema %}
+{% endcomment %}
 
-      // Slider (only if > 1 slide)
-      {% if section.blocks.size > 1 %}
-      (function(){
-        const wrap = document.getElementById('ann-sliderWrapper');
-        const prev = document.getElementById('ann-prevBtn');
-        const next = document.getElementById('ann-nextBtn');
-        if (!wrap || !prev || !next) return;
+<div id="announcement-bar" class="announcement-static">
+  <div class="announcement-inner">
+    <p class="announcement-text">
+      FREE SHIPPING ON ORDERS $40+
+      <a href="/collections/shop-all" class="announcement-link">SHOP NOW</a>
+    </p>
+  </div>
+</div>
 
-        const slides = Array.from(wrap.children);
-        const total = slides.length;
-        let i = 0, t = null;
+<style>
+  /* 1) Set a fixed height and expose it as --bar-h for the header */
+  :root {
+    --bar-h: 36px;
+  }
 
-        function go(n){ i = (n + total) % total; wrap.style.transform = 'translateX(-' + (i*100) + '%)'; }
-        function start(){ if (!t) t = setInterval(() => go(i+1), {{ section.settings.interval | default: 5000 }}); }
-        function stop(){ clearInterval(t); t = null; }
+  /* 2) Fixed bar at very top */
+  #announcement-bar.announcement-static {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--bar-h);
+    z-index: 40;
+    background: #d6d2c4;
+    border-bottom: 1px solid rgba(33, 35, 34, 0.2);
+    transform: translateY(var(--header-shift, 0px));
+  }
 
-        prev.addEventListener('click', () => go(i-1));
-        next.addEventListener('click', () => go(i+1));
+  /* 3) Simple centering */
+  #announcement-bar .announcement-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+  }
 
-        bar.addEventListener('mouseenter', stop);
-        bar.addEventListener('mouseleave', start);
-        start();
-      })();
-      {% endif %}
-
-      // First paint + observers
-      var ready = () => requestAnimationFrame(() => requestAnimationFrame(measure));
-      document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
-      window.addEventListener('load', measure, { passive:true });
-      window.addEventListener('resize', measure, { passive:true });
-      if ('ResizeObserver' in window) new ResizeObserver(measure).observe(bar);
-    });
-  </script>
-{% else %}
-  {%- comment -%}
-    Disabled: make sure header sits at the very top by zeroing the CSS var.
-    Not strictly necessary because header uses top: var(--bar-h, 0px), but this prevents stale values.
-  {%- endcomment -%}
-  <script>
-    document.documentElement.style.setProperty('--bar-h', '0px');
-  </script>
-{% endif %}
+  /* 4) Readable text, no surprises */
+  #announcement-bar .announcement-text,
+  #announcement-bar .announcement-link {
+    color: #212322 !important;
+  }
+  #announcement-bar .announcement-text {
+    margin: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    line-height: 1.2;
+    text-align: center;
+  }
+  #announcement-bar .announcement-link {
+    margin-left: 4px;
+    text-decoration: underline;
+    opacity: 0.8;
+  }
+  #announcement-bar .announcement-link:hover {
+    opacity: 1;
+  }
+</style>
 
 {% schema %}
 {
-  "name": "Announcement bar",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "enabled",
-      "label": "Enable announcement bar",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_close",
-      "label": "Show close (dismiss) button",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "interval",
-      "min": 3000,
-      "max": 5000,
-      "step": 500,
-      "unit": "ms",
-      "label": "Slide interval",
-      "default": 5000
-    }
-  ],
-  "blocks": [
-    {
-      "type": "announcement",
-      "name": "Announcement",
-      "settings": [
-        { "type": "text", "id": "text", "label": "Banner text", "default": "FREE SHIPPING ON ORDERS $40+" },
-        { "type": "url", "id": "link", "label": "Link URL (optional)" },
-        { "type": "text", "id": "link_text", "label": "Link text", "default": "SHOP NOW" }
-      ]
-    }
-  ],
-  "max_blocks": 5,
-  "presets": [{ "name": "Announcement bar" }]
+  "name": "Announcement bar (static)",
+  "settings": [],
+  "presets": [{ "name": "Announcement bar (static)" }]
 }
 {% endschema %}
